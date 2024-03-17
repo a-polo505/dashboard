@@ -1,0 +1,91 @@
+.currency--button {
+    color: #ffc44c;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.25rem;
+    background: rgba(255, 196, 76, 0.08);
+    border: 1px solid rgba(255, 196, 76, 0.14);
+    border-radius: 4px;
+    padding-left: 12px;
+    padding-right: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .currency--button:hover {
+    box-shadow: 0 0 4px #4a3d23;
+  }
+  
+  .currency--button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 100%
+    );
+    transition: left 0.8s ease;
+  }
+  
+  .currency--button:hover::before {
+    left: 100%;
+  }
+  
+  .currency--rate {
+    font-size: 24px;
+    font-weight: 800;
+    color: #fbc142;
+  }
+  
+  .currency--base {
+    font-size: 16px;
+    font-weight: normal;
+    color: #fdfdfd;
+  }
+  
+  .currency--percentage {
+    font-size: 16px;
+    font-weight: normal;
+  }
+  
+  .currency--percentage.positive {
+    color: #61b664;
+  }
+  
+  .currency--percentage.negative {
+    color: #b66161;
+  }
+  
+  .currency--percentage.neutral {
+    color: #a1a1a1;
+  }
+  
+  .noise-background {
+    background-image: url("../images/img-noise-380x380.png");
+    background-color: #333333;
+  }
+  
+  @media screen and (max-width: 480px) {
+    .currency--rate {
+      padding-top: 12px;
+      font-size: 32px;
+    }
+    .currency--button {
+      font-size: 16px;
+      line-height: 1.5rem;
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+    .currency--base {
+      font-size: 18px;
+    }
+    .currency--percentage {
+      font-size: 18px;
+    }
+  }
+  

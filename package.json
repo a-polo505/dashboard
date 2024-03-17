@@ -17,7 +17,7 @@
     "calendar"
   ],
   "author": "Alina Polozhai",
-  "license": "ISC",
+  "license": "MIT",
   "type": "module",
   "dependencies": {
     "@vercel/analytics": "^1.1.3",

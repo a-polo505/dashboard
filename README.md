@@ -1,1 +1,1 @@
-# dashboard
+# Widget Dashboard

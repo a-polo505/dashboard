@@ -6,7 +6,7 @@ const defaultContainerContent = '<p class="default-text-style">Soon 🛠</p>';
 const dateContainerContent = getCurrentDate();
 
 const defaultContainer4 = createContainer("Small", dateContainerContent);
-defaultContainer4.classList.add("grey-color");
+defaultContainer4.classList.add("ocean-color");
 document.getElementById("col-1").appendChild(defaultContainer4);
 
 const defaultContainer = createContainer("Small", defaultContainerContent);

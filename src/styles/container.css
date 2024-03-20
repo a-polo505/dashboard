@@ -73,12 +73,12 @@
     background: #2954a8;
   }
   
-  .grey-color {
-    background: #0e1716;
+  .ocean-color {
+    background: linear-gradient(180deg, #042742, #05172F);
   }
   
-  .grey-color.gradient-border:after {
-    background: linear-gradient(140deg, #1c2524, #333c3b);
+  .ocean-color.gradient-border:after {
+    background: linear-gradient(180deg, #031B30, #062B4C);
   }
   
   .green-color {

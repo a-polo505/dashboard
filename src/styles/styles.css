@@ -18,7 +18,7 @@ body {
   margin: 0;
   padding: 0;
   color: #333333;
-  background: #d7dfec;
+  background: #dee5f0;
   font-family: "Inter", sans-serif;
   font-size: 14px;
   min-height: 100vh;
@@ -91,7 +91,7 @@ a {
 }
 
 .cta-button:hover {
-  box-shadow: 0 0 4px #d5b36e5a;
+  box-shadow: 0 0 4px #8e8e8e5a;
 }
 
 .cta-button a {

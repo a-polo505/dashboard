@@ -3,7 +3,7 @@
 
 ## 🛠 Description
 
-This repository contains the source code of my [universal dashboard](https://dashboard-a-polo505.vercel.app) designed for everyday use. The dashboard consists of various widgets providing useful information and functionality.
+This repository contains the source code of my [universal dashboard](https://dashboard-a-polo505.vercel.app) designed for everyday use. The dashboard consists of various widgets providing useful information and functionality. Developed with JavaScript and deployed on Vercel
 
 ## 🗂 Current Widgets
 

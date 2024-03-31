@@ -6,6 +6,13 @@
 @import url("container.css");
 @import url("calendar-widget.css");
 
+:root {
+  --background-color: #F3F5F7;
+  --text-black: #292929;
+  --text-gray-400: rgb(156, 163, 175);
+  --text-gray-500: rgb(107 114 128);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -17,8 +24,8 @@ html {
 body {
   margin: 0;
   padding: 0;
-  color: #333333;
-  background: #dee5f0;
+  color: var(--text-gray-400);
+  background: var(--background-color);
   font-family: "Inter", sans-serif;
   font-size: 14px;
   min-height: 100vh;
@@ -91,7 +98,7 @@ a {
 }
 
 .cta-button:hover {
-  box-shadow: 0 0 4px #8e8e8e5a;
+  box-shadow: 0 0 4px #8e8e8e23;
 }
 
 .cta-button a {
@@ -128,9 +135,20 @@ a {
   color: #ffffff!important;
 }
 
-.main-link {
-    color:#161616;
-    font-weight: 700;
+.footer-link {
+    color: var(--text-gray-500);
+    text-decoration-line: underline;
+    text-decoration-color: #eeeff2;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+    transition-duration: .3s;
+}
+
+.footer-link:hover {
+  color: var(--text-black);
+  text-decoration-color: transparent;
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  transition-duration: .7s;
 }
 
 .loader-container {

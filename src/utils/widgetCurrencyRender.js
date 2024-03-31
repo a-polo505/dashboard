@@ -1,4 +1,4 @@
-function truncateDecimals(number, digits) {
+export function truncateDecimals(number, digits) {
     const numString = number.toString();
     const decimalIndex = numString.indexOf(".");
   
@@ -9,7 +9,7 @@ function truncateDecimals(number, digits) {
     return number;
   }
   
-  function truncateText(text, maxLength) {
+  export function truncateText(text, maxLength) {
     const textString = text.toString();
     if (textString.length <= maxLength) {
       return textString;
@@ -23,12 +23,13 @@ function truncateDecimals(number, digits) {
     return truncatedText;
   }
   
-  function calculatePercentageChange(
+  export function calculatePercentageChange(
     quoteCurrencyCode,
     currenciesDiff,
     quoteCurrency,
   ) {
-    if (!(quoteCurrencyCode in currenciesDiff[0].data)) {
+    const quoteCurrencyData = currenciesDiff[0].data[quoteCurrencyCode];
+    if (!quoteCurrencyData) {
       return { percentageChange: "0.00%", percentageClass: "neutral" };
     }
   
@@ -47,20 +48,6 @@ function truncateDecimals(number, digits) {
     const percentageClass = getPercentageClass(percentage);
   
     return { percentageChange, percentageClass };
-  }
-  
-  function getIconPath(icon) {
-    if (icon === "up") {
-      return "M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z";
-    } else if (icon === "down") {
-      return "M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z";
-    } else {
-      return "";
-    }
-  }
-  
-  function getPercentageClass(percentage) {
-    return percentage > 0 ? "positive" : percentage < 0 ? "negative" : "neutral";
   }
   
   export function widgetCurrencyRender(currencies, currenciesDiff) {
@@ -103,4 +90,18 @@ function truncateDecimals(number, digits) {
     const storedCurrency = localStorage.getItem("userCurrency");
     return storedCurrency ? storedCurrency : "UAH";
   }
+
+  function getIconPath(icon) {
+    if (icon === "up") {
+      return "M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z";
+    } else if (icon === "down") {
+      return "M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z";
+    } else {
+      return "";
+    }
+  }
+
+function getPercentageClass(percentage) {
+  return percentage > 0 ? "positive" : percentage < 0 ? "negative" : "neutral";
+}
   

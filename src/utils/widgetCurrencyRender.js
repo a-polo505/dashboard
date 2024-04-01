@@ -3,7 +3,8 @@ export function truncateDecimals(number, digits) {
     const decimalIndex = numString.indexOf(".");
   
     if (decimalIndex !== -1) {
-      return parseFloat(numString.slice(0, decimalIndex + 1 + digits));
+        const truncatedNumber = numString.slice(0, decimalIndex + digits + 1);
+        return parseFloat(truncatedNumber);
     }
   
     return number;

@@ -8,7 +8,7 @@ export function truncateDecimals(number, digits) {
     }
   
     return number;
-  }
+}
   
   export function truncateText(text, maxLength) {
     const textString = text.toString();

@@ -1,24 +1,24 @@
 .calendar--month {
-    padding: 0;
-    margin: 0;
-    font-size: 14px;
-    font-weight: normal;
-    color: #999AB6;
-  }
-  
-.calendar--day {
-    margin: 0;
-    padding: 0;
-    font-size: 64px;
-    font-weight: 800;
-    color: #FF4F4F
-  }
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  font-weight: normal;
+  color: #999ab6;
+}
 
-  @media screen and (max-width: 480px) {
-    .calendar--day {
-        font-size: 80px;
-      }
-      .calendar--month {
-        font-size: 18px;
-    }
+.calendar--day {
+  margin: 0;
+  padding: 0;
+  font-size: 64px;
+  font-weight: 800;
+  color: #ff4f4f;
+}
+
+@media screen and (max-width: 480px) {
+  .calendar--day {
+    font-size: 80px;
   }
+  .calendar--month {
+    font-size: 18px;
+  }
+}

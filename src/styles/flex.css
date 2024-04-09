@@ -1,52 +1,51 @@
 .flex {
-    display: flex;
-  }
-  
-  .flex-col {
-    flex-direction: column;
-  }
-  
-  .align-center {
-    align-items: center;
-  }
-  
-  .align-letf {
-    align-items: flex-start;
-  }
-  
-  .gap-4 {
-    gap: 4px;
-  }
-  
-  .gap-10 {
-    gap: 10px;
-  }
-  
-  .gap-24 {
-    gap: 24px;
-  }
+  display: flex;
+}
 
-  .gap-48 {
-    gap: 48px 48px;
-  }
-  
-  .gap-col-40 {
-    grid-column-gap: 40px;
-  }
-  
-  .gap-row-40 {
-    grid-row-gap: 40px;
-  }
-  
-  .wrap {
-    flex-wrap: wrap;
-  }
-  
-  .justify-center {
-    justify-content: center;
-  }
-  
-  .justify-between {
-    justify-content: space-between;
-  }
-  
+.flex-col {
+  flex-direction: column;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-letf {
+  align-items: flex-start;
+}
+
+.gap-4 {
+  gap: 4px;
+}
+
+.gap-10 {
+  gap: 10px;
+}
+
+.gap-24 {
+  gap: 24px;
+}
+
+.gap-48 {
+  gap: 48px 48px;
+}
+
+.gap-col-40 {
+  grid-column-gap: 40px;
+}
+
+.gap-row-40 {
+  grid-row-gap: 40px;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}

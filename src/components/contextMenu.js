@@ -7,7 +7,7 @@ let currencyList;
 const triggerCurrencyChangeEvent = (userCurrency) => {
   const currencyChangeEvent = new CustomEvent("currencyChange", {
     detail: {
-      userCurrency: userCurrency,
+      userCurrency,
     },
   });
   document.dispatchEvent(currencyChangeEvent);
@@ -131,6 +131,14 @@ export const showContextMenu = (event) => {
 
   document.body.appendChild(contextMenuContainer);
   contextMenuOpen = true;
+
+  const listRect = currencyList.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  if (listRect.bottom > viewportHeight || listRect.top < 0) {
+    searchInput.focus();
+  } else {
+    currencyList.focus();
+  }
 };
 
 const createSearchInput = () => {
@@ -163,6 +171,8 @@ const createCurrencyList = () => {
   list.classList.add("flex");
   list.classList.add("flex-col");
 
+  list.setAttribute("tabindex", "0");
+
   currenciesArray.forEach((currencyObject) => {
     const currencyData = currencyObject.data;
 
@@ -185,3 +195,14 @@ const createContextMenu = (currencyList) => {
 
   return contextMenu;
 };
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    if (document.activeElement === searchInput) {
+      searchInput.blur();
+      currencyList.focus();
+    } else if (contextMenuOpen) {
+      closeContextMenu();
+    }
+  }
+});

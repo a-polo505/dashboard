@@ -101,8 +101,6 @@ const handleSearchInput = () => {
 };
 
 export const showContextMenu = (event) => {
-  const scrollY = window.scrollY || document.documentElement.scrollTop;
-
   contextMenuContainer.innerHTML = "";
   contextMenuContainer.classList.add("context-menu-container");
 
@@ -134,14 +132,13 @@ export const showContextMenu = (event) => {
   document.body.appendChild(contextMenuContainer);
   contextMenuOpen = true;
 
-  document.body.style.overflow = "hidden";
-
-  currencyList.focus();
-
-  setTimeout(() => {
-    window.scrollTo(0, scrollY);
-    document.body.style.overflow = "auto";
-  }, 100);
+  const listRect = currencyList.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  if (listRect.bottom > viewportHeight || listRect.top < 0) {
+    searchInput.focus();
+  } else {
+    currencyList.focus();
+  }
 };
 
 const createSearchInput = () => {
@@ -174,7 +171,7 @@ const createCurrencyList = () => {
   list.classList.add("flex");
   list.classList.add("flex-col");
 
-  list.setAttribute("tabindex", "0");
+  list.setAttribute('tabindex', '0');
 
   currenciesArray.forEach((currencyObject) => {
     const currencyData = currencyObject.data;
@@ -199,8 +196,8 @@ const createContextMenu = (currencyList) => {
   return contextMenu;
 };
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
     if (document.activeElement === searchInput) {
       searchInput.blur();
       currencyList.focus();

@@ -41,6 +41,10 @@
   gap: 8px;
 }
 
+.context-menu ul:focus {
+  outline: none;
+}
+
 .context-menu button {
   width: 100%;
   text-align: left;

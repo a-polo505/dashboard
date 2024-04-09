@@ -7,7 +7,7 @@ let currencyList;
 const triggerCurrencyChangeEvent = (userCurrency) => {
   const currencyChangeEvent = new CustomEvent("currencyChange", {
     detail: {
-      userCurrency: userCurrency,
+      userCurrency,
     },
   });
   document.dispatchEvent(currencyChangeEvent);

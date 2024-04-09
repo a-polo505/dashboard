@@ -1,4 +1,5 @@
 # Widget Dashboard
+
 [![alina_polozhai_widget_dash_cover](https://github.com/a-polo505/dashboard/assets/23198484/72ab1efe-1f66-4fbd-ae24-5db33e44b443)](https://dashboard-a-polo505.vercel.app)
 
 ## 🛠 Description

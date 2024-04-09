@@ -1,13 +1,13 @@
 export function createLoadingSpinner() {
-    const loaderContainer = document.createElement("div");
-    loaderContainer.id = "loadingSpinner";
-    loaderContainer.className = "loader-container";
-    loaderContainer.style.display = "none";
-  
-    const loader = document.createElement("div");
-    loader.className = "loader";
-  
-    loader.innerHTML = `
+  const loaderContainer = document.createElement("div");
+  loaderContainer.id = "loadingSpinner";
+  loaderContainer.className = "loader-container";
+  loaderContainer.style.display = "none";
+
+  const loader = document.createElement("div");
+  loader.className = "loader";
+
+  loader.innerHTML = `
               <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="loader-1" x="0px" y="0px"
                   width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
                   <path fill="#FBC142" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">
@@ -15,16 +15,15 @@ export function createLoadingSpinner() {
                   </path>
               </svg>
       `;
-  
-    loaderContainer.appendChild(loader);
-  
-    return loaderContainer;
+
+  loaderContainer.appendChild(loader);
+
+  return loaderContainer;
+}
+
+export function showLoader() {
+  const loader = document.getElementById("loadingSpinner");
+  if (loader) {
+    loader.style.display = "flex";
   }
-  
-  export function showLoader() {
-    const loader = document.getElementById("loadingSpinner");
-    if (loader) {
-      loader.style.display = "flex";
-    }
-  }
-  
+}

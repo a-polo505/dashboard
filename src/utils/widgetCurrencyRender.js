@@ -89,7 +89,7 @@ export function widgetCurrencyRender(currencies, currenciesDiff) {
 
 function getUserCurrency() {
   const storedCurrency = localStorage.getItem("userCurrency");
-  return storedCurrency ? storedCurrency : "UAH";
+  return storedCurrency || "UAH";
 }
 
 function getIconPath(icon) {

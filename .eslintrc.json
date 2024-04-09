@@ -1,4 +1,12 @@
 {
-  "extends": ["eslint:recommended", "standard", "plugin:prettier/recommended"],
-  "plugins": ["standard", "prettier"]
+  "extends": [
+    "eslint:recommended",
+    "standard",
+    "plugin:prettier/recommended",
+    "plugin:jest/recommended"
+  ],
+  "plugins": ["standard", "prettier", "jest"],
+  "globals": {
+    "localStorage": true
+  }
 }

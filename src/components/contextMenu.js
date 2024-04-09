@@ -101,6 +101,8 @@ const handleSearchInput = () => {
 };
 
 export const showContextMenu = (event) => {
+  const scrollY = window.scrollY || document.documentElement.scrollTop;
+
   contextMenuContainer.innerHTML = "";
   contextMenuContainer.classList.add("context-menu-container");
 
@@ -132,7 +134,14 @@ export const showContextMenu = (event) => {
   document.body.appendChild(contextMenuContainer);
   contextMenuOpen = true;
 
+  document.body.style.overflow = "hidden";
+
   currencyList.focus();
+
+  setTimeout(() => {
+    window.scrollTo(0, scrollY);
+    document.body.style.overflow = "auto";
+  }, 100);
 };
 
 const createSearchInput = () => {

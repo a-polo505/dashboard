@@ -1,0 +1,28 @@
+.grid-item {
+  width: 10px;
+  height: 10px;
+  border-radius: 1px;
+  background-color: rgba(236, 251, 255, 0.1);
+}
+
+.past-week {
+  background-color: rgba(236, 251, 255, 0.5);
+}
+
+.current-week {
+  background-color: rgba(236, 251, 255, 0.9);
+}
+
+.text-accent {
+  color: #72d6f1;
+}
+
+.tooltip {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 10px;
+  z-index: 9999;
+}

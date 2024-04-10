@@ -1,15 +1,12 @@
 import { createContainer } from "./components/container.js";
 import { fetchDataAndDisplay } from "./utils/fetchUtils.js";
-import { getCurrentDate } from "./utils/widgetDateRender.js";
+import { renderDateContainer } from "./utils/widgetDateRender.js";
+import { renderWidgetContent } from "./utils/displayWeeksUtils.js";
 
 const defaultContainerContent = '<p class="default-text-style">Soon 🛠</p>';
-const dateContainerContent = getCurrentDate();
+const dateContainerContent = renderDateContainer();
 
 document.addEventListener("DOMContentLoaded", fetchDataAndDisplay);
-
-const defaultContainer = createContainer("Small", defaultContainerContent);
-defaultContainer.classList.add("magenta-color");
-document.getElementById("col-2").appendChild(defaultContainer);
 
 const defaultContainer2 = createContainer("Small", defaultContainerContent);
 defaultContainer2.classList.add("sky-color");
@@ -26,3 +23,10 @@ document.getElementById("col-1").appendChild(defaultContainer4);
 const defaultContainer5 = createContainer("Small", defaultContainerContent);
 defaultContainer5.classList.add("blue-color");
 document.getElementById("col-3").appendChild(defaultContainer5);
+
+const widgetContainer = createContainer("Small");
+widgetContainer.classList.add("magenta-color");
+document.getElementById("col-2").appendChild(widgetContainer);
+
+const widgetContent = renderWidgetContent();
+widgetContainer.appendChild(widgetContent);

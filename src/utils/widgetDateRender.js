@@ -1,4 +1,6 @@
-export function getCurrentDate() {
+import { getCurrentDate } from "./dateUtils.js";
+
+export function renderDateContainer() {
   const months = [
     "January",
     "February",
@@ -13,7 +15,8 @@ export function getCurrentDate() {
     "November",
     "December",
   ];
-  const currentDate = new Date();
+
+  const currentDate = getCurrentDate();
   const monthIndex = currentDate.getMonth();
   const dayOfMonth = currentDate.getDate();
 

@@ -7,8 +7,9 @@
 @import url("calendar-widget.css");
 
 :root {
-  --background-color: #f3f5f7;
-  --text-black: #292929;
+  --background-color: rgb(234, 237, 255);
+  --background-color-400: rgb(243, 245, 247);
+  --text-black: rgb(41, 41, 41);
   --text-gray-400: rgb(156, 163, 175);
   --text-gray-500: rgb(107 114 128);
 }

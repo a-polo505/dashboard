@@ -17,6 +17,10 @@
   background-color: rgba(236, 251, 255, 0.9);
 }
 
+.days-left {
+  font-size: 18px;
+}
+
 .text-accent {
   color: #72d6f1;
 }
@@ -29,4 +33,18 @@
   border-radius: 5px;
   font-size: 10px;
   z-index: 9999;
+}
+
+@media screen and (max-width: 480px) {
+  .weeks-grid {
+    gap: 6px!important;
+  }
+  .grid-item {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+  }
+  .tooltip {
+    font-size: 12px;
+  }
 }

@@ -8,6 +8,13 @@ const dateContainerContent = renderDateContainer();
 
 document.addEventListener("DOMContentLoaded", fetchDataAndDisplay);
 
+const widgetContainer = createContainer("Small");
+widgetContainer.classList.add("magenta-color");
+document.getElementById("col-2").appendChild(widgetContainer);
+
+const widgetContent = renderWidgetContent();
+widgetContainer.appendChild(widgetContent);
+
 const defaultContainer2 = createContainer("Small", defaultContainerContent);
 defaultContainer2.classList.add("sky-color");
 document.getElementById("col-2").appendChild(defaultContainer2);
@@ -24,9 +31,3 @@ const defaultContainer5 = createContainer("Small", defaultContainerContent);
 defaultContainer5.classList.add("blue-color");
 document.getElementById("col-3").appendChild(defaultContainer5);
 
-const widgetContainer = createContainer("Small");
-widgetContainer.classList.add("magenta-color");
-document.getElementById("col-2").appendChild(widgetContainer);
-
-const widgetContent = renderWidgetContent();
-widgetContainer.appendChild(widgetContent);

@@ -49,14 +49,6 @@
   background-size: 300% 300%;
 }
 
-.magenta-color {
-  background: linear-gradient(140deg, #1a0654, #400fab);
-}
-
-.magenta-color.gradient-border:after {
-  background: linear-gradient(140deg, #190654d3, #19065486);
-}
-
 .sky-color {
   background: linear-gradient(140deg, #2066a2, #7ebceb);
 }
@@ -71,14 +63,6 @@
 
 .blue-color.gradient-border:after {
   background: #2954a8;
-}
-
-.ocean-color {
-  background: linear-gradient(180deg, #042742, #05172f);
-}
-
-.ocean-color.gradient-border:after {
-  background: linear-gradient(180deg, #031b30, #062b4c);
 }
 
 .green-color {

@@ -4,16 +4,15 @@ import { renderDateContainer } from "./utils/widgetDateRender.js";
 import { renderWidgetContent } from "./utils/displayWeeksUtils.js";
 
 const defaultContainerContent = '<p class="default-text-style">Soon 🛠</p>';
-const dateContainerContent = renderDateContainer();
 
 document.addEventListener("DOMContentLoaded", fetchDataAndDisplay);
 
-const widgetContainer = createContainer("Small");
-widgetContainer.classList.add("magenta-color");
-document.getElementById("col-2").appendChild(widgetContainer);
+const widgetWeekContainer = createContainer("Small");
+widgetWeekContainer.classList.add("week-widget-container");
+document.getElementById("col-2").appendChild(widgetWeekContainer);
 
-const widgetContent = renderWidgetContent();
-widgetContainer.appendChild(widgetContent);
+const widgetWeekContent = renderWidgetContent();
+widgetWeekContainer.appendChild(widgetWeekContent);
 
 const defaultContainer2 = createContainer("Small", defaultContainerContent);
 defaultContainer2.classList.add("sky-color");
@@ -23,11 +22,15 @@ const defaultContainer3 = createContainer("Small", defaultContainerContent);
 defaultContainer3.classList.add("green-color");
 document.getElementById("col-3").appendChild(defaultContainer3);
 
-const defaultContainer4 = createContainer("Small", dateContainerContent);
-defaultContainer4.classList.add("ocean-color");
-document.getElementById("col-1").appendChild(defaultContainer4);
+const calendarContainerContent = renderDateContainer();
+
+const widgetCalendarContainer = createContainer(
+  "Small",
+  calendarContainerContent,
+);
+widgetCalendarContainer.classList.add("calendar-widget-container");
+document.getElementById("col-1").appendChild(widgetCalendarContainer);
 
 const defaultContainer5 = createContainer("Small", defaultContainerContent);
 defaultContainer5.classList.add("blue-color");
 document.getElementById("col-3").appendChild(defaultContainer5);
-

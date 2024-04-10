@@ -1,3 +1,11 @@
+.calendar-widget-container {
+  background: linear-gradient(180deg, #042742, #05172f);
+}
+
+.calendar-widget-container.gradient-border:after {
+  background: linear-gradient(180deg, #031b30, #062b4c);
+}
+
 .calendar--month {
   padding: 0;
   margin: 0;

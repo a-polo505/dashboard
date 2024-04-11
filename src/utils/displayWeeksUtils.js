@@ -6,7 +6,7 @@ import {
 } from "./dateUtils.js";
 import { createGrid, displayDaysLeft } from "./widgetWeeksRender.js";
 
-export function renderWidgetContent() {
+export function renderWeekWidgetContent() {
   const currentDate = getCurrentDate();
   const currentYear = currentDate.getFullYear();
   const weeksInYear = getWeeksInYear(currentYear);

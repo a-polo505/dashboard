@@ -3,7 +3,7 @@
 }
 
 .week-widget-container.gradient-border:after {
-  background: linear-gradient(140deg, #190654d3, #19065486);
+  background: linear-gradient(140deg, rgba(25, 6, 84, 0.86), rgba(64, 15, 171, 0.822));
 }
 
 .grid-item {

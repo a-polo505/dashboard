@@ -2,9 +2,9 @@ import {
   getCurrentDate,
   getWeeksInYear,
   getRemainingWeeksOfYear,
+  getWeekNumber,
 } from "./dateUtils.js";
 import { createGrid, displayDaysLeft } from "./widgetWeeksRender.js";
-import { getWeekNumber } from "./dateUtils.js";
 
 export function renderWidgetContent() {
   const currentDate = getCurrentDate();

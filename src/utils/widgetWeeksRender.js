@@ -15,6 +15,7 @@ export function createGrid(weeksInYear, currentWeek) {
     } else {
       gridItem.classList.add("future-week");
     }
+
     gridItem.addEventListener("mouseover", function (event) {
       showTooltip(gridItem.dataset.week, event);
     });
@@ -25,6 +26,7 @@ export function createGrid(weeksInYear, currentWeek) {
 
     gridContainer.appendChild(gridItem);
   }
+
   return gridContainer;
 }
 
@@ -37,6 +39,19 @@ function showTooltip(weekNumber, event) {
   tooltip.style.top = `${event.clientY}px`;
 
   document.body.appendChild(tooltip);
+
+  // Додамо обробник кліку на елементі document для приховування тултіпу
+  document.addEventListener("click", function hideTooltipOnClick(event) {
+    // Перевіряємо, чи клікнуто не на gridItem або на сам тултіп
+    if (
+      !event.target.classList.contains("grid-item") &&
+      !event.target.classList.contains("tooltip")
+    ) {
+      hideTooltip();
+      // Після того як тултіп було сховано, видаляємо обробник подій кліку
+      document.removeEventListener("click", hideTooltipOnClick);
+    }
+  });
 }
 
 function hideTooltip() {

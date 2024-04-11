@@ -21,16 +21,16 @@ export async function sendCurrenciesToMongoDB(currencies) {
 
     const currentDate = new Date();
     const lastUpdate = { lastUpdated: currentDate };
-    
+
     await diffCollection.replaceOne(
       {},
-      { data: await collection.findOne({}), ...lastUpdate},
+      { data: await collection.findOne({}), ...lastUpdate },
       { upsert: true },
     );
 
     await collection.updateOne(
       {},
-      { $set: { data: filteredCurrencies, ...lastUpdate} },
+      { $set: { data: filteredCurrencies, ...lastUpdate } },
       { upsert: true },
     );
   } catch (error) {

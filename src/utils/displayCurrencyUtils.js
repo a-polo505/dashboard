@@ -31,8 +31,12 @@ function addEventListeners() {
 }
 
 function showTooltip(event) {
+  const currenciesData = getParsedData("currencies");
+  const lastUpdated = currenciesData[0].lastUpdated;
+  const formattedLastUpdated = formatLastUpdate(lastUpdated);
+
   const tooltip = document.createElement("div");
-  tooltip.textContent = `NOW`;
+  tooltip.innerHTML = `Last updated: <span class="currency--tooltip-text-accent">${formattedLastUpdated}</span>`;
   tooltip.classList.add("tooltip");
 
   tooltip.style.left = `${event.clientX}px`;
@@ -41,6 +45,19 @@ function showTooltip(event) {
   document.body.appendChild(tooltip);
 
   window.addEventListener("scroll", hideTooltipOnScroll);
+}
+
+function formatLastUpdate(data) {
+  if (!data) return "No data available 😔";
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short",
+  };
+  return new Date(data).toLocaleString("en-US", options);
 }
 
 function hideTooltip() {

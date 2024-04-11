@@ -22,6 +22,10 @@
   color: #ff4f4f;
 }
 
+.currency--tooltip-text-accent {
+  font-weight: 600;
+}
+
 @media screen and (max-width: 480px) {
   .calendar--day {
     font-size: 80px;

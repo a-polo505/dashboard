@@ -40,18 +40,17 @@ function showTooltip(weekNumber, event) {
 
   document.body.appendChild(tooltip);
 
-  // Додамо обробник кліку на елементі document для приховування тултіпу
   document.addEventListener("click", function hideTooltipOnClick(event) {
-    // Перевіряємо, чи клікнуто не на gridItem або на сам тултіп
     if (
       !event.target.classList.contains("grid-item") &&
       !event.target.classList.contains("tooltip")
     ) {
       hideTooltip();
-      // Після того як тултіп було сховано, видаляємо обробник подій кліку
       document.removeEventListener("click", hideTooltipOnClick);
     }
   });
+
+  window.addEventListener("scroll", hideTooltipOnScroll);
 }
 
 function hideTooltip() {
@@ -59,6 +58,11 @@ function hideTooltip() {
   if (tooltip) {
     tooltip.remove();
   }
+}
+
+function hideTooltipOnScroll() {
+  hideTooltip();
+  window.removeEventListener("scroll", hideTooltipOnScroll);
 }
 
 export function displayDaysLeft(

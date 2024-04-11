@@ -18,12 +18,14 @@ function addEventListeners() {
 
   const percentageChangeElement = document.getElementById("percentageChange");
   percentageChangeElement.addEventListener("mouseover", showTooltip);
+  console.log("percentageChangeElement mouseover");
   percentageChangeElement.addEventListener("mouseout", hideTooltip);
+  console.log("percentageChangeElement mouseout");
 
   document.addEventListener("click", function hideTooltipOnClick(event) {
+    console.log("percentageChangeElement click");
     if (!event.target.classList.contains("currency--percentage")) {
       hideTooltip();
-      document.removeEventListener("click", hideTooltipOnClick);
     }
   });
 
@@ -48,7 +50,7 @@ function showTooltip(event) {
 }
 
 function formatLastUpdate(data) {
-  if (!data) return "No data available 😔";
+  if (!data) return "A long time ago 😔";
   const options = {
     year: "numeric",
     month: "long",

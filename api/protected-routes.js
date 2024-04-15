@@ -9,10 +9,8 @@ router.get("/api/protected-routes", (req, res) => {
   console.log(userIPAddress);
   const isAllowed = checkIPRestrictions(userIPAddress);
   if (isAllowed) {
-    console.log("isAllowed");
     res.send("Welcome! You have access to this route.");
   } else {
-    console.log("Access denied");
     res.status(403).send("Access denied.");
   }
 });

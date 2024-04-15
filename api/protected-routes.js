@@ -3,15 +3,19 @@ import { checkIPRestrictions } from "../src/ipRestrictions.js";
 
 const router = express.Router();
 
-router.get("/api/protected-routes", (req, res) => {
-  const userIPAddress =
-    req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-  console.log("from protected-routes:", userIPAddress);
-  const isAllowed = checkIPRestrictions(userIPAddress);
-  if (isAllowed) {
-    res.send("Welcome! You have access to this route.");
-  } else {
-    res.status(403).send("Access denied.");
+router.get("/api/protected-routes", async (req, res) => {
+  try {
+    const userIPAddress =
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    console.log(userIPAddress);
+    const isAllowed = await checkIPRestrictions(userIPAddress);
+
+    const responseData = { isAllowed };
+
+    res.status(200).json(responseData);
+  } catch (error) {
+    console.error("Error checking IP restrictions:", error);
+    res.status(500).send("Internal server error.");
   }
 });
 

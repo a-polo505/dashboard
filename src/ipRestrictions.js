@@ -1,4 +1,4 @@
-const geoip = require('geoip-lite');
+import geoip from 'geoip-lite';
 
 // Функція для перевірки IP-адреси користувача
 export function checkIPRestrictions(ip) {

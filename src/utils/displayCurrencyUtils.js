@@ -1,9 +1,8 @@
 import { createContainer } from "../components/container.js";
-import { showContextMenu } from "../components/contextMenu.js";
+import { showContextMenu } from "../components/currencyContextMenu.js";
 import { createLoadingSpinner, showLoader } from "../components/spinner.js";
 import { getParsedData } from "./storageUtils.js";
 import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
-import { showTooltip, hideTooltip } from "../components/tooltip.js";
 
 const currencyContainer = createContainer("Small", "");
 currencyContainer.id = "currencyWidget";
@@ -20,14 +19,53 @@ function currencyButtonEventListeners() {
 
 function percentageEventListeners() {
   const percentageChangeElement = document.getElementById("percentageChange");
-  percentageChangeElement.addEventListener("mouseover", function(event) {
+
+  percentageChangeElement.addEventListener("mouseover", function (event) {
     const currenciesData = getParsedData("currencies");
     const lastUpdated = currenciesData[0].lastUpdated;
     const formattedLastUpdated = formatLastUpdate(lastUpdated);
     const content = `Last updated: <span class="currency--tooltip-text-accent">${formattedLastUpdated}</span>`;
     showTooltip(content, event);
   });
-  percentageChangeElement.addEventListener("mouseout", hideTooltip);
+
+  percentageChangeElement.addEventListener("mouseout", function () {
+    hideTooltip();
+  });
+}
+
+function showTooltip(content, event) {
+  const tooltip = document.createElement("div");
+  tooltip.innerHTML = content;
+  tooltip.classList.add("tooltip");
+
+  tooltip.style.left = `${event.clientX}px`;
+  tooltip.style.top = `${event.clientY}px`;
+
+  document.body.appendChild(tooltip);
+
+  document.addEventListener("click", function hideTooltipOnClick(event) {
+    if (
+      !event.target.classList.contains("currency--percentage") &&
+      !event.target.classList.contains("tooltip")
+    ) {
+      hideTooltip();
+      document.removeEventListener("click", hideTooltipOnClick);
+    }
+  });
+
+  window.addEventListener("scroll", hideTooltipOnScroll);
+}
+
+function hideTooltip() {
+  const tooltip = document.querySelector(".tooltip");
+  if (tooltip) {
+    tooltip.remove();
+  }
+}
+
+function hideTooltipOnScroll() {
+  hideTooltip();
+  window.removeEventListener("scroll", hideTooltipOnScroll);
 }
 
 function formatLastUpdate(data) {

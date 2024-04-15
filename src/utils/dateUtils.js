@@ -20,9 +20,13 @@ export function getWeeksInYear(year) {
 
 export function getWeekNumber(date) {
   const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+  let firstDayOfWeek = firstDayOfYear.getDay();
+  if (firstDayOfWeek === 0) firstDayOfWeek = 7;
+
   const millisecondsInDay = 86400000;
   const daysOffset = (date - firstDayOfYear) / millisecondsInDay;
-  const weekNumber = Math.ceil((daysOffset + firstDayOfYear.getDay() + 1) / 7);
+
+  const weekNumber = Math.ceil((daysOffset + firstDayOfWeek) / 7);
   return weekNumber;
 }
 

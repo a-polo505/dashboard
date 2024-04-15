@@ -5,8 +5,8 @@ export async function checkIPRestrictions(ip) {
   console.log(location);
 
   if (location && location.country === "CZ") {
-    return true;
-  } else {
     return false;
+  } else {
+    return true;
   }
 }

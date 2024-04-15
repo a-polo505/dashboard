@@ -44,7 +44,7 @@ export async function loadPageContent() {
 
     if (data.isAllowed) {
       displayPageContent();
-      await fetchDataAndDisplay();
+      fetchDataAndDisplay();
     } else {
       console.log(
         "Access denied. You do not have permission to access this page.",
@@ -57,17 +57,22 @@ export async function loadPageContent() {
 
 function displayPageContent() {
   const defaultContainerContent = '<p class="default-text-style">Soon 🛠</p>';
+
   const widgetWeekContainer = createContainer("Small");
   widgetWeekContainer.classList.add("week-widget-container");
   document.getElementById("col-2").appendChild(widgetWeekContainer);
+
   const widgetWeekContent = renderWeekWidgetContent();
   widgetWeekContainer.appendChild(widgetWeekContent);
+
   const defaultContainer2 = createContainer("Small", defaultContainerContent);
   defaultContainer2.classList.add("sky-color");
   document.getElementById("col-2").appendChild(defaultContainer2);
+
   const defaultContainer3 = createContainer("Small", defaultContainerContent);
   defaultContainer3.classList.add("green-color");
   document.getElementById("col-3").appendChild(defaultContainer3);
+
   const calendarContainerContent = renderDateContainer();
   const widgetCalendarContainer = createContainer(
     "Small",
@@ -75,6 +80,7 @@ function displayPageContent() {
   );
   widgetCalendarContainer.classList.add("calendar-widget-container");
   document.getElementById("col-1").appendChild(widgetCalendarContainer);
+
   const defaultContainer5 = createContainer("Small", defaultContainerContent);
   defaultContainer5.classList.add("blue-color");
   document.getElementById("col-3").appendChild(defaultContainer5);

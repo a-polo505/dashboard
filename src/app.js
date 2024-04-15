@@ -35,7 +35,7 @@ import { renderWeekWidgetContent } from "./utils/displayWeeksUtils.js";
 // defaultContainer5.classList.add("blue-color");
 // document.getElementById("col-3").appendChild(defaultContainer5);
 
-async function loadPageContent() {
+export async function loadPageContent() {
   try {
     const response = await fetch("/api/protected-routes");
     const data = await response.json();
@@ -49,7 +49,7 @@ async function loadPageContent() {
       );
     }
   } catch (error) {
-    console.error("Error loading page content:", error);
+    console.error(error);
   }
 }
 

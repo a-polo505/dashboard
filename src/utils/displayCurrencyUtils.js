@@ -3,6 +3,7 @@ import { showContextMenu } from "../components/contextMenu.js";
 import { createLoadingSpinner, showLoader } from "../components/spinner.js";
 import { getParsedData } from "./storageUtils.js";
 import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
+import { showTooltip, hideTooltip } from "../components/tooltip.js";
 
 const currencyContainer = createContainer("Small", "");
 currencyContainer.id = "currencyWidget";
@@ -12,41 +13,21 @@ document.getElementById("col-1").appendChild(currencyContainer);
 const loadingSpinner = createLoadingSpinner();
 currencyContainer.appendChild(loadingSpinner);
 
-function addEventListeners() {
+function currencyButtonEventListeners() {
   const currencyPairButton = document.getElementById("currencyPair");
   currencyPairButton.addEventListener("click", showContextMenu);
-
-  const percentageChangeElement = document.getElementById("percentageChange");
-  percentageChangeElement.addEventListener("mouseover", showTooltip);
-  console.log("percentageChangeElement mouseover");
-  percentageChangeElement.addEventListener("mouseout", hideTooltip);
-  console.log("percentageChangeElement mouseout");
-
-  document.addEventListener("click", function hideTooltipOnClick(event) {
-    console.log("percentageChangeElement click");
-    if (!event.target.classList.contains("currency--percentage")) {
-      hideTooltip();
-    }
-  });
-
-  window.addEventListener("scroll", hideTooltipOnScroll);
 }
 
-function showTooltip(event) {
-  const currenciesData = getParsedData("currencies");
-  const lastUpdated = currenciesData[0].lastUpdated;
-  const formattedLastUpdated = formatLastUpdate(lastUpdated);
-
-  const tooltip = document.createElement("div");
-  tooltip.innerHTML = `Last updated: <span class="currency--tooltip-text-accent">${formattedLastUpdated}</span>`;
-  tooltip.classList.add("tooltip");
-
-  tooltip.style.left = `${event.clientX}px`;
-  tooltip.style.top = `${event.clientY}px`;
-
-  document.body.appendChild(tooltip);
-
-  window.addEventListener("scroll", hideTooltipOnScroll);
+function percentageEventListeners() {
+  const percentageChangeElement = document.getElementById("percentageChange");
+  percentageChangeElement.addEventListener("mouseover", function(event) {
+    const currenciesData = getParsedData("currencies");
+    const lastUpdated = currenciesData[0].lastUpdated;
+    const formattedLastUpdated = formatLastUpdate(lastUpdated);
+    const content = `Last updated: <span class="currency--tooltip-text-accent">${formattedLastUpdated}</span>`;
+    showTooltip(content, event);
+  });
+  percentageChangeElement.addEventListener("mouseout", hideTooltip);
 }
 
 function formatLastUpdate(data) {
@@ -62,21 +43,10 @@ function formatLastUpdate(data) {
   return new Date(data).toLocaleString("en-US", options);
 }
 
-function hideTooltip() {
-  const tooltip = document.querySelector(".tooltip");
-  if (tooltip) {
-    tooltip.remove();
-  }
-}
-
-function hideTooltipOnScroll() {
-  hideTooltip();
-  window.removeEventListener("scroll", hideTooltipOnScroll);
-}
-
 export function renderCurrencyContainer(content) {
   currencyContainer.innerHTML = content;
-  addEventListeners();
+  currencyButtonEventListeners();
+  percentageEventListeners();
 }
 
 document.addEventListener("currencyChange", (event) => {

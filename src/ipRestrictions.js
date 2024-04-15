@@ -4,7 +4,7 @@ export async function checkIPRestrictions(ip) {
   const location = await geoip.lookup(ip);
   console.log(location);
 
-  if (location && location.country === "GR") {
+  if (location && location.country === "CZ") {
     return true;
   } else {
     return false;

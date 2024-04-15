@@ -5,10 +5,12 @@
 @import url("animation.css");
 @import url("container.css");
 @import url("calendar-widget.css");
+@import url("weeks-widget.css");
 
 :root {
-  --background-color: #f3f5f7;
-  --text-black: #292929;
+  --background-color: rgb(234, 237, 255);
+  --background-color-400: rgb(243, 245, 247);
+  --text-black: rgb(41, 41, 41);
   --text-gray-400: rgb(156, 163, 175);
   --text-gray-500: rgb(107 114 128);
 }
@@ -55,12 +57,20 @@ a {
   margin: 0;
 }
 
+.p-0 {
+  padding: 0;
+}
+
 .p-16 {
   padding: 16px;
 }
 
 .p-24 {
   padding: 24px;
+}
+
+.m-0 {
+  margin: 0;
 }
 
 .mt-0 {

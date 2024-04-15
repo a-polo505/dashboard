@@ -1,0 +1,65 @@
+.week-widget-container {
+  background: linear-gradient(140deg, #1a0654, #400fab);
+}
+
+.week-widget-container.gradient-border:after {
+  background: linear-gradient(
+    140deg,
+    rgba(25, 6, 84, 0.86),
+    rgba(64, 15, 171, 0.822)
+  );
+}
+
+.grid-item {
+  width: 10px;
+  height: 10px;
+  border-radius: 1px;
+  background-color: rgba(236, 251, 255, 0.1);
+}
+
+.grid-item:hover {
+  border: 1px solid rgba(236, 251, 255, 0.5);
+}
+
+.past-week {
+  background-color: rgba(236, 251, 255, 0.5);
+}
+
+.current-week {
+  background-color: rgba(236, 251, 255, 0.9);
+}
+
+.days-left {
+  font-size: 14px;
+}
+
+.text-accent {
+  color: #72d6f1;
+}
+
+.tooltip {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 10px;
+  z-index: 9999;
+}
+
+@media screen and (max-width: 480px) {
+  .weeks-grid {
+    gap: 6px !important;
+  }
+  .grid-item {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+  }
+  .tooltip {
+    font-size: 12px;
+  }
+  .days-left {
+    font-size: 18px;
+  }
+}

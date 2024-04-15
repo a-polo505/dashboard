@@ -168,8 +168,7 @@ const getCurrenciesArray = () => {
 
 const createCurrencyList = () => {
   const list = document.createElement("ul");
-  list.classList.add("flex");
-  list.classList.add("flex-col");
+  list.classList.add("flex", "flex-col");
 
   list.setAttribute("tabindex", "0");
 

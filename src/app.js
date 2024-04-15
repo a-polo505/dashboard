@@ -49,6 +49,8 @@ export async function loadPageContent() {
       );
     }
   } catch (error) {
+    console.log('Data:', data);
+    console.log('Data type:', typeof data);
     console.error(error);
   }
 }

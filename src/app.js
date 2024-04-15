@@ -39,6 +39,8 @@ export async function loadPageContent() {
   try {
     const response = await fetch("/api/protected-routes");
     const data = await response.json();
+    console.log("Data:", data);
+    console.log("Data type:", typeof data);
 
     if (data.isAllowed) {
       displayPageContent();
@@ -49,8 +51,6 @@ export async function loadPageContent() {
       );
     }
   } catch (error) {
-    console.log('Data:', data);
-    console.log('Data type:', typeof data);
     console.error(error);
   }
 }

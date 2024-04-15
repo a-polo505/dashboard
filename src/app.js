@@ -2,6 +2,7 @@ import { createContainer } from "./components/container.js";
 import { fetchDataAndDisplay } from "./utils/fetchUtils.js";
 import { renderDateContainer } from "./utils/widgetDateRender.js";
 import { renderWeekWidgetContent } from "./utils/displayWeeksUtils.js";
+//import { checkIPRestrictions } from "./ipRestrictions.js";
 
 const defaultContainerContent = '<p class="default-text-style">Soon 🛠</p>';
 

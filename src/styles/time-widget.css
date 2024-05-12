@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+.time-widget-container {
+  padding: 12px !important;
+  background: linear-gradient(180deg, #363a7e, #000223);
+  font-family: "Montserrat", sans-serif;
+}
+
+.time-widget-container:after {
+  background: linear-gradient(140deg, rgba(54, 58, 126, 0.8), #363a7e);
+}
+
+.time-widget-container .label {
+  color: #d9c4ff;
+  font-size: 12px;
+}
+
+.time-widget-container #svgText {
+  font-weight: 600;
+  font-size: 14px;
+  fill: #ffffff;
+}
+
+@media screen and (max-width: 480px) {
+  .time-widget-container .label {
+    font-size: 14px;
+  }
+}

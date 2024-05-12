@@ -1,0 +1,113 @@
+.air-widget-container {
+  background: linear-gradient(140deg, #2066a2, #7ebceb);
+}
+
+.air-widget-container:after {
+  background: linear-gradient(140deg, rgba(32, 101, 162, 0.75), #7ebceb);
+}
+
+.air-widget-container--hours {
+  font-size: 64px;
+  font-weight: 800;
+}
+
+.air-widget-container--lable {
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+}
+
+.air-widget-container--text {
+  font-size: 14px;
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.air-widget-container--icon {
+  opacity: 0.8;
+}
+
+.smoke-box-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 26px;
+  background-size: cover;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.smoke-box-container .smoke {
+  position: absolute;
+  top: -20%;
+  left: -50%;
+  transform: translate3d(0, 0, 0) rotate(0.01deg);
+  width: 200%;
+  height: 100%;
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/537051/smoke-min.png")
+    center center no-repeat;
+  background-size: cover;
+  z-index: -10;
+  opacity: 0.5;
+  animation: smoke 120s infinite alternate;
+}
+
+.smoke-box-container .smoke-background {
+  position: absolute;
+  top: 0%;
+  left: -30%;
+  transform: translate3d(0, 0, 0) rotate(0.01deg);
+  width: 295%;
+  height: 100%;
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/537051/smoke-min.png")
+    center center no-repeat;
+  background-size: cover;
+  z-index: -10;
+  opacity: 0.2;
+  animation: smoke-background 200s infinite alternate;
+}
+
+@keyframes smoke {
+  25% {
+    transform: translate3d(100px, 0, 0) rotate(0.01deg);
+  }
+  50% {
+    transform: translate3d(75px, -5px, 0) rotate(0.01deg);
+  }
+  75% {
+    transform: translate3d(45px, -10px, 0) rotate(0.01deg);
+  }
+  100% {
+    transform: translate3d(25px, -15px, 0) rotate(0.01deg);
+  }
+}
+
+@keyframes smoke-background {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .air-widget-container--text {
+    font-size: 18px;
+  }
+  .air-widget-container--hours {
+    font-size: 80px;
+  }
+  .air-widget-container--lable {
+    font-size: 16px;
+  }
+  .air-widget-container--icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}

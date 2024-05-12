@@ -1,6 +1,9 @@
-import { createContainer } from "../components/container.js";
-import { showContextMenu } from "../components/currencyContextMenu.js";
-import { createLoadingSpinner, showLoader } from "../components/spinner.js";
+import { createContainer } from "./container.js";
+import { showContextMenu } from "../components/ui/contextMenu/currencyContextMenu.js";
+import {
+  createLoadingSpinner,
+  showLoader,
+} from "../components/ui/spinner/spinner.js";
 import { getParsedData } from "./storageUtils.js";
 import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
 

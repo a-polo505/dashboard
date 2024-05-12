@@ -110,4 +110,7 @@
     width: 24px;
     height: 24px;
   }
+  .smoke-box-container {
+    border-radius: 33px;
+  }
 }

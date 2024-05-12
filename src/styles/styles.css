@@ -4,8 +4,10 @@
 @import url("context-menu.css");
 @import url("animation.css");
 @import url("container.css");
-@import url("calendar-widget.css");
+@import url("date-widget.css");
 @import url("weeks-widget.css");
+@import url("air-widget.css");
+@import url("time-widget.css");
 
 :root {
   --background-color: rgb(234, 237, 255);

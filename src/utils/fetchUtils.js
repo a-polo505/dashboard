@@ -1,5 +1,5 @@
 import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
-import { showLoader } from "../components/spinner.js";
+import { showLoader } from "../components/ui/spinner/spinner.js";
 import { getParsedData } from "./storageUtils.js";
 import { renderCurrencyContainer } from "./displayCurrencyUtils.js";
 

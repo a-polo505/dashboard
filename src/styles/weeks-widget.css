@@ -1,8 +1,12 @@
-.week-widget-container {
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+
+.weeks-widget-container {
   background: linear-gradient(140deg, #1a0654, #400fab);
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
 }
 
-.week-widget-container.gradient-border:after {
+.weeks-widget-container.gradient-border:after {
   background: linear-gradient(
     140deg,
     rgba(25, 6, 84, 0.86),
@@ -34,6 +38,7 @@
 }
 
 .text-accent {
+  line-height: 1.25;
   color: #72d6f1;
 }
 

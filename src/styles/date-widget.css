@@ -1,12 +1,12 @@
-.calendar-widget-container {
+.date-widget-container {
   background: linear-gradient(180deg, #042742, #05172f);
 }
 
-.calendar-widget-container.gradient-border:after {
+.date-widget-container.gradient-border:after {
   background: linear-gradient(180deg, #031b30, #062b4c);
 }
 
-.calendar--month {
+.date--month {
   padding: 0;
   margin: 0;
   font-size: 14px;
@@ -14,7 +14,7 @@
   color: #999ab6;
 }
 
-.calendar--day {
+.date--day {
   margin: 0;
   padding: 0;
   font-size: 64px;
@@ -23,10 +23,10 @@
 }
 
 @media screen and (max-width: 480px) {
-  .calendar--day {
+  .date--day {
     font-size: 80px;
   }
-  .calendar--month {
+  .date--month {
     font-size: 18px;
   }
 }

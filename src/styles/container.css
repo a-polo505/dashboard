@@ -49,14 +49,6 @@
   background-size: 300% 300%;
 }
 
-.sky-color {
-  background: linear-gradient(140deg, #2066a2, #7ebceb);
-}
-
-.sky-color.gradient-border:after {
-  background: linear-gradient(140deg, #2066a2, #7ebceb);
-}
-
 .blue-color {
   background: #14309d;
 }

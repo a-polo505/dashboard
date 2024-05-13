@@ -122,6 +122,7 @@ class TimeWidgetRenderer {
     );
     this.tooltipManager.handleMouseLeave(path);
     this.tooltipManager.handleScroll();
+    this.tooltipManager.handleTooltipClick();
     return path;
   }
 

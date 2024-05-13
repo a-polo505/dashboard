@@ -118,7 +118,7 @@ class TimeWidgetRenderer {
     const leftPercentage = 100 - remainingPercentage;
     this.tooltipManager.handleMouseOver(
       path,
-      `Remaining time until end of day: ${leftPercentage}%`,
+      `Remaining time until end of day: ${leftPercentage.toFixed(2)}%`,
     );
     this.tooltipManager.handleMouseLeave(path);
     this.tooltipManager.handleScroll();

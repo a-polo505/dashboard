@@ -14,14 +14,17 @@ class TimeWidget {
     this.timeWidgetContainer.addToDOM("col-3");
 
     this.renderWidgetContent();
+
+    setInterval(() => {
+        this.renderWidgetContent();
+      }, 5 * 60 * 1000); 
   }
 
   renderWidgetContent() {
     const remainingPercentage = getRemainingPercentage();
-
     const widgetContent = this.timeWidgetRenderer.render(remainingPercentage);
-
-    this.timeWidgetContainer.appendContent(widgetContent);
+        this.timeWidgetContainer.container.innerHTML = '';
+        this.timeWidgetContainer.appendContent(widgetContent);
   }
 }
 

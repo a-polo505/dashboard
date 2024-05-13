@@ -49,8 +49,7 @@
   transform: translate3d(0, 0, 0) rotate(0.01deg);
   width: 200%;
   height: 100%;
-  background: url("../images/img-smoke.png")
-    center center no-repeat;
+  background: url("../images/img-smoke.png") center center no-repeat;
   background-size: cover;
   z-index: -10;
   opacity: 0.5;
@@ -64,8 +63,7 @@
   transform: translate3d(0, 0, 0) rotate(0.01deg);
   width: 295%;
   height: 100%;
-  background: url("../images/img-smoke.png")
-    center center no-repeat;
+  background: url("../images/img-smoke.png") center center no-repeat;
   background-size: cover;
   z-index: -10;
   opacity: 0.2;

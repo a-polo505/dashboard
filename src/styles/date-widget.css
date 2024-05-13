@@ -1,11 +1,14 @@
 .date-widget-container {
-  background: linear-gradient(180deg, #042742, #05172f);
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.039) 1px, rgba(0, 0, 0, 0) 1px);
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.039) 1px,
+    rgba(0, 0, 0, 0) 1px
+  );
   background-size: 1rem 1rem;
 }
 
 .date-widget-container.gradient-border:after {
-  background: linear-gradient(180deg, #031b30, #062b4c);
+  background: linear-gradient(180deg, #042742, #05172f);
 }
 
 .date--month {

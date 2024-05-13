@@ -1,6 +1,11 @@
 import { getCurrentDate } from "../../../utils/dateUtils.js";
+import { TooltipManager } from "../../ui/tooltip/TooltipManager.js";
 
 class DateWidgetRenderer {
+  constructor() {
+    this.tooltipManager = new TooltipManager();
+  }
+
   render() {
     const container = document.createElement("div");
     container.classList.add(
@@ -22,7 +27,20 @@ class DateWidgetRenderer {
         <p class="date--day">${day}</p>
     `;
 
+    const todaysDateText = currentDate.toLocaleString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
     container.innerHTML = containerContent;
+    const dayElement = container.querySelector(".date--day");
+
+    this.tooltipManager.handleMouseOver(dayElement, `${todaysDateText}`);
+    this.tooltipManager.handleMouseLeave(dayElement);
+    this.tooltipManager.handleScroll();
+    this.tooltipManager.handleTooltipClick();
 
     return container;
   }

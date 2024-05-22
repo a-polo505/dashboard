@@ -2,6 +2,15 @@ export function getCurrentDate() {
   return new Date();
 }
 
+export function diffDays(selectedDate) {
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  selectedDate.setHours(0, 0, 0, 0);
+  const diffTime = selectedDate - currentDate;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
+
 export function getWeeksInYear(year) {
   const firstDayOfYear = new Date(year, 0, 1);
   const lastDayOfYear = new Date(year, 11, 31);

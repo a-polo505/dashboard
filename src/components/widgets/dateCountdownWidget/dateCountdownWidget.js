@@ -6,7 +6,7 @@ class DateCountdownWidget {
     this.dateCountDownRenderer = new DateCountdownRenderer();
     this.dateCountDownContainer = new WidgetContainer(
       this.dateCountDownRenderer,
-      "date-widget-container",
+      "datecount-widget-container",
     );
 
     this.dateCountDownContainer.addToDOM("col-1");

@@ -1,0 +1,59 @@
+.datecount-widget-container {
+  background: linear-gradient(180deg, #102651, #0f1f48);
+  padding: 12px !important;
+  font-family: "Montserrat", sans-serif;
+  overflow: hidden;
+}
+
+.datecount-widget-container .days-label {
+  font-size: 10px;
+  color: #74b1ff;
+  margin: 0;
+  padding: 0;
+}
+
+.datecount-widget-container .days-left {
+  font-size: 48px;
+  margin: -12px 0px 0px 0px;
+  padding: 0;
+  font-weight: 500;
+}
+
+.datecount-widget-container .button-select-day {
+  background: linear-gradient(180deg, #2788ff, #1672f9);
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 8%) !important;
+  border-radius: 64px !important;
+  font-family: "Montserrat", sans-serif !important;
+  font-weight: 500;
+  font-size: 12px !important;
+  width: 100%;
+}
+
+.datecount-widget-container .button-select-day:hover {
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(180deg, #3c93fd, #1672f9);
+}
+
+@media screen and (max-width: 480px) {
+  .datecount-widget-container .days-left {
+    font-size: 80px;
+  }
+  .datecount-widget-container .days-label {
+    font-size: 16px;
+    color: #74b1ff;
+  }
+  .datecount-widget-container .button-select-day {
+    font-size: 16px !important;
+    height: 56px;
+  }
+
+  .datecount-widget-container #selected-date {
+    font-size: 16px;
+  }
+
+  .bi-calendar-heart-fill {
+    width: 18px;
+    height: 18px;
+  }
+}

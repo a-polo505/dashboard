@@ -396,9 +396,6 @@
 .flatpickr-current-month .flatpickr-monthDropdown-months:active {
   outline: none;
 }
-.flatpickr-current-month .flatpickr-monthDropdown-months:hover {
-  /* background: rgba(81, 62, 62, 0.05); */
-}
 .flatpickr-current-month
   .flatpickr-monthDropdown-months
   .flatpickr-monthDropdown-month {

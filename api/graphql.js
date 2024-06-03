@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server-micro');
+import { ApolloServer, gql } from 'apollo-server-micro';
 
 const typeDefs = gql`
   type Query {
@@ -12,6 +12,6 @@ const resolvers = {
   },
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const apolloServer = new ApolloServer({ typeDefs, resolvers });
 
-module.exports = server.createHandler({ path: '/api/graphql' });
+export default apolloServer.createHandler({ path: '/api/graphql' });

@@ -9,7 +9,7 @@ const typeDefs = gql`
     hello1: String
   }
 
-  type Currency {
+  type CurrencyDiff {
     hello2: String
   }
 

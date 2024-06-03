@@ -43,7 +43,7 @@ export async function fetchDataAndDisplay() {
       await fetchAndUpdateData();
     }
 
-    setInterval(fetchAndUpdateData, 5 * 60 * 1000);
+    setInterval(fetchAndUpdateData, 60 * 60 * 1000);
   } catch (error) {
     console.error("Error fetching data:", error);
   }

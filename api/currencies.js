@@ -14,13 +14,13 @@ MongoClient.connect(uri)
       .db("yourDatabaseName")
       .collection("currenciesDiff");
 
-    app.get("/api/currencies", aj, async (req, res) => {
+    app.get("/api/currencies", async (req, res) => {
       try {
-        // const decision = await aj.protect(req);
-        // if (decision.isDenied()) {
-        //   res.status(403).json({ error: "Forbidden" });
-        //   return;
-        // }
+        const decision = await aj.protect(req);
+        if (decision.isDenied()) {
+          res.status(403).json({ error: "Forbidden" });
+          return;
+        }
 
         const currenciesData = await collection.find({}).toArray();
         const currenciesDiffData = await currenciesDiffCollection

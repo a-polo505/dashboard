@@ -1,7 +1,41 @@
 import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
 import { showLoader } from "../components/ui/spinner/spinner.js";
 import { getParsedData } from "./storageUtils.js";
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import { renderCurrencyContainer } from "./displayCurrencyUtils.js";
+
+const client = new ApolloClient({
+  uri: '/api/graphql',
+  cache: new InMemoryCache(),
+});
+
+const GET_CURRENCIES = gql`
+  query GetCurrencies {
+    currencies {
+      id,
+      data
+    }
+    currenciesDiff {
+      id,
+      data
+    }
+  }
+`;
+
+export async function fetchCurrenciesFromServer() {
+  try {
+    const { data } = await client.query({
+      query: GET_CURRENCIES,
+    });
+
+    console.log("Currencies from server:", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching currencies from server:", error);
+    return null;
+  }
+}
+fetchCurrenciesFromServer();
 
 export async function fetchAndUpdateData() {
   try {

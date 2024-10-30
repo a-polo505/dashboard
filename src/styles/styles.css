@@ -13,7 +13,7 @@
 @import url("quote-widget.css");
 
 :root {
-  --background-color: rgb(234, 237, 255);
+  --background-color: rgb(235, 237, 253);
   --background-color-400: rgb(243, 245, 247);
   --text-black: rgb(41, 41, 41);
   --text-gray-400: rgb(156, 163, 175);

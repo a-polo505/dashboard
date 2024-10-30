@@ -8,6 +8,7 @@
   "plugins": ["standard", "prettier", "jest"],
   "globals": {
     "localStorage": true,
+    "sessionStorage": true,
     "flatpickr": true
   }
 }

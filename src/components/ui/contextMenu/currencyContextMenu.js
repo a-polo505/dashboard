@@ -31,7 +31,7 @@ const closeContextMenu = () => {
   }
 };
 
-const createAnimationClocalStorageircle = () => {
+const createAnimationCircle = () => {
   const animationCircle = document.createElement("div");
   animationCircle.classList.add("animation-circle");
 

@@ -31,7 +31,7 @@ const closeContextMenu = () => {
   }
 };
 
-const createAnimationCircle = () => {
+const createAnimationClocalStorageircle = () => {
   const animationCircle = document.createElement("div");
   animationCircle.classList.add("animation-circle");
 
@@ -76,7 +76,7 @@ const createCurrencyItem = (currencyCode) => {
 
   currencyItem.appendChild(currencyButton);
   currencyItem.addEventListener("click", () => {
-    localStorage.setItem("userCurrency", currencyCode);
+    sessionStorage.setItem("userCurrency", currencyCode);
     triggerCurrencyChangeEvent(currencyCode);
     closeContextMenu();
   });
@@ -162,7 +162,7 @@ const restrictInput = (event) => {
 };
 
 const getCurrenciesArray = () => {
-  const storedData = localStorage.getItem("currencies");
+  const storedData = sessionStorage.getItem("currencies");
   return storedData ? JSON.parse(storedData) : [];
 };
 

@@ -14,8 +14,11 @@ export async function fetchAndUpdateData() {
 
     showLoader();
 
-    localStorage.setItem("currencies", JSON.stringify(data.currencies));
-    localStorage.setItem("currenciesDiff", JSON.stringify(data.currenciesDiff));
+    sessionStorage.setItem("currencies", JSON.stringify(data.currencies));
+    sessionStorage.setItem(
+      "currenciesDiff",
+      JSON.stringify(data.currenciesDiff),
+    );
     const currencyContainerContent = widgetCurrencyRender(
       data.currencies,
       data.currenciesDiff,

@@ -76,7 +76,7 @@ const createCurrencyItem = (currencyCode) => {
 
   currencyItem.appendChild(currencyButton);
   currencyItem.addEventListener("click", () => {
-    sessionStorage.setItem("userCurrency", currencyCode);
+    localStorage.setItem("userCurrency", currencyCode);
     triggerCurrencyChangeEvent(currencyCode);
     closeContextMenu();
   });

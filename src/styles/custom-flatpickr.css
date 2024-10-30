@@ -202,7 +202,7 @@
 .flatpickr-months .flatpickr-prev-month.flatpickr-next-month,
 .flatpickr-months .flatpickr-next-month.flatpickr-next-month {
   right: 0;
-} 
+}
 .flatpickr-months .flatpickr-prev-month:hover,
 .flatpickr-months .flatpickr-next-month:hover {
   color: #959ea9;
@@ -800,7 +800,7 @@ span.flatpickr-weekday {
     transform: translate3d(0, 0, 0);
   }
 }
-@media screen and (-webkit-min-device-pixel-ratio:0) {
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
   .flatpickr-current-month .flatpickr-monthDropdown-months {
     background: none;
     font-size: 16px;

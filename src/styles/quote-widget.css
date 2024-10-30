@@ -1,7 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Catamaran:wght@700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Catamaran:wght@700&display=swap");
 
 .quote-widget-container:after {
-  background: linear-gradient(180deg, #FFD952 0%, #FFC801 24%, #dfdfdf 24%, #FFFFFF 25% ,#FFFFFF 64%, #efefef 64%, #FFFFFF 65%, #FFFFFF 76%, #efefef 76%, #FFFFFF 77%, #FFFFFF 88%, #efefef 88%, #FFFFFF 89%, #FFFDF1); 
+  background: linear-gradient(
+    180deg,
+    #ffd952 0%,
+    #ffc801 24%,
+    #dfdfdf 24%,
+    #ffffff 25%,
+    #ffffff 64%,
+    #efefef 64%,
+    #ffffff 65%,
+    #ffffff 76%,
+    #efefef 76%,
+    #ffffff 77%,
+    #ffffff 88%,
+    #efefef 88%,
+    #ffffff 89%,
+    #fffdf1
+  );
 }
 
 .quote-widget-container--symbol {
@@ -9,18 +25,18 @@
   font-family: "Catamaran", sans-serif;
   font-optical-sizing: auto;
   line-height: 30px;
-  color: #2E2E2E;
+  color: #2e2e2e;
 }
 
 .quote-widget-container--text-accent {
-  color: #D03860;
+  color: #d03860;
 }
 
 .quote-widget-container--text {
   font-size: 18px;
   font-family: "Rubik", sans-serif;
   font-optical-sizing: auto;
-  color: #2E2E2E;
+  color: #2e2e2e;
 }
 
 @media screen and (max-width: 480px) {
@@ -32,6 +48,22 @@
     line-height: 40px;
   }
   .quote-widget-container:after {
-    background: linear-gradient(180deg, #FFD952 0%, #FFC801 24%, #dfdfdf 24%, #FFFFFF 25%, #FFFFFF 63%, #efefef 63%, #FFFFFF 64%, #FFFFFF 74%, #efefef 74%, #FFFFFF 75%, #FFFFFF 85%, #efefef 85%, #FFFFFF 86%, #FFFDF1); 
+    background: linear-gradient(
+      180deg,
+      #ffd952 0%,
+      #ffc801 24%,
+      #dfdfdf 24%,
+      #ffffff 25%,
+      #ffffff 63%,
+      #efefef 63%,
+      #ffffff 64%,
+      #ffffff 74%,
+      #efefef 74%,
+      #ffffff 75%,
+      #ffffff 85%,
+      #efefef 85%,
+      #ffffff 86%,
+      #fffdf1
+    );
   }
 }

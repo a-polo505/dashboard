@@ -6,7 +6,7 @@ class QuoteWidget {
     this.quoteWidgetRenderer = new QuoteWidgetRenderer();
     this.quoteWidgetContainer = new WidgetContainer(
       this.quoteWidgetRenderer,
-      "quote-widget-container"
+      "quote-widget-container",
     );
 
     this.quoteWidgetContainer.addToDOM("col-3");

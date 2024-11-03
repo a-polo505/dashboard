@@ -9,7 +9,7 @@ class AirWidget {
       "air-widget-container",
     );
 
-    this.airWidgetContainer.addToDOM("col-2");
+    this.airWidgetContainer.addToDOM("col-3");
     this.airWidgetContainer.renderWidgetContent();
   }
 }

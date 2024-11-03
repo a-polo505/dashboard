@@ -1,0 +1,190 @@
+@import url("https://fonts.googleapis.com/css2?family=Catamaran:wght@700&family=Heebo:wght@800,700,600,500&display=swap");
+
+.music-widget-container {
+  padding: 0 !important;
+  background: linear-gradient(180deg, #872116, #4a110a);
+  overflow: hidden;
+  position: relative;
+}
+
+.music-widget-container::after {
+  content: "";
+  position: absolute;
+  top: -50px;
+  left: -60px;
+  width: 140%;
+  height: 140%;
+  background: linear-gradient(180deg, #912418, #5b160d), 
+              url('data:image/svg+xml, %3Csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3E%3Cpath d="M0,30 Q15,45 30,30 T60,30" fill="none" stroke="%23ffffff" stroke-width="2" /%3E%3C/svg%3E');
+  background-size: 10px 10px;
+  background-position: center;
+  background-repeat: repeat;
+  transform: rotate(-45deg); 
+  opacity: 0.06; 
+  z-index: 0;
+  pointer-events: none; 
+}
+
+.lava-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -4px;
+  width: 30px;
+  height: 30px;
+  background-color: #e83b1f;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: bubbleMove 8s infinite ease-in-out;
+}
+
+.bubble.fast-bubble {
+  background-color: #ff3700;
+}
+
+.music-widget-container .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #731b11, #5e160e);
+  height: 56px;
+  border-radius: 21px !important;
+  font-family: "Heebo", sans-serif !important;
+  font-weight: 500;
+  font-size: 12px !important;
+  width: 175px;
+  z-index: 1;
+}
+
+.music-widget-container .button:hover {
+  background: linear-gradient(180deg, #aa1a0f, #5e160e);
+}
+
+.music-icon-box {
+  padding-top: 12px;
+  padding-right: 12px;
+  z-index: 1;
+}
+
+.music-widget-container .button::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  background-image: url("../images/youtubemusicIcon.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+}
+
+.music-widget-container .text {
+  font-family: "Heebo", sans-serif;
+  font-weight: 600;
+  font-optical-sizing: auto;
+  font-size: 28px;
+  color: #a4281a;
+  text-align: center;
+  z-index: 1;
+}
+
+@keyframes bubbleMove {
+  0% {
+    transform: translateX(0) translateY(0);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(60px) translateY(-500px);
+    opacity: 0;
+  }
+}
+
+.bubble:nth-child(1) {
+  width: 25px;
+  height: 25px;
+  left: 20%;
+  animation-duration: 5s;
+  background-color: #e72c0e;
+}
+
+.bubble:nth-child(2) {
+  width: 35px;
+  height: 35px;
+  left: 60%;
+  animation-duration: 7s;
+  animation-delay: 1s;
+  background-color: #ea4126;
+}
+
+.bubble:nth-child(3) {
+  width: 20px;
+  height: 20px;
+  left: 40%;
+  animation-duration: 6s;
+  animation-delay: 2s;
+}
+
+.bubble:nth-child(4) {
+  width: 30px;
+  height: 30px;
+  left: 70%;
+  animation-duration: 4.5s;
+  animation-delay: 1.5s;
+}
+
+.bubble:nth-child(5) {
+  width: 45px;
+  height: 45px;
+  left: 35%;
+  animation-duration: 6.5s;
+  animation-delay: 0.5s;
+}
+
+.bubble:nth-child(6) {
+  width: 15px;
+  height: 15px;
+  left: 10%;
+  animation-duration: 6.5s;
+  animation-delay: 0.5s;
+  background-color: #e72c0e;
+}
+
+@media screen and (max-width: 480px) {
+  .music-widget-container .text {
+    font-size: 38px;
+  }
+
+  .music-icon-box {
+    padding-top: 16px;
+    padding-right: 16px;
+  }
+
+  .music-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .music-widget-container .button {
+    height: 72px;
+    border-radius: 21px;
+    font-size: 16px !important;
+    width: 240px;
+    font-weight: 500;
+  }
+
+  .music-widget-container::after {
+    top: -50px;
+    left: -60px;
+    width: 140%;
+    height: 140%;
+    background-size: 20px 20px;
+    opacity: 0.06; 
+  }
+}

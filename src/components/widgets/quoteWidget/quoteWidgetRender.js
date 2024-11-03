@@ -11,7 +11,7 @@ class QuoteWidgetRenderer {
 
     const containerContent = `
             <div class="quote-widget-container--symbol">”</div>
-            <div class="quote-widget-container--text"><span class="quote-widget-container--text-accent">Keep it simple,</span> brilliance lies in&nbspease</div>
+            <div class="quote-widget-container--text"><span class="quote-widget-container--text-accent">Keep it simple</span>, brilliance lies in&nbspease</div>
         `;
 
     container.innerHTML = containerContent;

@@ -6,13 +6,13 @@ class ButtonStyle {
       border: "none",
       cursor: "pointer",
       backgroundColor: "#007BFF",
-      color: "#FFF",
+      color: "#FFFFFF",
     };
   }
 
   static hover() {
     return {
-      backgroundColor: "#ffffff",
+      backgroundColor: "#FFFFFF",
     };
   }
 
@@ -24,7 +24,7 @@ class ButtonStyle {
 
   static focus() {
     return {
-      outline: "2px solid #80bdff",
+      outline: "2px solid #80BDFF",
       outlineOffset: "2px",
     };
   }

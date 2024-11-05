@@ -2,7 +2,7 @@
 
 .bookmarks-widget-container {
   padding: 0px !important;
-  background: #d5deff;
+  background: linear-gradient(180deg, #D5DEFF, #FFFFFF);
   position: relative;
 }
 

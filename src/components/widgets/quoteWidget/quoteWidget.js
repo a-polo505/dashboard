@@ -9,7 +9,7 @@ class QuoteWidget {
       "quote-widget-container",
     );
 
-    this.quoteWidgetContainer.addToDOM("col-4");
+    this.quoteWidgetContainer.addToDOM("col-3");
     this.quoteWidgetContainer.renderWidgetContent();
   }
 }

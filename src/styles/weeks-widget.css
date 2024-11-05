@@ -67,10 +67,10 @@
   .weeks-widget-container {
     padding: 20px;
   }
-  .weeks-grid {
+  .weeks-widget-container .weeks-grid {
     gap: 8px !important;
   }
-  .grid-item {
+  .weeks-widget-container .grid-item {
     width: 15px;
     height: 15px;
     border-radius: 4px;
@@ -78,7 +78,7 @@
   .tooltip {
     font-size: 12px;
   }
-  .days-left {
+  .weeks-widget-container .days-left {
     font-size: 18px;
   }
 }

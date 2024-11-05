@@ -4,7 +4,7 @@
     rgba(255, 255, 255, 0.03) 1px,
     rgba(0, 0, 0, 0) 1px
   );
-  background-size: .5rem .5rem;
+  background-size: 0.5rem 0.5rem;
 }
 
 .date-widget-container.gradient-border:after {
@@ -16,7 +16,7 @@
   margin: 0;
   font-size: 14px;
   font-weight: normal;
-  color: #FBDBC1;
+  color: #fbdbc1;
 }
 
 .date--day {
@@ -25,7 +25,7 @@
   font-size: 64px;
   font-weight: 800;
   color: #ff4f4f;
-  text-shadow: 0 2px 4px #00132E;
+  text-shadow: 0 2px 4px #00132e;
 }
 
 @media screen and (max-width: 480px) {

@@ -14,9 +14,9 @@ class AirWidgetRenderer {
               <div class="flex align-baseline air-widget-container--icon">
                   ${this.renderIcon()}
               </div>
-              <div class="flex align-baseline gap-4">
+              <div class="flex align-baseline gap-2">
                   <div class="air-widget-container--hours">${this.getHours()}</div>
-                  <div class="air-widget-container--lable">Hrs</div>
+                  <div class="air-widget-container--lable">Hours</div>
               </div>
           </div>
           <div class="air-widget-container--text">${this.getRecommendationText()}</div>

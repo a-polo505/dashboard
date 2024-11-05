@@ -46,7 +46,7 @@ class WeeksWidgetRenderer {
 
   renderGrid(weeksInYear, currentWeek) {
     const gridContainer = document.createElement("div");
-    gridContainer.classList.add("weeks-grid", "flex", "gap-4", "wrap");
+    gridContainer.classList.add("weeks-grid", "flex", "gap-5", "wrap");
 
     for (let week = 1; week <= weeksInYear; week++) {
       const gridItem = document.createElement("div");

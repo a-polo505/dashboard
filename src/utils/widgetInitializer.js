@@ -17,4 +17,4 @@ dashboard.addWidget(new TimeWidget());
 dashboard.addWidget(new DateCountdownWidget());
 dashboard.addWidget(new QuoteWidget());
 dashboard.addWidget(new MusicWidget());
-dashboard.addWidget(new BookmarksWidget)
+dashboard.addWidget(new BookmarksWidget());

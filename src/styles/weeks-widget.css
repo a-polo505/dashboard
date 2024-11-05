@@ -1,45 +1,56 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
 .weeks-widget-container {
-  background: linear-gradient(140deg, #1a0654, #400fab);
+  background: linear-gradient(180deg, #503392, #1e075b);
   font-family: "Rubik", sans-serif;
   font-optical-sizing: auto;
 }
 
 .weeks-widget-container.gradient-border::after {
   background: linear-gradient(
-    140deg,
-    rgba(25, 6, 84, 0.86),
-    rgba(64, 15, 171, 0.822)
+    180deg,
+    #ffffff,
+    #e17fff 50%,
+    #7c3bff 70%,
+    #390fa9
   );
 }
 
-.grid-item {
-  width: 10px;
-  height: 10px;
-  border-radius: 1px;
-  background-color: rgba(236, 251, 255, 0.1);
+.weeks-widget-container .grid-item {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
 }
 
-.grid-item:hover {
-  border: 1px solid rgba(236, 251, 255, 0.5);
+.weeks-widget-container .grid-item:hover {
+  border: 1px solid #ffffff;
 }
 
-.past-week {
-  background-color: rgba(236, 251, 255, 0.5);
+.weeks-widget-container .past-week {
+  background-color: #a99ce9;
+  box-shadow: 0px 1px 2px #1b0d62;
 }
 
-.current-week {
-  background-color: rgba(236, 251, 255, 0.9);
+.weeks-widget-container .future-week {
+  background-color: #492f83;
 }
 
-.days-left {
+.weeks-widget-container .current-week {
+  background-color: #dfdcf8;
+  box-shadow: 0px 1px 8px #1b0d62;
+}
+
+.weeks-widget-container .days-left {
   font-size: 14px;
+  font-weight: lighter;
+  color: #c6c0f2;
 }
 
 .text-accent {
   line-height: 1.25;
-  color: #42dfff;
+  font-weight: 400;
+  color: #ffffff;
+  text-shadow: 0 0px 1px #e17fff;
 }
 
 .tooltip {
@@ -53,13 +64,16 @@
 }
 
 @media screen and (max-width: 480px) {
+  .weeks-widget-container {
+    padding: 20px;
+  }
   .weeks-grid {
-    gap: 6px !important;
+    gap: 8px !important;
   }
   .grid-item {
-    width: 14px;
-    height: 14px;
-    border-radius: 2px;
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
   }
   .tooltip {
     font-size: 12px;

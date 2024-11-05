@@ -1,10 +1,10 @@
 .date-widget-container {
   background-image: radial-gradient(
     circle,
-    rgba(255, 255, 255, 0.039) 1px,
+    rgba(255, 255, 255, 0.03) 1px,
     rgba(0, 0, 0, 0) 1px
   );
-  background-size: 1rem 1rem;
+  background-size: .5rem .5rem;
 }
 
 .date-widget-container.gradient-border:after {
@@ -16,7 +16,7 @@
   margin: 0;
   font-size: 14px;
   font-weight: normal;
-  color: #999ab6;
+  color: #FBDBC1;
 }
 
 .date--day {
@@ -25,6 +25,7 @@
   font-size: 64px;
   font-weight: 800;
   color: #ff4f4f;
+  text-shadow: 0 2px 4px #00132E;
 }
 
 @media screen and (max-width: 480px) {

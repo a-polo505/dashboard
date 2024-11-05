@@ -6,7 +6,7 @@
   font-optical-sizing: auto;
 }
 
-.weeks-widget-container.gradient-border:after {
+.weeks-widget-container.gradient-border::after {
   background: linear-gradient(
     140deg,
     rgba(25, 6, 84, 0.86),

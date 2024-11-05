@@ -22,6 +22,10 @@
   align-items: flex-start;
 }
 
+.gap-2 {
+  gap: 2px;
+}
+
 .gap-4 {
   gap: 4px;
 }
@@ -32,6 +36,10 @@
 
 .gap-10 {
   gap: 10px;
+}
+
+.gap-12 {
+  gap: 12px;
 }
 
 .gap-24 {
@@ -60,6 +68,10 @@
 
 .justify-between {
   justify-content: space-between;
+}
+
+.justify-start {
+  justify-content: start;
 }
 
 .justify-end {

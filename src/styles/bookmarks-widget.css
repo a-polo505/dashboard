@@ -1,0 +1,163 @@
+@import url("https://fonts.googleapis.com/css2?family=Catamaran:wght@700&family=Heebo:wght@800&family=Nunito:wght@500..800&family=Rubik+Wet+Paint&display=swap");
+
+.bookmarks-widget-container {
+  padding: 0px !important;
+  background: #d5deff;
+  position: relative;
+}
+
+.bookmarks-widget-container::after {
+  background: #ffffff;
+}
+
+.bookmarks-widget-container .header {
+  padding-top: 12px;
+  padding-left: 16px;
+}
+
+.bookmarks-widget-container .links-box {
+  gap: 12px;
+  overflow-x: scroll;
+  padding: 12px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.bookmarks-widget-container .links-box::-webkit-scrollbar {
+  display: none;
+}
+
+.bookmarks-widget-container .bookmarks-link-box {
+  position: relative;
+  min-width: 56px;
+  min-height: 56px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  box-shadow: 0 2px 4px #304af222;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.bookmarks-widget-container .bookmarks-link-box:hover {
+  transform: translateY(-5px) scale(1.1);
+  box-shadow: 0 4px 8px #5068ff33;
+}
+
+.bookmarks-widget-container .title {
+  margin: 0;
+  font-size: 16px;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+  color: #114db3;
+}
+
+.bookmarks-widget-container .link-total {
+  margin: 0;
+  padding-bottom: 12px;
+  font-size: 10px;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  text-align: center;
+  color: rgba(91, 128, 194, 0.8);
+}
+
+.bookmarks-widget-container .bookmark-icon {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.bookmarks-widget-container .bookmarks-link-text {
+  margin: 0;
+  font-size: 10px;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  color: #114db3;
+}
+
+.bg-github {
+  background: #191717;
+}
+
+.bg-chatgpt {
+  background: #74a89b;
+}
+
+.bg-readcv {
+  background: #222222;
+}
+
+.bg-twitter {
+  background: #000000;
+}
+
+.bg-dribbble {
+  background: #ffffff;
+}
+
+.bg-figma {
+  background: linear-gradient(180deg, #2a221f, #151616);
+}
+
+.bg-linkedin {
+  background: #0a66c2;
+}
+
+.bg-layers {
+  background: #ffffff;
+}
+
+.bg-mobbin {
+  background: #111111;
+}
+
+.bg-medium {
+  background: #000000;
+}
+
+@media screen and (max-width: 480px) {
+  .bookmarks-widget-container .widget-icon {
+    width: 24px;
+    height: 26px;
+  }
+  .bookmarks-widget-container .header {
+    padding-top: 24px;
+    padding-left: 24px;
+  }
+  .bookmarks-widget-container .title {
+    font-size: 24px;
+  }
+  .bookmarks-widget-container .link-total {
+    padding-bottom: 18px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .bookmarks-widget-container .bookmarks-link-box {
+    min-width: 72px;
+    min-height: 72px;
+    border-radius: 18px;
+  }
+  .bookmarks-widget-container .links-box {
+    gap: 16px;
+    padding: 16px;
+  }
+  .bookmarks-widget-container .bookmarks-link-text {
+    padding-top: 4px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .bookmarks-widget-container .icon-medium {
+    width: 72px;
+    height: 72px;
+  }
+}

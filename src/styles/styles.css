@@ -13,6 +13,7 @@
 @import url("quote-widget.css");
 @import url("music-widget.css");
 @import url("bookmarks-widget.css");
+@import url("calendar-widget.css");
 
 :root {
   --background-color: rgb(235, 237, 253);

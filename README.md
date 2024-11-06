@@ -17,6 +17,7 @@ Welcome to the [Universal Widget Dashboard](https://dashboard-a-polo505.vercel.a
 7. Countdown to Your Special Day: Select a date to see how many days are left. Your chosen date is saved for future reference.
 8. Rock Time: Tap to jump into a curated rock playlist on YouTube Music and enjoy the beats!
 9. Bookmarks: Quick access to recommended tools and platforms for creators, all in one place.
+10. Monthly Calendar: View the current month at a glance and stay on top of important dates.
 
 This list is continuously expanding as new widgets and features are developed.
 

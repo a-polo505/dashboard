@@ -7,6 +7,7 @@ import { DateCountdownWidget } from "../components/widgets/dateCountdownWidget/d
 import { QuoteWidget } from "../components/widgets/quoteWidget/quoteWidget.js";
 import { MusicWidget } from "../components/widgets/musicWidget/musicWidget.js";
 import { BookmarksWidget } from "../components/widgets/bookmarksWidget/bookmarksWidget.js";
+import { CalendarWidget } from "../components/widgets/calendarWidget/calendarWidget.js";
 
 const dashboard = new Dashboard();
 
@@ -18,3 +19,4 @@ dashboard.addWidget(new DateCountdownWidget());
 dashboard.addWidget(new QuoteWidget());
 dashboard.addWidget(new MusicWidget());
 dashboard.addWidget(new BookmarksWidget());
+dashboard.addWidget(new CalendarWidget());

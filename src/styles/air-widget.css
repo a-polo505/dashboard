@@ -102,13 +102,13 @@
 
 @media screen and (max-width: 480px) {
   .air-widget-container--text {
-    font-size: 18px;
+    font-size: 16px;
   }
   .air-widget-container--hours {
-    font-size: 80px;
+    font-size: 88px;
   }
   .air-widget-container--lable {
-    font-size: 16px;
+    font-size: 24px;
   }
   .air-widget-container--icon svg {
     width: 24px;

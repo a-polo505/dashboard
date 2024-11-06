@@ -43,3 +43,12 @@ export function getRemainingWeeksOfYear(weeksInYear, currentWeek) {
   const remainingWeeks = Math.ceil(weeksInYear) - currentWeek;
   return remainingWeeks;
 }
+
+export function getDaysInCurrentMonth() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  return Array.from({ length: daysInMonth }, (_, i) => i + 1);
+}

@@ -59,9 +59,15 @@ a {
 }
 
 .widgets {
-  height: auto;
+  /* height: auto;
   max-height: none;
-  margin: 0;
+  margin: 0; */
+  .widgets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Задає кількість колонок автоматично */
+    gap: 24px; /* Відступи між віджетами */
+    padding: 24px;
+  }
 }
 
 .p-0 {

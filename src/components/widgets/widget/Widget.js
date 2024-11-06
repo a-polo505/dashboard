@@ -4,17 +4,17 @@ class Widget {
     this.container.classList.add(
       "Container",
       "gradient-border",
-      `Container--${containerType.toLowerCase()}`,
+      `Container--${containerType.toLowerCase()}`
     );
     this.container.innerHTML = contentHTML;
   }
 
-  addToDOM(parentId) {
-    const parentElement = document.getElementById(parentId);
+  addToDOM(parentClass = "widgets") {
+    const parentElement = document.querySelector(`.${parentClass}`);
     if (parentElement) {
       parentElement.appendChild(this.container);
     } else {
-      console.error(`Parent element with id ${parentId} not found`);
+      console.error(`Parent element with class ${parentClass} not found`);
     }
   }
 

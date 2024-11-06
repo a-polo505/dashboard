@@ -9,7 +9,7 @@ class MusicWidget {
       "music-widget-container",
     );
 
-    this.musicWidgetContainer.addToDOM("col-4");
+    this.musicWidgetContainer.addToDOM("widgets");
     this.musicWidgetContainer.renderWidgetContent();
   }
 }

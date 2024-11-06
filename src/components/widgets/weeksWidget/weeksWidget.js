@@ -9,7 +9,7 @@ class WeeksWidget {
       "weeks-widget-container",
     );
 
-    this.weeksWidgetContainer.addToDOM("col-2");
+    this.weeksWidgetContainer.addToDOM("widgets");
     this.weeksWidgetContainer.renderWidgetContent();
   }
 }

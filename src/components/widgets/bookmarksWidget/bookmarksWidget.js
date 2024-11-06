@@ -9,7 +9,7 @@ class BookmarksWidget {
       "bookmarks-widget-container",
     );
 
-    this.bookmarksWidgetContainer.addToDOM("col-1");
+    this.bookmarksWidgetContainer.addToDOM("widgets");
     this.bookmarksWidgetContainer.renderWidgetContent();
   }
 }

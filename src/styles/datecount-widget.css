@@ -1,4 +1,5 @@
 .datecount-widget-container {
+  order: 6;
   background: linear-gradient(180deg, #102651, #0f1f48);
   padding: 12px !important;
   font-family: "Montserrat", sans-serif;

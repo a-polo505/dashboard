@@ -9,7 +9,7 @@ class DateCountdownWidget {
       "datecount-widget-container",
     );
 
-    this.dateCountDownContainer.addToDOM("col-2");
+    this.dateCountDownContainer.addToDOM("widgets");
     this.dateCountDownContainer.renderWidgetContent();
   }
 }

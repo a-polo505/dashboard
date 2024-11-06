@@ -1,4 +1,5 @@
 .air-widget-container {
+  order: 4;
   background: linear-gradient(140deg, #165fa0, #3895dc);
 }
 

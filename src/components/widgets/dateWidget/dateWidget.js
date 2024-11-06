@@ -9,7 +9,7 @@ class DateWidget {
       "date-widget-container",
     );
 
-    this.dateWidgetContainer.addToDOM("col-1");
+    this.dateWidgetContainer.addToDOM("widgets");
     this.dateWidgetContainer.renderWidgetContent();
   }
 }

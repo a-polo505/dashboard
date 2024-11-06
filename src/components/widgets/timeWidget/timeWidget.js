@@ -11,7 +11,7 @@ class TimeWidget {
       "time-widget-container",
     );
 
-    this.timeWidgetContainer.addToDOM("col-3");
+    this.timeWidgetContainer.addToDOM("widgets");
 
     this.renderWidgetContent();
 

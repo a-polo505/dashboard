@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
 .time-widget-container {
+  order: 3;
   padding: 12px !important;
   background: linear-gradient(180deg, #363a7e, #000223);
   font-family: "Montserrat", sans-serif;

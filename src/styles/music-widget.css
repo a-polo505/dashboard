@@ -1,4 +1,5 @@
 .music-widget-container {
+  order: 7;
   padding: 0 !important;
   background: linear-gradient(180deg, #872116, #4a110a);
   overflow: hidden;

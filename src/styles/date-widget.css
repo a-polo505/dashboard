@@ -1,4 +1,5 @@
 .date-widget-container {
+  order: 1;
   background-image: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.03) 1px,

@@ -4,7 +4,7 @@ class Widget {
     this.container.classList.add(
       "Container",
       "gradient-border",
-      `Container--${containerType.toLowerCase()}`
+      `Container--${containerType.toLowerCase()}`,
     );
     this.container.innerHTML = contentHTML;
   }

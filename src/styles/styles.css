@@ -58,16 +58,11 @@ a {
   text-decoration: none;
 }
 
-.widgets {
-  /* height: auto;
-  max-height: none;
-  margin: 0; */
-  .widgets {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Задає кількість колонок автоматично */
-    gap: 24px; /* Відступи між віджетами */
-    padding: 24px;
-  }
+.widgets .widgets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 24px;
+  padding: 24px;
 }
 
 .p-0 {

@@ -98,6 +98,10 @@ a {
   margin-bottom: 12px;
 }
 
+.mb-24 {
+  margin-bottom: 24px;
+}
+
 .h-100 {
   height: 100%;
 }
@@ -121,11 +125,11 @@ a {
 .cta-button {
   overflow: hidden;
   gap: 4px;
-  margin-top: 8px;
-  background-color: #fcc511;
+  background-color: #768cff;
   border-radius: 24px;
   cursor: pointer;
   font-weight: 600;
+  box-shadow: 0 1px 6px #b7bef8;
 }
 
 .cta-button:hover {
@@ -134,7 +138,7 @@ a {
 
 .cta-button a {
   position: relative;
-  padding: 10px 24px;
+  padding: 8px 8px;
   color: #161616;
 }
 
@@ -158,12 +162,13 @@ a {
   left: 100%;
 }
 
-.bento {
-  background-color: #768cff !important;
+.bento a {
+  padding: 4px 4px;
+  color: #ffffff !important;
 }
 
-.bento a {
-  color: #ffffff !important;
+.footer-label {
+  order: 2;
 }
 
 .footer-link {
@@ -224,4 +229,14 @@ a {
 
 ::-moz-scrollbar-thumb:active {
   background-color: #5d5d5d;
+}
+
+header {
+  margin-right: auto;
+}
+
+@media screen and (max-width: 480px) {
+  header {
+    margin: 0;
+  }
 }

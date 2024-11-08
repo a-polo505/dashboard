@@ -2,8 +2,9 @@ import { BaseButton } from "../../ui/button/BaseButton.js";
 import { ButtonStyle } from "../../ui/button/ButtonStyle.js";
 
 class MusicWidgetRenderer {
-  constructor(playlistUrl) {
-    this.playlistUrl = playlistUrl;
+  constructor() {
+    this.playlistUrl =
+      "https://music.youtube.com/watch?v=DV-acRCuOGU&si=GNoPi0yrE8c75zv9&t=7";
     this.button = this.createButton();
   }
 

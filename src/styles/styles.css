@@ -132,6 +132,10 @@ a {
   box-shadow: 0 1px 6px #b7bef8;
 }
 
+.info {
+  padding: 8px 12px;
+}
+
 .cta-button:hover {
   box-shadow: 0 0 4px #8e8e8e23;
 }

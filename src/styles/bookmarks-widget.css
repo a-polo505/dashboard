@@ -18,10 +18,11 @@
 
 .bookmarks-widget-container .links-box {
   gap: 12px;
-  overflow-x: scroll;
+  overflow-x: auto;
   padding: 12px;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  white-space: nowrap;
 }
 
 .bookmarks-widget-container .links-box::-webkit-scrollbar {

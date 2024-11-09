@@ -1,3 +1,7 @@
+#currencyWidget {
+  order: 2;
+}
+
 .currency--button {
   color: #ffc44c;
   font-size: 14px;

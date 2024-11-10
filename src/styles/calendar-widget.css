@@ -24,12 +24,12 @@
 }
 
 .calendar-year {
-  color: #3a8f73;
+  color: #3A8F73;
   font-size: 8px;
 }
 
 .calendar-month {
-  color: #8cc9b1;
+  color: #8CC9B1;
   font-size: 14px;
   font-weight: 500;
 }
@@ -44,7 +44,7 @@
 
 .calendar-weekday {
   font-weight: 600;
-  color: #bae0cf;
+  color: #BAE0CF;
 }
 
 .calendar-day {
@@ -53,8 +53,8 @@
 }
 
 .calendar-day-today {
-  background-color: #ff463a;
-  color: white;
+  background-color: #FF463A;
+  color: #FFFFFF;
 }
 
 .calendar-day-empty {
@@ -62,7 +62,11 @@
 }
 
 .calendar-day-sunday {
-  color: #5cab8e;
+  color: #5CAB8E;
+}
+
+.calendar-day-sunday.calendar-day-today {
+  color: #FFFFFF;
 }
 
 @media screen and (max-width: 480px) {

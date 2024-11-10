@@ -24,12 +24,12 @@
 }
 
 .calendar-year {
-  color: #3A8F73;
+  color: #3a8f73;
   font-size: 8px;
 }
 
 .calendar-month {
-  color: #8CC9B1;
+  color: #8cc9b1;
   font-size: 14px;
   font-weight: 500;
 }
@@ -44,7 +44,7 @@
 
 .calendar-weekday {
   font-weight: 600;
-  color: #BAE0CF;
+  color: #bae0cf;
 }
 
 .calendar-day {
@@ -53,20 +53,20 @@
 }
 
 .calendar-day-today {
-  background-color: #FF463A;
-  color: #FFFFFF;
+  background-color: #ff463a;
+  color: #ffffff;
 }
 
 .calendar-day-empty {
   visibility: hidden;
 }
 
-.calendar-day-sunday {
-  color: #5CAB8E;
+.calendar-day-weekend {
+  color: #5cab8e;
 }
 
-.calendar-day-sunday.calendar-day-today {
-  color: #FFFFFF;
+.calendar-day-weekend.calendar-day-today {
+  color: #ffffff;
 }
 
 @media screen and (max-width: 480px) {

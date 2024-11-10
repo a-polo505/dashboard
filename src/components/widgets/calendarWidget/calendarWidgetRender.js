@@ -82,8 +82,8 @@ class CalendarWidgetRenderer {
         this.currentDate.getMonth(),
         day,
       );
-      if (date.getDay() === 0) {
-        dayElement.classList.add("calendar-day-sunday");
+      if (date.getDay() === 0 || date.getDay() === 6) {
+        dayElement.classList.add("calendar-day-weekend");
       }
 
       if (day === this.currentDate.getDate()) {

@@ -54,16 +54,6 @@
   text-shadow: 0 0px 1px #e17fff;
 }
 
-.tooltip {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #ffffff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 10px;
-  z-index: 9999;
-}
-
 @media screen and (max-width: 480px) {
   .weeks-widget-container {
     padding: 20px;
@@ -75,9 +65,6 @@
     width: 15px;
     height: 15px;
     border-radius: 4px;
-  }
-  .tooltip {
-    font-size: 12px;
   }
   .weeks-widget-container .days-left {
     font-size: 18px;

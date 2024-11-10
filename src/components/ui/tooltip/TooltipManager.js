@@ -4,13 +4,43 @@ class TooltipManager {
     this.isTooltipVisible = false;
   }
 
-  createTooltip(text, x, y) {
+  createTooltip(text, x, y, additionalClass = null) {
+    if (this.tooltipElement) {
+      this.updateTooltipPosition(x, y);
+
+      return;
+    }
+
     this.tooltipElement = document.createElement("div");
-    this.tooltipElement.textContent = text;
+    this.tooltipElement.innerHTML = text;
     this.tooltipElement.classList.add("tooltip");
+
+    if (additionalClass) {
+      this.tooltipElement.classList.add(additionalClass);
+    }
+
+    document.body.appendChild(this.tooltipElement);
+
     this.tooltipElement.style.left = `${x}px`;
     this.tooltipElement.style.top = `${y}px`;
-    document.body.appendChild(this.tooltipElement);
+
+    setTimeout(() => {
+      if (this.tooltipElement) {
+        this.tooltipElement.classList.add("visible");
+      }
+    }, 10);
+
+    const tooltipRect = this.tooltipElement.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    if (tooltipRect.right > viewportWidth) {
+      this.tooltipElement.style.left = `${viewportWidth - tooltipRect.width - 10}px`;
+    }
+    if (tooltipRect.bottom > viewportHeight) {
+      this.tooltipElement.style.top = `${viewportHeight - tooltipRect.height - 10}px`;
+    }
+
     this.isTooltipVisible = true;
   }
 
@@ -29,29 +59,25 @@ class TooltipManager {
     }
   }
 
-  handleTap(element, text) {
-    element.addEventListener("click", (event) => {
-      if (this.isTooltipVisible) {
-        this.removeTooltip();
-      } else {
-        const rect = element.getBoundingClientRect();
-        const x = rect.left + rect.width / 2;
-        const y = rect.top - 30;
-        this.createTooltip(text, x, y);
-      }
-    });
-  }
+  handleMouseOver(element, text, additionalClass = null) {
+    element.removeEventListener("mouseover", this._mouseoverHandler);
 
-  handleMouseOver(element, text) {
-    element.addEventListener("mouseover", (event) => {
-      this.createTooltip(text, event.clientX, event.clientY);
-    });
+    this._mouseoverHandler = (event) => {
+      console.log("Mouse over event triggered");
+      this.createTooltip(text, event.clientX, event.clientY, additionalClass);
+    };
+
+    element.addEventListener("mouseover", this._mouseoverHandler);
   }
 
   handleMouseLeave(element) {
-    element.addEventListener("mouseleave", () => {
+    element.removeEventListener("mouseleave", this._mouseleaveHandler);
+
+    this._mouseleaveHandler = () => {
       this.removeTooltip();
-    });
+    };
+
+    element.addEventListener("mouseleave", this._mouseleaveHandler);
   }
 
   handleScroll() {

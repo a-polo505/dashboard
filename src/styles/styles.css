@@ -86,6 +86,14 @@ a {
   padding: 24px;
 }
 
+.pb-6 {
+  padding-bottom: 6px;
+}
+
+.pb-8 {
+  padding-bottom: 8px;
+}
+
 .m-0 {
   margin: 0;
 }
@@ -120,6 +128,18 @@ a {
 
 .text-center {
   text-align: center;
+}
+
+.project-title {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  background: linear-gradient(to bottom, #5a52e5, #8793f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
 }
 
 .cta-button {
@@ -160,6 +180,13 @@ a {
     transparent 100%
   );
   transition: left 0.8s ease;
+  z-index: 1;
+}
+
+.info-icon {
+  position: relative;
+  width: 40px;
+  cursor: none;
 }
 
 .cta-button:hover a::before {
@@ -239,8 +266,50 @@ header {
   margin-right: auto;
 }
 
+.tooltip {
+  position: fixed;
+  background-color: rgba(12, 12, 12, 0.9);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  max-width: 250px;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  line-height: 1.4;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  cursor: none;
+  z-index: 9999;
+}
+
+.tooltip p {
+  margin: 0;
+  padding: 4px 0;
+}
+
+.tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media screen and (max-width: 480px) {
+  .tooltip {
+    font-size: 14px;
+  }
+  .info-tooltip {
+    min-width: 300px !important;
+    line-height: 1.5;
+  }
   header {
     margin: 0;
+    gap: 16px !important;
+    align-content: center;
+  }
+  .footer-label {
+    text-align: center;
   }
 }

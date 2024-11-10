@@ -1,6 +1,6 @@
 .vercel
 node_modules/
-dist
+/dist
 
 # Compiled source #
 ###################

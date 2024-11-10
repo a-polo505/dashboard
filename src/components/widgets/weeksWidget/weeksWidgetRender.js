@@ -61,12 +61,11 @@ class WeeksWidgetRenderer {
         gridItem.classList.add("future-week");
       }
 
-      this.tooltipManager.handleMouseOver(gridItem, `Week ${week}`);
-      this.tooltipManager.handleMouseLeave(gridItem);
+      this.tooltipManager.handleInteraction(gridItem, `Week ${week}`);
 
       gridContainer.appendChild(gridItem);
     }
-    this.tooltipManager.handleScroll();
+
     return gridContainer;
   }
 

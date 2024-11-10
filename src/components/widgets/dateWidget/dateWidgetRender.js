@@ -37,10 +37,10 @@ class DateWidgetRenderer {
     container.innerHTML = containerContent;
     const dayElement = container.querySelector(".date--day");
 
-    this.tooltipManager.handleMouseOver(dayElement, `${todaysDateText}`);
-    this.tooltipManager.handleMouseLeave(dayElement);
-    this.tooltipManager.handleScroll();
-    this.tooltipManager.handleTooltipClick();
+    this.tooltipManager.handleInteraction(
+      dayElement,
+      "".concat(todaysDateText),
+    );
 
     return container;
   }

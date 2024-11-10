@@ -9,5 +9,4 @@ const tooltipText = `
   <p>Created just for fun.</p>
 `;
 
-tooltipManager.handleMouseOver(infoIconElement, tooltipText, "info-tooltip");
-tooltipManager.handleMouseLeave(infoIconElement);
+tooltipManager.handleInteraction(infoIconElement, tooltipText, "info-tooltip");

@@ -1,5 +1,4 @@
 import { getCurrentDate } from "../../../utils/dateUtils.js";
-import { TooltipManager } from "../../ui/tooltip/TooltipManager.js";
 
 class CoffeeWidgetRenderer {
   constructor() {
@@ -8,7 +7,6 @@ class CoffeeWidgetRenderer {
     this.dateKey = "coffeeCupsDate";
     this.cups = [];
     this.container = null;
-    this.tooltipManager = new TooltipManager();
   }
 
   render() {

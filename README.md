@@ -2,6 +2,10 @@
 
 [![dashboard-template](https://github.com/user-attachments/assets/8f645a37-1e08-483f-a143-aac208aefba3)](https://dashboard-a-polo505.vercel.app)
 
+[![GitHub Release][gh-release-image]][gh-release-url]
+[![Twitter][twitter-image]][twitter-url]
+
+
 ## 🛠 Description
 
 Welcome to the [Universal Widget Dashboard](https://dashboard-a-polo505.vercel.app) – a personal project showcasing a versatile and user-friendly dashboard with various widgets for everyday use. Built with JavaScript and deployed on Vercel, this dashboard is designed to offer quick access to essential tools and information.
@@ -40,3 +44,10 @@ This project does not use cookies and does not collect any personal data. All us
 ## 📝 Notes
 
 This project is actively under development, with ongoing additions of new features and widgets. Feedback and suggestions are always welcome! If you encounter any issues or have ideas for improvement, please open an issue in this repository.
+
+<!-- Badges -->
+
+[gh-release-url]: https://github.com/a-polo505/dashboard/releases/latest
+[gh-release-image]: https://img.shields.io/github/v/release/a-polo505/dashboard?style=flat-square
+[twitter-url]: https://x.com/a_polo505
+[twitter-image]: https://img.shields.io/badge/twitter-%40a__polo505-00ACEE.svg?style=flat-square

@@ -73,9 +73,8 @@
   font-weight: 600;
 }
 
-.noise-background {
-  background-image: url("../images/img-noise-380x380.png");
-  background-color: #333333;
+.currency-widget-container {
+  background: linear-gradient(to bottom, #262626, #212121);
 }
 
 @media screen and (max-width: 480px) {

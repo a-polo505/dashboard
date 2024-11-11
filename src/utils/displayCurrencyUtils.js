@@ -9,7 +9,7 @@ import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
 
 const currencyContainer = createContainer("Small", "");
 currencyContainer.id = "currencyWidget";
-currencyContainer.classList.add("noise-background");
+currencyContainer.classList.add("currency-widget-container");
 document.querySelector(".widgets").appendChild(currencyContainer);
 
 const loadingSpinner = createLoadingSpinner();

@@ -49,6 +49,17 @@ body {
   min-height: 100vh;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom, #ffffff, #c1c3ff);
+  z-index: -1;
+}
+
 main {
   flex: 1;
 }
@@ -140,10 +151,10 @@ a {
 
 .project-title {
   margin: 0;
-  font-family: "Montserrat", sans-serif;
+
   font-weight: 400;
-  font-size: 18px;
-  background: linear-gradient(to bottom, #5a52e5, #8793f5);
+  font-size: 16px;
+  background: #45059d;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -187,7 +198,7 @@ header {
 .cta-button {
   overflow: hidden;
   gap: 4px;
-  background-color: #768cff;
+  background-color: #8987df;
   border-radius: 24px;
   cursor: pointer;
   font-weight: 600;
@@ -242,7 +253,7 @@ header {
 
 .footer-label {
   order: 2;
-  color: #4b4694;
+  color: #4b4694c4;
 }
 
 .footer-link {
@@ -306,17 +317,20 @@ header {
 }
 
 @media screen and (max-width: 480px) {
+  header {
+    margin: 0 !important;
+    gap: 16px !important;
+  }
+  .logotype {
+    width: 32px;
+    height: 32px;
+  }
   .tooltip {
     font-size: 14px;
   }
   .info-tooltip {
     min-width: 300px !important;
     line-height: 1.5;
-  }
-  header {
-    margin: 0;
-    gap: 16px !important;
-    align-content: center;
   }
   .footer-label {
     text-align: center;

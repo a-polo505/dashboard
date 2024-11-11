@@ -5,7 +5,6 @@
 [![GitHub Release][gh-release-image]][gh-release-url]
 [![Twitter][twitter-image]][twitter-url]
 
-
 ## 🛠 Description
 
 Welcome to the [Universal Widget Dashboard](https://dashboard-a-polo505.vercel.app) – a personal project showcasing a versatile and user-friendly dashboard with various widgets for everyday use. Built with JavaScript and deployed on Vercel, this dashboard is designed to offer quick access to essential tools and information.

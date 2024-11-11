@@ -50,12 +50,14 @@ class DateCountdownRenderer {
   }
 
   showDatePicker() {
+    const storedDate = localStorage.getItem("selectedDate");
     flatpickr(".button-select-day", {
       clickOpens: true,
       dateFormat: "Y-m-d",
       minDate: "today",
       disableMobile: true,
       firstDayOfWeek: 1,
+      defaultDate: storedDate ? new Date(storedDate) : null,
       onChange: (selectedDates, dateStr, instance) => {
         const selectedDate = new Date(dateStr);
         const diff = diffDays(selectedDate);

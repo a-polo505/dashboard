@@ -69,10 +69,6 @@
   color: #a1a1a1;
 }
 
-.currency--tooltip-text-accent {
-  font-weight: 600;
-}
-
 .currency-widget-container {
   background: linear-gradient(to bottom, #262626, #212121);
 }

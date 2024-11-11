@@ -27,7 +27,7 @@ function percentageEventListeners() {
     const currenciesData = getParsedData("currencies");
     const lastUpdated = currenciesData[0].lastUpdated;
     const formattedLastUpdated = formatLastUpdate(lastUpdated);
-    const content = `Last updated: <span class="currency--tooltip-text-accent">${formattedLastUpdated}</span>`;
+    const content = `Last updated: ${formattedLastUpdated}`;
     showTooltip(content, event);
   });
 

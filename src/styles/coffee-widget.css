@@ -1,0 +1,88 @@
+.coffe-widget-container {
+  order: 10;
+  padding: 16px;
+  background: linear-gradient(to bottom, #54372f, #2e1d17);
+  position: relative;
+  color: #b69b88;
+}
+
+.coffe-widget-container::after {
+  background: linear-gradient(180deg, #54372f, #2e1d17);
+}
+
+.coffe-widget-container .month-day-label {
+  margin: 0;
+  font-size: 8px;
+  opacity: 0.8;
+}
+
+.coffe-widget-container .widget-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.max-cups-text {
+  margin: 0;
+  font-size: 10px;
+  color: #d9d9d9;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+.max-cups-text.visible {
+  opacity: 1;
+}
+
+.coffee-cups-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  justify-items: center;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.coffee-cup {
+  transition: transform 0.2s ease;
+}
+
+.coffee-cup.bounce {
+  animation: bounce 0.3s ease;
+}
+
+.coffee-icon {
+  width: 27px;
+  height: 34px;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .coffe-widget-container .month-day-label {
+    font-size: 14px;
+  }
+
+  .coffe-widget-container .widget-title {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .coffe-widget-container .max-cups-text {
+    font-size: 14px;
+  }
+
+  .coffee-icon {
+    width: 48px;
+    height: 48px;
+  }
+}

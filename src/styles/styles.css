@@ -21,6 +21,7 @@
 @import url("music-widget.css");
 @import url("bookmarks-widget.css");
 @import url("calendar-widget.css");
+@import url("coffee-widget.css");
 
 :root {
   --text-black: rgb(41, 41, 41);
@@ -40,7 +41,7 @@ body {
   margin: 0;
   padding: 0;
   color: var(--text-gray-400);
-  background: linear-gradient(to bottom, #FFFFFF, #C1C3FF 100%);
+  background: linear-gradient(to bottom, #ffffff, #c1c3ff 100%);
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: "Inter", sans-serif;

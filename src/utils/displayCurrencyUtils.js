@@ -39,7 +39,7 @@ function percentageEventListeners() {
 function showTooltip(content, event) {
   const tooltip = document.createElement("div");
   tooltip.innerHTML = content;
-  tooltip.classList.add("tooltip");
+  tooltip.classList.add("tooltip", "visible");
 
   tooltip.style.left = `${event.clientX}px`;
   tooltip.style.top = `${event.clientY}px`;

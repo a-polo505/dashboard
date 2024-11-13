@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://a-polo505.github.io/alinapolozhai/sitemap.xml

@@ -4,7 +4,7 @@ import { ButtonStyle } from "../../ui/button/ButtonStyle.js";
 class MusicWidgetRenderer {
   constructor() {
     this.playlistUrl =
-      "https://music.youtube.com/watch?v=DV-acRCuOGU&si=GNoPi0yrE8c75zv9&t=7";
+      "https://music.youtube.com/playlist?list=PLogsqhN08GV7b1WehiX450XetYRmXVrn3&si=jHH6aDk4EbLH3OYS";
     this.button = this.createButton();
   }
 

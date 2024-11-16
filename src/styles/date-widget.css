@@ -26,7 +26,7 @@
   font-size: 64px;
   font-weight: 800;
   color: #ff4f4f;
-  text-shadow: 0 2px 4px #00132e;
+  text-shadow: 0 2px 4px #00132e9c;
 }
 
 @media screen and (max-width: 480px) {
@@ -34,6 +34,6 @@
     font-size: 96px;
   }
   .date--month {
-    font-size: 24px;
+    font-size: 18px;
   }
 }

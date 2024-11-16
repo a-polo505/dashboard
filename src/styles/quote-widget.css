@@ -58,6 +58,9 @@
 }
 
 @media screen and (max-width: 480px) {
+  .quote-widget-container {
+    padding: 24px;
+  }
   .quote-widget-container--text {
     font-size: 24px;
   }
@@ -72,15 +75,15 @@
       #ffc801 24%,
       #dfdfdf 24%,
       #ffffff 25%,
-      #ffffff 63%,
-      #efefef 63%,
-      #ffffff 64%,
-      #ffffff 74%,
-      #efefef 74%,
-      #ffffff 75%,
-      #ffffff 85%,
-      #efefef 85%,
-      #ffffff 86%,
+      #ffffff 66%,
+      #efefef 66%,
+      #ffffff 67%,
+      #ffffff 78%,
+      #efefef 78%,
+      #ffffff 79%,
+      #ffffff 90%,
+      #efefef 90%,
+      #ffffff 91%,
       #fffdf1
     );
   }

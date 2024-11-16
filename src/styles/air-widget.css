@@ -101,6 +101,9 @@
 }
 
 @media screen and (max-width: 480px) {
+  .air-widget-container {
+    padding: 24px;
+  }
   .air-widget-container--text {
     font-size: 16px;
   }

@@ -27,6 +27,7 @@
   --text-black: rgb(41, 41, 41);
   --text-gray-400: rgb(156, 163, 175);
   --text-gray-500: rgb(107 114 128);
+  --vh: 100%;
 }
 
 * {
@@ -34,7 +35,7 @@
 }
 
 html {
-  height: 100%;
+  height: var(--vh);
 }
 
 body {
@@ -310,6 +311,12 @@ header {
 
 ::-moz-scrollbar-thumb:active {
   background-color: #5d5d5d;
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --vh: calc(var(--vh, 1vh) * 100);
+  }
 }
 
 @media screen and (max-width: 480px) {

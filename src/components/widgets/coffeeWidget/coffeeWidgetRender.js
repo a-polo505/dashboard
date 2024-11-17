@@ -42,7 +42,7 @@ class CoffeeWidgetRenderer {
 
     for (let i = 0; i < this.maxCups; i++) {
       const cupIcon = document.createElement("div");
-      cupIcon.classList.add("coffee-cup");
+      cupIcon.classList.add("coffee-cup", "coffee-cup-shake");
 
       cupIcon.innerHTML = this.cups[i]
         ? this.renderCoffeeIcon()

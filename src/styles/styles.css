@@ -48,7 +48,7 @@ body {
   background-attachment: scroll;
   font-family: "Inter", sans-serif;
   font-size: 14px;
-  min-height: 100vh;
+  min-height: var(--vh);
 }
 
 body::before {
@@ -57,7 +57,7 @@ body::before {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: var(--vh);
   background: linear-gradient(to bottom, #ffffff, #c1c3ff);
   z-index: -1;
 }

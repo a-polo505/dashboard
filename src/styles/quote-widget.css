@@ -90,5 +90,6 @@
 
   .quote-widget-container::before {
     height: 56px;
+    border-radius: 32px 32px 0 0;
   }
 }

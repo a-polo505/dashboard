@@ -30,20 +30,15 @@ class CalendarWidgetRenderer {
 
   createHeader() {
     const header = document.createElement("div");
-    header.classList.add("calendar-header", "flex", "flex-col", "gap-0");
+    header.classList.add("calendar-header", "flex");
 
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.toLocaleString("en-US", { month: "long" });
 
-    const yearLabel = document.createElement("p");
-    yearLabel.classList.add("calendar-year");
-    yearLabel.textContent = `${year}`;
-
     const monthLabel = document.createElement("p");
     monthLabel.classList.add("calendar-month");
-    monthLabel.textContent = `${month}`;
+    monthLabel.textContent = `${month}, ${year}`;
 
-    header.appendChild(yearLabel);
     header.appendChild(monthLabel);
     return header;
   }

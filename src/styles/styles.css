@@ -22,6 +22,7 @@
 @import url("bookmarks-widget.css");
 @import url("calendar-widget.css");
 @import url("coffee-widget.css");
+@import url("contact-author-widget.css");
 
 :root {
   --text-black: rgb(41, 41, 41);

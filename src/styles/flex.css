@@ -30,6 +30,10 @@
   align-items: flex-start;
 }
 
+.align-end {
+  align-items: end;
+}
+
 .gap-2 {
   gap: 2px;
 }

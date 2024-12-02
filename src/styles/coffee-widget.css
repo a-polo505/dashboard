@@ -91,6 +91,10 @@
 }
 
 @media screen and (max-width: 480px) {
+  .coffe-widget-container {
+    padding: 20px;
+  }
+
   .coffe-widget-container .month-day-label {
     font-size: 14px;
   }

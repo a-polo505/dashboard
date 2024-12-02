@@ -22,6 +22,7 @@ Welcome to the [Universal Widget Dashboard](https://dashboard-a-polo505.vercel.a
 9. Bookmarks: Quick access to recommended tools and platforms for creators, all in one place.
 10. Monthly Calendar: View the current month at a glance and stay on top of important dates.
 11. Coffee Cups: Track your daily coffee intake by tapping on each cup icon. Each tap fills a cup, helping you stay mindful of your caffeine consumption. Hit the max of six cups, and a gentle reminder encourages moderation.
+12. Contact Me: Quick links to my Twitter and BlueSky profiles for staying in touch.
 
 This list is continuously expanding as new widgets and features are developed.
 

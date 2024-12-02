@@ -9,6 +9,7 @@ import { MusicWidget } from "../components/widgets/musicWidget/musicWidget.js";
 import { BookmarksWidget } from "../components/widgets/bookmarksWidget/bookmarksWidget.js";
 import { CalendarWidget } from "../components/widgets/calendarWidget/calendarWidget.js";
 import { CoffeeWidget } from "../components/widgets/coffeeWidget/coffeeWidget.js";
+import { ContactAuthorWidget } from "../components/widgets/contactAuthorWidget/contactAuthorWidget.js";
 
 const dashboard = new Dashboard();
 
@@ -22,3 +23,4 @@ dashboard.addWidget(new MusicWidget());
 dashboard.addWidget(new BookmarksWidget());
 dashboard.addWidget(new CalendarWidget());
 dashboard.addWidget(new CoffeeWidget());
+dashboard.addWidget(new ContactAuthorWidget());

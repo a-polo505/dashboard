@@ -82,7 +82,7 @@
 
   .calendar-grid {
     grid-template-columns: repeat(7, 2fr);
-    gap: 4px;
+    gap: 2px;
     font-size: 14px;
   }
 

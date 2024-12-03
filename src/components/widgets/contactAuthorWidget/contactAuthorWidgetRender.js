@@ -47,9 +47,11 @@ class ContactAuthorWidgetRenderer {
 
     const buttonTwitter = this.buttonTwitter.render();
     buttonTwitter.classList.add("button", "btn-twitter");
+    buttonTwitter.setAttribute("aria-label", "Twitter Profile")
 
     const buttonBlueSky = this.buttonBlueSky.render();
     buttonBlueSky.classList.add("button", "btn-bluesky");
+    buttonBlueSky.setAttribute("aria-label", "BlueSky Profile")
 
     buttonsContainer.appendChild(buttonTwitter);
     buttonsContainer.appendChild(buttonBlueSky);

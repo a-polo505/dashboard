@@ -19,7 +19,7 @@ class CoffeeWidgetRenderer {
       "wrapper",
     );
     this.container.innerHTML = `
-      <div class="flex flex-col align-baseline">
+      <div class="flex flex-col align-baseline gap-2">
         <p class="month-day-label">${this.getFormattedDate()}</p>
         <p class="widget-title">Coffee Cups</p>
       </div>

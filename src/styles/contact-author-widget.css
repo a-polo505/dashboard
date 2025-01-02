@@ -44,7 +44,7 @@
   z-index: 1;
 }
 
-.logo-container a {
+.logo-container .avatar {
   position: relative;
   width: 36px;
   height: 36px;
@@ -143,11 +143,6 @@
 
   .contact-author-widget-container .btn-bluesky::before {
     border-radius: 6px 6px 14px 6px !important;
-  }
-
-  .logo-container a {
-    width: 48px;
-    height: 48px;
   }
 
   .contact-author-widget-container .btn-twitter::after,

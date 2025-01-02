@@ -11,6 +11,7 @@
 
 .calendar-container {
   font-family: "Inter", sans-serif;
+  height: 100%;
 }
 
 .calendar-header {
@@ -36,6 +37,7 @@
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
   width: 100%;
+  height: 100%;
   text-align: center;
   font-size: 10px;
 }
@@ -48,6 +50,7 @@
 .calendar-day {
   padding: 4px;
   border-radius: 50%;
+  align-self: center;
 }
 
 .calendar-day-today {

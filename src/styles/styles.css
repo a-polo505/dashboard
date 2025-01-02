@@ -43,7 +43,7 @@ body {
   margin: 0;
   padding: 0;
   color: var(--text-gray-400);
-  background-color: #F6F7FB;
+  background-color: #f6f7fb;
   font-family: "Inter", sans-serif;
   font-size: 14px;
   min-height: var(--vh);

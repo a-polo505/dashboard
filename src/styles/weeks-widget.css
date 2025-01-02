@@ -23,6 +23,7 @@
 
 .weeks-widget-container .grid-item:hover {
   border: 1px solid #ffffff;
+  box-shadow: none;
 }
 
 .weeks-widget-container .past-week {

@@ -31,7 +31,8 @@
 }
 
 .weeks-widget-container .future-week {
-  background-color: #492f83;
+  background-color: #5f3da9;
+  box-shadow: inset 0 1px 1px rgba(41, 12, 110, 0.5);
 }
 
 .weeks-widget-container .current-week {

@@ -43,10 +43,7 @@ body {
   margin: 0;
   padding: 0;
   color: var(--text-gray-400);
-  background: linear-gradient(to bottom, #ffffff, #c1c3ff 100%);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-color: #F6F7FB;
   font-family: "Inter", sans-serif;
   font-size: 14px;
   min-height: var(--vh);

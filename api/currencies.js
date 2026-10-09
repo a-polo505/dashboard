@@ -14,24 +14,80 @@ MongoClient.connect(uri)
       .collection("currenciesDiff");
 
     app.get("/api/currencies", async (req, res) => {
+      let session;
+      let responseData;
+      let operationFailed = false;
+      let operationError;
       try {
-        const currenciesData = await collection.find({}).toArray();
-        const currenciesDiffData = await currenciesDiffCollection
-          .find({})
+        session = client.startSession();
+        session.startTransaction({
+          readConcern: { level: "snapshot" },
+          writeConcern: { w: "majority" },
+          readPreference: "primary",
+        });
+
+        const currenciesData = await collection
+          .find({}, { session })
+          .limit(2)
           .toArray();
+        const currenciesDiffData = await currenciesDiffCollection
+          .find({}, { session })
+          .limit(2)
+          .toArray();
+
+        if (currenciesData.length > 1 || currenciesDiffData.length > 1) {
+          throw new Error(
+            "Expected at most one document per currency collection",
+          );
+        }
 
         const formattedCurrenciesDiffData = currenciesDiffData.map(
           ({ _id, data }) => data,
         );
 
-        res.json({
+        responseData = {
           currencies: currenciesData,
           currenciesDiff: formattedCurrenciesDiffData,
-        });
+        };
+        await session.commitTransaction();
       } catch (error) {
-        console.error("Error retrieving data from the database:", error);
-        res.status(500).send("Server error");
+        operationFailed = true;
+        operationError = error;
+        if (session?.inTransaction()) {
+          try {
+            await session.abortTransaction();
+          } catch {
+            console.error(
+              "Error aborting MongoDB read transaction after a failed operation",
+            );
+          }
+        }
+      } finally {
+        if (session) {
+          try {
+            await session.endSession();
+          } catch (error) {
+            if (operationFailed) {
+              console.error(
+                "Error ending MongoDB read session after a failed operation",
+              );
+            } else {
+              operationFailed = true;
+              operationError = error;
+            }
+          }
+        }
       }
+
+      if (operationFailed) {
+        console.error(
+          "Error retrieving data from the database:",
+          operationError,
+        );
+        res.status(500).send("Server error");
+        return;
+      }
+      res.json(responseData);
     });
 
     app.listen(port, () => {

@@ -2,13 +2,25 @@ export function getCurrentDate() {
   return new Date();
 }
 
+function getCalendarDateTimestamp(date) {
+  const calendarDate = new Date(0);
+  // Map local calendar components to UTC midnight, independent of DST offsets.
+  // setUTCFullYear also preserves years 0–99 instead of treating them as 1900–1999.
+  calendarDate.setUTCFullYear(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
+  return calendarDate.getTime();
+}
+
 export function diffDays(selectedDate) {
   const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
-  selectedDate.setHours(0, 0, 0, 0);
-  const diffTime = selectedDate - currentDate;
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
+  return (
+    (getCalendarDateTimestamp(selectedDate) -
+      getCalendarDateTimestamp(currentDate)) /
+    (1000 * 60 * 60 * 24)
+  );
 }
 
 export function getWeeksInYear(year) {

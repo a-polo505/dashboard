@@ -105,6 +105,29 @@ describe("date countdown recovery", () => {
     expect(document.body.textContent).not.toContain("NaN");
   });
 
+  test("restores an exact calendar count across the autumn clock change", () => {
+    jest.setSystemTime(new Date(2026, 9, 24, 12));
+    localStorage.setItem("selectedDate", "2026-10-26");
+
+    mountWidget();
+
+    expect(document.getElementById("selected-date").textContent).toBe("2");
+    expect(localStorage.getItem("selectedDate")).toBe("2026-10-26");
+    expect(openPicker().defaultDate.getDate()).toBe(26);
+  });
+
+  test("counts a newly selected date across the spring clock change", () => {
+    jest.setSystemTime(new Date(2026, 2, 28, 12));
+    mountWidget();
+    const instance = { close: jest.fn() };
+
+    openPicker().onChange([new Date(2026, 2, 30)], "2026-03-30", instance);
+
+    expect(document.getElementById("selected-date").textContent).toBe("2");
+    expect(localStorage.getItem("selectedDate")).toBe("2026-03-30");
+    expect(instance.close).toHaveBeenCalledTimes(1);
+  });
+
   test("allows selection after recovery and restores it after reload", () => {
     localStorage.setItem("selectedDate", "invalid");
     mountWidget();

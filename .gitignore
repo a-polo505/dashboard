@@ -43,3 +43,4 @@ Thumbs.db
 src/mockData.js
 src/oldMockData.js
 src/components/tooltip.js
+.env*

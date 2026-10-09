@@ -3,10 +3,17 @@ import { getCurrencies } from "./getCurrenciesFromCAPI.js";
 import { sendCurrenciesToMongoDB } from "./mongoHandler.js";
 
 export default async (req, res) => {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    res.status(405).send("Method Not Allowed");
+    return;
+  }
+
   try {
-    const requestToken = req.headers.authorization;
+    const requestToken = req.headers?.authorization;
 
     if (!isValidToken(requestToken)) {
+      res.setHeader("WWW-Authenticate", "Bearer");
       res.status(401).send("Unauthorized");
       return;
     }

@@ -150,4 +150,18 @@ describe("explicit widget initialization", () => {
     ).not.toBeNull();
     expect(initializeWidgets()).toBe(dashboard);
   });
+
+  test("starts all widgets with an invalid saved countdown date", () => {
+    localStorage.setItem("selectedDate", "invalid");
+
+    expect(initializeWidgets().widgets).toHaveLength(11);
+    expect(
+      document.querySelector(".datecount-widget-container").textContent,
+    ).not.toContain("NaN");
+    expect(localStorage.getItem("selectedDate")).toBeNull();
+    expect(document.querySelectorAll(".coffee-cup")).toHaveLength(6);
+    expect(
+      document.querySelector(".contact-author-widget-container"),
+    ).not.toBeNull();
+  });
 });

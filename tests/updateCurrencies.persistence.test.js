@@ -17,6 +17,10 @@ describe("updateCurrencies with the real persistence helper", () => {
   let currenciesCollection;
   let diffCollection;
   let response;
+  let session;
+  let currentCursor;
+  let previousCursor;
+  let transactionActive;
   let errorLog;
 
   beforeAll(() => {
@@ -37,15 +41,41 @@ describe("updateCurrencies with the real persistence helper", () => {
     process.env.CRON_AUTH_SECRET = testSecret;
     errorLog = jest.spyOn(console, "error").mockImplementation(() => {});
     getCurrencies.mockResolvedValue(testCurrencies);
+    transactionActive = false;
+    session = {
+      startTransaction: jest.fn(() => {
+        transactionActive = true;
+      }),
+      commitTransaction: jest.fn(async () => {
+        transactionActive = false;
+      }),
+      abortTransaction: jest.fn(async () => {
+        transactionActive = false;
+      }),
+      inTransaction: jest.fn(() => transactionActive),
+      endSession: jest.fn().mockResolvedValue(undefined),
+    };
+    currentCursor = {
+      limit: jest.fn().mockReturnThis(),
+      toArray: jest
+        .fn()
+        .mockResolvedValue([{ _id: "current", data: testCurrencies }]),
+    };
+    previousCursor = {
+      limit: jest.fn().mockReturnThis(),
+      toArray: jest.fn().mockResolvedValue([{ _id: "previous" }]),
+    };
     currenciesCollection = {
-      findOne: jest.fn().mockResolvedValue({ data: testCurrencies }),
+      find: jest.fn().mockReturnValue(currentCursor),
       updateOne: jest.fn().mockResolvedValue({ acknowledged: true }),
     };
     diffCollection = {
+      find: jest.fn().mockReturnValue(previousCursor),
       replaceOne: jest.fn().mockResolvedValue({ acknowledged: true }),
     };
     client = {
       connect: jest.fn().mockResolvedValue(undefined),
+      startSession: jest.fn().mockReturnValue(session),
       close: jest.fn().mockResolvedValue(undefined),
       db: jest.fn().mockReturnValue({
         collection: jest.fn((name) =>
@@ -70,36 +100,60 @@ describe("updateCurrencies with the real persistence helper", () => {
     }
   });
 
-  test.each(["connect", "findOne", "replaceOne", "updateOne", "close"])(
-    "returns HTTP 500 instead of 200 when MongoDB %s fails",
-    async (stage) => {
-      const failure = new Error(`Synthetic ${stage} failure`);
-      const operations = {
-        connect: client.connect,
-        findOne: currenciesCollection.findOne,
-        replaceOne: diffCollection.replaceOne,
-        updateOne: currenciesCollection.updateOne,
-        close: client.close,
-      };
+  test.each([
+    "connect",
+    "startSession",
+    "startTransaction",
+    "currentRead",
+    "previousRead",
+    "replaceOne",
+    "updateOne",
+    "commitTransaction",
+    "endSession",
+    "close",
+  ])("returns HTTP 500 instead of 200 when MongoDB %s fails", async (stage) => {
+    const failure = new Error(`Synthetic ${stage} failure`);
+    const operations = {
+      connect: client.connect,
+      startSession: client.startSession,
+      startTransaction: session.startTransaction,
+      currentRead: currentCursor.toArray,
+      previousRead: previousCursor.toArray,
+      replaceOne: diffCollection.replaceOne,
+      updateOne: currenciesCollection.updateOne,
+      close: client.close,
+      commitTransaction: session.commitTransaction,
+      endSession: session.endSession,
+    };
+    if (stage === "startSession" || stage === "startTransaction") {
+      operations[stage].mockImplementation(() => {
+        throw failure;
+      });
+    } else if (stage === "commitTransaction") {
+      operations[stage].mockImplementation(async () => {
+        transactionActive = false;
+        throw failure;
+      });
+    } else {
       operations[stage].mockRejectedValue(failure);
+    }
 
-      await handler(
-        { method: "POST", headers: { authorization: `Bearer ${testSecret}` } },
-        response,
-      );
+    await handler(
+      { method: "POST", headers: { authorization: `Bearer ${testSecret}` } },
+      response,
+    );
 
-      expect(response.status).toHaveBeenCalledTimes(1);
-      expect(response.status).toHaveBeenCalledWith(500);
-      expect(response.status).not.toHaveBeenCalledWith(200);
-      expect(response.send).toHaveBeenCalledWith("Internal Server Error");
-      expect(errorLog).toHaveBeenCalledTimes(1);
-      expect(errorLog).toHaveBeenCalledWith(
-        "Error fetching and formatting data:",
-        failure,
-      );
-      expect(client.close).toHaveBeenCalledTimes(1);
-    },
-  );
+    expect(response.status).toHaveBeenCalledTimes(1);
+    expect(response.status).toHaveBeenCalledWith(500);
+    expect(response.status).not.toHaveBeenCalledWith(200);
+    expect(response.send).toHaveBeenCalledWith("Internal Server Error");
+    expect(errorLog).toHaveBeenCalledTimes(1);
+    expect(errorLog).toHaveBeenCalledWith(
+      "Error fetching and formatting data:",
+      failure,
+    );
+    expect(client.close).toHaveBeenCalledTimes(1);
+  });
 
   test("reports the original write error when cleanup also fails", async () => {
     const failure = new Error("Synthetic write failure");
@@ -128,9 +182,64 @@ describe("updateCurrencies with the real persistence helper", () => {
     expect(diffCollection.replaceOne).toHaveBeenCalledTimes(1);
     expect(currenciesCollection.updateOne).toHaveBeenCalledTimes(1);
     expect(client.close).toHaveBeenCalledTimes(1);
+    expect(session.commitTransaction).toHaveBeenCalledTimes(1);
+    expect(session.endSession).toHaveBeenCalledTimes(1);
+    expect(client.close.mock.invocationCallOrder[0]).toBeLessThan(
+      response.status.mock.invocationCallOrder[0],
+    );
     expect(response.status).toHaveBeenCalledTimes(1);
     expect(response.status).toHaveBeenCalledWith(200);
     expect(response.send).toHaveBeenCalledWith("Available currencies: USD");
     expect(errorLog).not.toHaveBeenCalled();
+  });
+
+  test.each(["current", "previous"])(
+    "returns HTTP 500 for duplicate %s documents without writing",
+    async (collection) => {
+      const cursor = collection === "current" ? currentCursor : previousCursor;
+      cursor.toArray.mockResolvedValue([{ _id: "one" }, { _id: "two" }]);
+
+      await handler(
+        { method: "POST", headers: { authorization: `Bearer ${testSecret}` } },
+        response,
+      );
+
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(diffCollection.replaceOne).not.toHaveBeenCalled();
+      expect(currenciesCollection.updateOne).not.toHaveBeenCalled();
+      expect(session.abortTransaction).toHaveBeenCalledTimes(1);
+      expect(session.endSession).toHaveBeenCalledTimes(1);
+      expect(client.close).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  test("does not report success while commit is pending", async () => {
+    let resolveCommit;
+    let notifyCommit;
+    const commitStarted = new Promise((resolve) => {
+      notifyCommit = resolve;
+    });
+    const commitFinished = new Promise((resolve) => {
+      resolveCommit = resolve;
+    });
+    session.commitTransaction.mockImplementation(async () => {
+      notifyCommit();
+      await commitFinished;
+      transactionActive = false;
+    });
+
+    const request = handler(
+      { method: "POST", headers: { authorization: `Bearer ${testSecret}` } },
+      response,
+    );
+    await commitStarted;
+
+    expect(response.status).not.toHaveBeenCalled();
+    expect(session.endSession).not.toHaveBeenCalled();
+    expect(client.close).not.toHaveBeenCalled();
+
+    resolveCommit();
+    await request;
+    expect(response.status).toHaveBeenCalledWith(200);
   });
 });

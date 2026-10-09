@@ -25,6 +25,7 @@ describe("updateCurrencies with the real Currency API helper", () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+    jest.useFakeTimers();
     process.env.CRON_AUTH_SECRET = testSecret;
     process.env.CURRENCYAPI_API_KEY = testApiKey;
     process.env.CURRENCYAPI_API_URL = testApiUrl;
@@ -44,6 +45,7 @@ describe("updateCurrencies with the real Currency API helper", () => {
   });
 
   afterEach(() => {
+    jest.useRealTimers();
     errorLog.mockRestore();
     if (originalSecret === undefined) {
       delete process.env.CRON_AUTH_SECRET;
@@ -114,4 +116,48 @@ describe("updateCurrencies with the real Currency API helper", () => {
     );
     expect(errorLog).not.toHaveBeenCalled();
   });
+
+  test.each(["headers", "body"])(
+    "returns HTTP 500 without persistence when waiting for %s times out",
+    async (stage) => {
+      fetch.mockImplementation((url, { signal }) => {
+        const pending = new Promise((resolve, reject) => {
+          signal.addEventListener(
+            "abort",
+            () => reject(new Error(`Aborted request to ${url}`)),
+            { once: true },
+          );
+        });
+        providerResponse.json.mockReturnValue(pending);
+        return stage === "headers"
+          ? pending
+          : Promise.resolve(providerResponse);
+      });
+
+      const pendingRequest = handler(
+        { method: "POST", headers: { authorization: `Bearer ${testSecret}` } },
+        response,
+      );
+
+      await jest.advanceTimersByTimeAsync(4999);
+      expect(response.status).not.toHaveBeenCalled();
+      expect(sendCurrenciesToMongoDB).not.toHaveBeenCalled();
+
+      await jest.advanceTimersByTimeAsync(1);
+      await pendingRequest;
+
+      expect(fetch.mock.calls[0][1].signal.aborted).toBe(true);
+      expect(sendCurrenciesToMongoDB).not.toHaveBeenCalled();
+      expect(response.status).toHaveBeenCalledTimes(1);
+      expect(response.status).toHaveBeenCalledWith(500);
+      expect(response.send).toHaveBeenCalledWith("Internal Server Error");
+      expect(errorLog).toHaveBeenCalledTimes(1);
+      const loggedError = errorLog.mock.calls[0][1];
+      expect(loggedError.message).toBe("Currency API request timed out");
+      expect(loggedError.message).not.toContain(testApiKey);
+      expect(loggedError.message).not.toContain(testApiUrl);
+      expect(loggedError.cause).toBeUndefined();
+      expect(jest.getTimerCount()).toBe(0);
+    },
+  );
 });

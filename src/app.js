@@ -1,6 +1,17 @@
 import "./styles/styles.css";
-import { fetchDataAndDisplay } from "./utils/fetchUtils.js";
-import "./utils/widgetInitializer.js";
+import { initializeCurrencyWidget } from "./components/widgets/currencyWidget/currencyWidget.js";
+import { initializeWidgets } from "./utils/widgetInitializer.js";
 import "./components/ui/tooltip/infoTooltip.js";
 
-document.addEventListener("DOMContentLoaded", fetchDataAndDisplay);
+function initializeDashboard() {
+  initializeWidgets();
+  initializeCurrencyWidget();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeDashboard, {
+    once: true,
+  });
+} else {
+  initializeDashboard();
+}

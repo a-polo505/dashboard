@@ -11,16 +11,27 @@ import { CalendarWidget } from "../components/widgets/calendarWidget/calendarWid
 import { CoffeeWidget } from "../components/widgets/coffeeWidget/coffeeWidget.js";
 import { ContactAuthorWidget } from "../components/widgets/contactAuthorWidget/contactAuthorWidget.js";
 
-const dashboard = new Dashboard();
+let dashboard;
 
-dashboard.addWidget(new AirWidget());
-dashboard.addWidget(new DateWidget());
-dashboard.addWidget(new WeeksWidget());
-dashboard.addWidget(new TimeWidget());
-dashboard.addWidget(new DateCountdownWidget());
-dashboard.addWidget(new QuoteWidget());
-dashboard.addWidget(new MusicWidget());
-dashboard.addWidget(new BookmarksWidget());
-dashboard.addWidget(new CalendarWidget());
-dashboard.addWidget(new CoffeeWidget());
-dashboard.addWidget(new ContactAuthorWidget());
+export function initializeWidgets() {
+  if (dashboard) return dashboard;
+  if (!document.querySelector(".widgets")) {
+    throw new Error("Widget parent element not found");
+  }
+
+  const initializedDashboard = new Dashboard();
+  initializedDashboard.addWidget(new AirWidget());
+  initializedDashboard.addWidget(new DateWidget());
+  initializedDashboard.addWidget(new WeeksWidget());
+  initializedDashboard.addWidget(new TimeWidget());
+  initializedDashboard.addWidget(new DateCountdownWidget());
+  initializedDashboard.addWidget(new QuoteWidget());
+  initializedDashboard.addWidget(new MusicWidget());
+  initializedDashboard.addWidget(new BookmarksWidget());
+  initializedDashboard.addWidget(new CalendarWidget());
+  initializedDashboard.addWidget(new CoffeeWidget());
+  initializedDashboard.addWidget(new ContactAuthorWidget());
+
+  dashboard = initializedDashboard;
+  return dashboard;
+}

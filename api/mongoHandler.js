@@ -4,6 +4,8 @@ const uri = process.env.MONGODB_URI;
 
 export async function sendCurrenciesToMongoDB(currencies) {
   const client = new MongoClient(uri);
+  let operationFailed = false;
+  let operationError;
 
   try {
     await client.connect();
@@ -14,7 +16,7 @@ export async function sendCurrenciesToMongoDB(currencies) {
 
     const filteredCurrencies = {};
     for (const key in currencies) {
-      if (key !== "RUB") {
+      if (key !== "RUB" && key !== "BYN") {
         filteredCurrencies[key] = currencies[key];
       }
     }
@@ -34,8 +36,25 @@ export async function sendCurrenciesToMongoDB(currencies) {
       { upsert: true },
     );
   } catch (error) {
-    console.error("Error saving request data:", error);
+    operationFailed = true;
+    operationError = error;
   } finally {
-    await client.close();
+    try {
+      await client.close();
+    } catch (error) {
+      if (operationFailed) {
+        // Preserve the operation error instead of replacing it with cleanup failure.
+        console.error(
+          "Error closing MongoDB connection after a failed operation",
+        );
+      } else {
+        operationFailed = true;
+        operationError = error;
+      }
+    }
+  }
+
+  if (operationFailed) {
+    throw operationError;
   }
 }

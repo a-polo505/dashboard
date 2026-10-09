@@ -29,12 +29,12 @@ export function calculatePercentageChange(
   currenciesDiff,
   quoteCurrency,
 ) {
-  const quoteCurrencyData = currenciesDiff[0].data[quoteCurrencyCode];
+  const quoteCurrencyData = currenciesDiff?.[0]?.data?.[quoteCurrencyCode];
   if (!quoteCurrencyData) {
     return { percentageChange: "0.00%", percentageClass: "neutral" };
   }
 
-  const diffValue = currenciesDiff[0].data[quoteCurrencyCode].value;
+  const diffValue = quoteCurrencyData.value;
   const change = quoteCurrency.value - diffValue;
   const percentage = (change / diffValue) * 100;
 
@@ -52,12 +52,17 @@ export function calculatePercentageChange(
 }
 
 export function widgetCurrencyRender(currencies, currenciesDiff) {
+  const currencyData = currencies?.[0]?.data;
+  if (!isValidCurrencyData(currencyData)) {
+    throw new Error("Invalid currency data");
+  }
+
   const defaultCurrencyCode = "USD";
-  const defaultCurrency = currencies[0].data[defaultCurrencyCode];
+  const defaultCurrency = currencyData[defaultCurrencyCode];
   const defaultCurrencyName = defaultCurrency.code;
 
-  const quoteCurrencyCode = getUserCurrency();
-  const quoteCurrency = currencies[0].data[quoteCurrencyCode];
+  const quoteCurrencyCode = getUserCurrency(currencyData);
+  const quoteCurrency = currencyData[quoteCurrencyCode];
   const quoteCurrencyName = quoteCurrency.code;
 
   const { percentageChange, percentageClass } = calculatePercentageChange(
@@ -87,9 +92,35 @@ export function widgetCurrencyRender(currencies, currenciesDiff) {
   return currencyContent;
 }
 
-function getUserCurrency() {
+function isValidCurrencyData(currencyData) {
+  return (
+    currencyData !== null &&
+    typeof currencyData === "object" &&
+    !Array.isArray(currencyData) &&
+    Object.prototype.hasOwnProperty.call(currencyData, "USD") &&
+    Object.prototype.hasOwnProperty.call(currencyData, "UAH") &&
+    Object.entries(currencyData).every(
+      ([code, currency]) =>
+        code.length > 0 &&
+        !/[^A-Z0-9]/.test(code) &&
+        currency?.code === code &&
+        Number.isFinite(currency.value) &&
+        currency.value > 0,
+    )
+  );
+}
+
+function getUserCurrency(currencyData) {
   const storedCurrency = localStorage.getItem("userCurrency");
-  return storedCurrency || "UAH";
+  if (storedCurrency === null) {
+    return "UAH";
+  }
+  if (Object.prototype.hasOwnProperty.call(currencyData, storedCurrency)) {
+    return storedCurrency;
+  }
+
+  localStorage.removeItem("userCurrency");
+  return "UAH";
 }
 
 function getIconPath(icon) {

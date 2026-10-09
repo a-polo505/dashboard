@@ -1,6 +1,24 @@
 import { calculatePercentageChange } from "../src/utils/widgetCurrencyRender";
 
 describe("calculatePercentageChange function", () => {
+  test.each([
+    ["missing history", undefined],
+    ["null history", null],
+    ["empty history", []],
+    ["null historical document", [null]],
+    ["missing historical data", [{}]],
+    ["null historical data", [{ data: null }]],
+    ["empty historical data", [{ data: {} }]],
+    ["missing selected currency", [{ data: { UAH: { value: 40 } } }]],
+  ])("returns the neutral state for %s", (description, history) => {
+    const result = calculatePercentageChange("EUR", history, { value: 0.9 });
+
+    expect(result).toEqual({
+      percentageChange: "0.00%",
+      percentageClass: "neutral",
+    });
+  });
+
   test("should return equal percentage change when quote currency value equals diff value", () => {
     const quoteCurrencyCode = "EUR";
     const currenciesDiff = [{ data: { EUR: { value: 10.1234556 } } }];

@@ -1,6 +1,12 @@
 import "./styles/styles.css";
-import { fetchDataAndDisplay } from "./utils/fetchUtils.js";
+import { initializeCurrencyWidget } from "./components/widgets/currencyWidget/currencyWidget.js";
 import "./utils/widgetInitializer.js";
 import "./components/ui/tooltip/infoTooltip.js";
 
-document.addEventListener("DOMContentLoaded", fetchDataAndDisplay);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeCurrencyWidget, {
+    once: true,
+  });
+} else {
+  initializeCurrencyWidget();
+}

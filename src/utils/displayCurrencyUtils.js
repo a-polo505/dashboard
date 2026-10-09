@@ -7,13 +7,27 @@ import {
 import { getParsedData } from "./storageUtils.js";
 import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
 
-const currencyContainer = createContainer("Small", "");
-currencyContainer.id = "currencyWidget";
-currencyContainer.classList.add("currency-widget-container");
-document.querySelector(".widgets").appendChild(currencyContainer);
+let currencyContainer;
 
-const loadingSpinner = createLoadingSpinner();
-currencyContainer.appendChild(loadingSpinner);
+export function mountCurrencyWidget() {
+  if (currencyContainer) {
+    return currencyContainer;
+  }
+
+  const parent = document.querySelector(".widgets");
+  if (!parent) {
+    throw new Error("Currency widget parent element not found");
+  }
+
+  currencyContainer = createContainer("Small", "");
+  currencyContainer.id = "currencyWidget";
+  currencyContainer.classList.add("currency-widget-container");
+  // Keep the original DOM order when mounting after the other widgets.
+  parent.prepend(currencyContainer);
+  currencyContainer.appendChild(createLoadingSpinner());
+  document.addEventListener("currencyChange", handleCurrencyChange);
+  return currencyContainer;
+}
 
 function currencyButtonEventListeners() {
   const currencyPairButton = document.getElementById("currencyPair");
@@ -90,7 +104,33 @@ export function renderCurrencyContainer(content) {
   percentageEventListeners();
 }
 
-document.addEventListener("currencyChange", (event) => {
+export function renderCurrencyLoading() {
+  const spinner = createLoadingSpinner();
+  spinner.setAttribute("role", "status");
+  spinner.setAttribute("aria-label", "Loading currency rates");
+  currencyContainer.replaceChildren(spinner);
+  showLoader();
+}
+
+export function renderCurrencyError(retry) {
+  const content = document.createElement("div");
+  content.classList.add("flex", "flex-col", "justify-between", "h-100");
+
+  const message = document.createElement("p");
+  message.textContent = "Currency rates are unavailable. Please try again.";
+  message.setAttribute("role", "alert");
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.classList.add("currency--button");
+  button.textContent = "Try again";
+  button.addEventListener("click", retry);
+
+  content.append(message, button);
+  currencyContainer.replaceChildren(content);
+}
+
+function handleCurrencyChange(event) {
   const userCurrency = event.detail.userCurrency;
 
   showLoader();
@@ -105,4 +145,4 @@ document.addEventListener("currencyChange", (event) => {
   );
 
   renderCurrencyContainer(currencyContainerContent);
-});
+}

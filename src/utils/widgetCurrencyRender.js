@@ -30,7 +30,11 @@ export function calculatePercentageChange(
   quoteCurrency,
 ) {
   const quoteCurrencyData = currenciesDiff?.[0]?.data?.[quoteCurrencyCode];
-  if (!quoteCurrencyData) {
+  if (
+    !quoteCurrencyData ||
+    !Number.isFinite(quoteCurrencyData.value) ||
+    quoteCurrencyData.value <= 0
+  ) {
     return { percentageChange: "0.00%", percentageClass: "neutral" };
   }
 

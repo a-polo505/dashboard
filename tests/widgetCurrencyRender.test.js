@@ -136,6 +136,20 @@ describe("currency widget selection recovery", () => {
     expect(localStorage.getItem("userCurrency")).toBeNull();
   });
 
+  test.each([0, -1, "40", null, undefined, Infinity, NaN, {}])(
+    "uses a neutral percentage when the historical rate is invalid (%#)",
+    (value) => {
+      const content = widgetCurrencyRender(currencies, [
+        { data: { UAH: { value } } },
+      ]);
+
+      expect(content).toContain("currency--percentage neutral");
+      expect(content).toContain("0.00%");
+      expect(content).not.toContain("NaN");
+      expect(content).not.toContain("Infinity");
+    },
+  );
+
   test.each([
     ["missing payload", undefined],
     ["null payload", null],

@@ -136,4 +136,18 @@ describe("explicit widget initialization", () => {
     ]);
     expect(document.querySelectorAll(".coffee-cup")).toHaveLength(6);
   });
+
+  test("continues startup past coffee when its saved progress is corrupted", () => {
+    localStorage.setItem("coffeeCupsDate", new Date().toDateString());
+    localStorage.setItem("coffeeCupsProgress", "{invalid");
+
+    const dashboard = initializeWidgets();
+
+    expect(dashboard.widgets).toHaveLength(11);
+    expect(document.querySelectorAll(".coffee-cup")).toHaveLength(6);
+    expect(
+      document.querySelector(".contact-author-widget-container"),
+    ).not.toBeNull();
+    expect(initializeWidgets()).toBe(dashboard);
+  });
 });

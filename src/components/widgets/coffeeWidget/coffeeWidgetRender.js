@@ -6,6 +6,7 @@ class CoffeeWidgetRenderer {
     this.progressKey = "coffeeCupsProgress";
     this.dateKey = "coffeeCupsDate";
     this.cups = [];
+    this.progressDate = null;
     this.container = null;
   }
 
@@ -27,6 +28,7 @@ class CoffeeWidgetRenderer {
       <div class="flex align-center justify-center max-cups-text-container"></div>
     `;
 
+    this.loadProgress();
     this.renderCups();
     this.updateMaxCupsText();
 
@@ -38,7 +40,6 @@ class CoffeeWidgetRenderer {
       ".coffee-cups-container",
     );
     cupsContainer.innerHTML = "";
-    this.loadProgress();
 
     for (let i = 0; i < this.maxCups; i++) {
       const cupIcon = document.createElement("div");
@@ -53,6 +54,10 @@ class CoffeeWidgetRenderer {
   }
 
   toggleCup(index) {
+    if (this.progressDate !== getCurrentDate().toDateString()) {
+      this.loadProgress();
+    }
+
     if (this.cups[index]) {
       for (let i = index; i < this.maxCups; i++) {
         this.cups[i] = false;
@@ -143,22 +148,37 @@ class CoffeeWidgetRenderer {
   }
 
   loadProgress() {
-    const savedDate = localStorage.getItem(this.dateKey);
     const currentDate = getCurrentDate().toDateString();
+    this.progressDate = currentDate;
+    this.cups = Array(this.maxCups).fill(false);
 
-    if (savedDate !== currentDate) {
-      this.cups = Array(this.maxCups).fill(false);
-      localStorage.setItem(this.dateKey, currentDate);
-      localStorage.setItem(this.progressKey, JSON.stringify(this.cups));
-    } else {
-      this.cups =
-        JSON.parse(localStorage.getItem(this.progressKey)) ||
-        Array(this.maxCups).fill(false);
+    try {
+      if (localStorage.getItem(this.dateKey) === currentDate) {
+        const progress = JSON.parse(localStorage.getItem(this.progressKey));
+        if (
+          Array.isArray(progress) &&
+          progress.length === this.maxCups &&
+          progress.every((cup) => typeof cup === "boolean")
+        ) {
+          this.cups = progress;
+          return;
+        }
+      }
+    } catch {
+      // Invalid or inaccessible storage falls back to today's empty progress.
     }
+
+    this.saveProgress();
   }
 
   saveProgress() {
-    localStorage.setItem(this.progressKey, JSON.stringify(this.cups));
+    try {
+      // Write progress first so a failed reset cannot relabel old data as today.
+      localStorage.setItem(this.progressKey, JSON.stringify(this.cups));
+      localStorage.setItem(this.dateKey, this.progressDate);
+    } catch {
+      // Keep the widget interactive in memory when persistence is unavailable.
+    }
   }
 }
 

@@ -6,6 +6,7 @@ const testCurrencies = {
   USD: { code: "USD", value: 1 },
   UAH: { code: "UAH", value: 40 },
   RUB: { code: "RUB", value: 90 },
+  BYN: { code: "BYN", value: 120 },
 };
 const previousDocument = {
   _id: "synthetic-document-id",

@@ -2,6 +2,7 @@
 
 jest.mock("../src/components/ui/contextMenu/currencyContextMenu.js", () => ({
   showContextMenu: jest.fn(),
+  closeContextMenu: jest.fn(),
 }));
 
 const payload = {

@@ -55,7 +55,11 @@ export function calculatePercentageChange(
   return { percentageChange, percentageClass };
 }
 
-export function widgetCurrencyRender(currencies, currenciesDiff) {
+export function widgetCurrencyRender(
+  currencies,
+  currenciesDiff,
+  userCurrency = "UAH",
+) {
   const currencyData = currencies?.[0]?.data;
   if (!isValidCurrencyData(currencyData)) {
     throw new Error("Invalid currency data");
@@ -65,7 +69,12 @@ export function widgetCurrencyRender(currencies, currenciesDiff) {
   const defaultCurrency = currencyData[defaultCurrencyCode];
   const defaultCurrencyName = defaultCurrency.code;
 
-  const quoteCurrencyCode = getUserCurrency(currencyData);
+  const quoteCurrencyCode = Object.prototype.hasOwnProperty.call(
+    currencyData,
+    userCurrency,
+  )
+    ? userCurrency
+    : "UAH";
   const quoteCurrency = currencyData[quoteCurrencyCode];
   const quoteCurrencyName = quoteCurrency.code;
 
@@ -96,7 +105,7 @@ export function widgetCurrencyRender(currencies, currenciesDiff) {
   return currencyContent;
 }
 
-function isValidCurrencyData(currencyData) {
+export function isValidCurrencyData(currencyData) {
   return (
     currencyData !== null &&
     typeof currencyData === "object" &&
@@ -112,19 +121,6 @@ function isValidCurrencyData(currencyData) {
         currency.value > 0,
     )
   );
-}
-
-function getUserCurrency(currencyData) {
-  const storedCurrency = localStorage.getItem("userCurrency");
-  if (storedCurrency === null) {
-    return "UAH";
-  }
-  if (Object.prototype.hasOwnProperty.call(currencyData, storedCurrency)) {
-    return storedCurrency;
-  }
-
-  localStorage.removeItem("userCurrency");
-  return "UAH";
 }
 
 function getIconPath(icon) {

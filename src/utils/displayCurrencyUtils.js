@@ -1,14 +1,18 @@
 import { createContainer } from "./container.js";
-import { showContextMenu } from "../components/ui/contextMenu/currencyContextMenu.js";
+import {
+  showContextMenu,
+  closeContextMenu,
+} from "../components/ui/contextMenu/currencyContextMenu.js";
 import {
   createLoadingSpinner,
   showLoader,
 } from "../components/ui/spinner/spinner.js";
-import { getParsedData } from "./storageUtils.js";
 import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
 import { TooltipManager } from "../components/ui/tooltip/TooltipManager.js";
 
 let currencyContainer;
+let currentData;
+let userCurrency;
 const tooltipManager = new TooltipManager();
 
 export function mountCurrencyWidget() {
@@ -33,7 +37,10 @@ export function mountCurrencyWidget() {
 
 function currencyButtonEventListeners() {
   const currencyPairButton = document.getElementById("currencyPair");
-  currencyPairButton.addEventListener("click", showContextMenu);
+  currencyPairButton.addEventListener("click", () => {
+    if (currentData)
+      showContextMenu(Object.keys(currentData.currencies[0].data));
+  });
 }
 
 function percentageEventListeners() {
@@ -42,12 +49,7 @@ function percentageEventListeners() {
 }
 
 function getTooltipText() {
-  let lastUpdated;
-  try {
-    lastUpdated = getParsedData("currencies")?.[0]?.lastUpdated;
-  } catch {
-    // Optional cache access must not prevent opening the tooltip.
-  }
+  const lastUpdated = currentData?.currencies[0]?.lastUpdated;
   return `Last updated: ${formatLastUpdate(lastUpdated)}`;
 }
 
@@ -64,15 +66,45 @@ function formatLastUpdate(data) {
   return new Date(data).toLocaleString("en-US", options);
 }
 
-export function renderCurrencyContainer(content) {
+function readStoredCurrency() {
+  try {
+    return localStorage.getItem("userCurrency");
+  } catch {
+    return null;
+  }
+}
+
+export function renderCurrencyContainer(data) {
+  const selection = userCurrency ?? readStoredCurrency();
+  const content = widgetCurrencyRender(
+    data.currencies,
+    data.currenciesDiff,
+    selection,
+  );
+  const available = Object.prototype.hasOwnProperty.call(
+    data.currencies[0].data,
+    selection,
+  );
+  if (selection !== null && !available) {
+    try {
+      localStorage.removeItem("userCurrency");
+    } catch {
+      // Recover in memory even if the invalid preference cannot be removed.
+    }
+  }
+  closeContextMenu();
   tooltipManager.clearInteractions();
+  currentData = data;
+  userCurrency = available ? selection : "UAH";
   currencyContainer.innerHTML = content;
   currencyButtonEventListeners();
   percentageEventListeners();
 }
 
 export function renderCurrencyLoading() {
+  closeContextMenu();
   tooltipManager.clearInteractions();
+  currentData = undefined;
   const spinner = createLoadingSpinner();
   spinner.setAttribute("role", "status");
   spinner.setAttribute("aria-label", "Loading currency rates");
@@ -81,7 +113,9 @@ export function renderCurrencyLoading() {
 }
 
 export function renderCurrencyError(retry) {
+  closeContextMenu();
   tooltipManager.clearInteractions();
+  currentData = undefined;
   const content = document.createElement("div");
   content.classList.add("flex", "flex-col", "justify-between", "h-100");
 
@@ -100,18 +134,21 @@ export function renderCurrencyError(retry) {
 }
 
 function handleCurrencyChange(event) {
-  const userCurrency = event.detail.userCurrency;
-
-  showLoader();
-
-  const parsedData = getParsedData("currencies");
-  const parsedOldData = getParsedData("currenciesDiff");
-
-  const currencyContainerContent = widgetCurrencyRender(
-    parsedData,
-    parsedOldData,
-    userCurrency,
-  );
-
-  renderCurrencyContainer(currencyContainerContent);
+  const selection = event.detail?.userCurrency;
+  if (
+    !currentData ||
+    typeof selection !== "string" ||
+    !Object.prototype.hasOwnProperty.call(
+      currentData.currencies[0].data,
+      selection,
+    )
+  )
+    return;
+  userCurrency = selection;
+  renderCurrencyContainer(currentData);
+  try {
+    localStorage.setItem("userCurrency", selection);
+  } catch {
+    // Persistence is optional; the current selection already works in memory.
+  }
 }

@@ -1,9 +1,8 @@
 /** @jest-environment jsdom */
 
-import { widgetCurrencyRender } from "../src/utils/widgetCurrencyRender.js";
-
 jest.mock("../src/components/ui/contextMenu/currencyContextMenu.js", () => ({
   showContextMenu: jest.fn(),
+  closeContextMenu: jest.fn(),
 }));
 
 const firstUpdate = "2026-10-10T09:00:00.000Z";
@@ -59,9 +58,10 @@ describe.each([false, true])(
 
     function renderRates(lastUpdated = firstUpdate) {
       sessionStorage.setItem("currencies", JSON.stringify(rates(lastUpdated)));
-      display.renderCurrencyContainer(
-        widgetCurrencyRender(rates(lastUpdated), historicalRates),
-      );
+      display.renderCurrencyContainer({
+        currencies: rates(lastUpdated),
+        currenciesDiff: historicalRates,
+      });
     }
 
     function count(spy, type) {
@@ -134,11 +134,12 @@ describe.each([false, true])(
       expect(document.getElementById("rate").textContent).toBe("41");
     });
 
-    test("reads the cache on opening, after fresh content is rendered", () => {
+    test("uses the displayed snapshot even when the cache contains older data", () => {
       sessionStorage.setItem("currencies", JSON.stringify(rates()));
-      display.renderCurrencyContainer(
-        widgetCurrencyRender(rates(nextUpdate), historicalRates),
-      );
+      display.renderCurrencyContainer({
+        currencies: rates(nextUpdate),
+        currenciesDiff: historicalRates,
+      });
       // The fetch flow writes the fresh cache only after rendering.
       sessionStorage.setItem("currencies", JSON.stringify(rates(nextUpdate)));
       open();
@@ -146,17 +147,17 @@ describe.each([false, true])(
       window.dispatchEvent(new Event("scroll"));
       sessionStorage.setItem("currencies", JSON.stringify(rates(firstUpdate)));
       open();
-      expect(tooltip().textContent).toBe(expectedText(firstUpdate));
+      expect(tooltip().textContent).toBe(expectedText(nextUpdate));
     });
 
     test.each([null, "[]", JSON.stringify(rates(null)), "broken JSON"])(
-      "keeps the existing fallback when cached last-update data is absent (%s)",
+      "preserves the displayed last-update date despite unusable cache (%s)",
       (cache) => {
         renderRates();
         if (cache === null) sessionStorage.removeItem("currencies");
         else sessionStorage.setItem("currencies", cache);
         open();
-        expect(tooltip().textContent).toBe("Last updated: A long time ago 😔");
+        expect(tooltip().textContent).toBe(expectedText(firstUpdate));
       },
     );
 
@@ -165,6 +166,12 @@ describe.each([false, true])(
       jest.spyOn(window.Storage.prototype, "getItem").mockImplementation(() => {
         throw new Error("Storage unavailable");
       });
+      open();
+      expect(tooltip().textContent).toBe(expectedText(firstUpdate));
+    });
+
+    test("uses the existing fallback if the loaded snapshot has no update date", () => {
+      renderRates(null);
       open();
       expect(tooltip().textContent).toBe("Last updated: A long time ago 😔");
     });

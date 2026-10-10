@@ -149,6 +149,23 @@ describe.each([false, true])(
       expect(document.getElementById("rate").textContent).toBe("41");
     });
 
+    test("opens and closes from a nested SVG target with Safari touch click metadata", () => {
+      renderRates();
+      const target = document.querySelector("#percentageChange path");
+      const safariTap = () => {
+        pointer(target, "pointerdown", "touch");
+        pointer(target, "pointerup", "touch");
+        pointer(target, "click", "mouse");
+      };
+
+      safariTap();
+      expect(tooltip().textContent).toBe(expectedText(firstUpdate));
+      expect(document.querySelectorAll(".tooltip")).toHaveLength(1);
+      safariTap();
+      expect(tooltip()).toBeNull();
+      expect(document.getElementById("rate").textContent).toBe("41");
+    });
+
     test("uses the displayed snapshot even when the cache contains older data", () => {
       sessionStorage.setItem("currencies", JSON.stringify(rates()));
       display.renderCurrencyContainer({

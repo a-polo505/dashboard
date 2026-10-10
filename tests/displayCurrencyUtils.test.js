@@ -24,6 +24,10 @@ describe("currency loading and error states", () => {
     localStorage.clear();
   });
 
+  afterEach(() => {
+    renderCurrencyLoading();
+  });
+
   test("replaces the initial spinner with an accessible error and a working retry button", () => {
     renderCurrencyLoading();
     const retry = jest.fn();

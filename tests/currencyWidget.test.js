@@ -49,6 +49,11 @@ describe("explicit currency widget initialization", () => {
   });
 
   afterEach(() => {
+    if (document.getElementById("currencyWidget")) {
+      jest
+        .requireActual("../src/utils/displayCurrencyUtils.js")
+        .renderCurrencyLoading();
+    }
     for (const [type, listener] of addEventListener.mock.calls) {
       if (type === "currencyChange")
         document.removeEventListener(type, listener);

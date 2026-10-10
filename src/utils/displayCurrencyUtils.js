@@ -6,8 +6,10 @@ import {
 } from "../components/ui/spinner/spinner.js";
 import { getParsedData } from "./storageUtils.js";
 import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
+import { TooltipManager } from "../components/ui/tooltip/TooltipManager.js";
 
 let currencyContainer;
+const tooltipManager = new TooltipManager();
 
 export function mountCurrencyWidget() {
   if (currencyContainer) {
@@ -36,53 +38,17 @@ function currencyButtonEventListeners() {
 
 function percentageEventListeners() {
   const percentageChangeElement = document.getElementById("percentageChange");
-
-  percentageChangeElement.addEventListener("mouseover", function (event) {
-    const currenciesData = getParsedData("currencies");
-    const lastUpdated = currenciesData[0].lastUpdated;
-    const formattedLastUpdated = formatLastUpdate(lastUpdated);
-    const content = `Last updated: ${formattedLastUpdated}`;
-    showTooltip(content, event);
-  });
-
-  percentageChangeElement.addEventListener("mouseout", function () {
-    hideTooltip();
-  });
+  tooltipManager.handleInteraction(percentageChangeElement, getTooltipText);
 }
 
-function showTooltip(content, event) {
-  const tooltip = document.createElement("div");
-  tooltip.innerHTML = content;
-  tooltip.classList.add("tooltip", "visible");
-
-  tooltip.style.left = `${event.clientX}px`;
-  tooltip.style.top = `${event.clientY}px`;
-
-  document.body.appendChild(tooltip);
-
-  document.addEventListener("click", function hideTooltipOnClick(event) {
-    if (
-      !event.target.classList.contains("currency--percentage") &&
-      !event.target.classList.contains("tooltip")
-    ) {
-      hideTooltip();
-      document.removeEventListener("click", hideTooltipOnClick);
-    }
-  });
-
-  window.addEventListener("scroll", hideTooltipOnScroll);
-}
-
-function hideTooltip() {
-  const tooltip = document.querySelector(".tooltip");
-  if (tooltip) {
-    tooltip.remove();
+function getTooltipText() {
+  let lastUpdated;
+  try {
+    lastUpdated = getParsedData("currencies")?.[0]?.lastUpdated;
+  } catch {
+    // Optional cache access must not prevent opening the tooltip.
   }
-}
-
-function hideTooltipOnScroll() {
-  hideTooltip();
-  window.removeEventListener("scroll", hideTooltipOnScroll);
+  return `Last updated: ${formatLastUpdate(lastUpdated)}`;
 }
 
 function formatLastUpdate(data) {
@@ -99,12 +65,14 @@ function formatLastUpdate(data) {
 }
 
 export function renderCurrencyContainer(content) {
+  tooltipManager.clearInteractions();
   currencyContainer.innerHTML = content;
   currencyButtonEventListeners();
   percentageEventListeners();
 }
 
 export function renderCurrencyLoading() {
+  tooltipManager.clearInteractions();
   const spinner = createLoadingSpinner();
   spinner.setAttribute("role", "status");
   spinner.setAttribute("aria-label", "Loading currency rates");
@@ -113,6 +81,7 @@ export function renderCurrencyLoading() {
 }
 
 export function renderCurrencyError(retry) {
+  tooltipManager.clearInteractions();
   const content = document.createElement("div");
   content.classList.add("flex", "flex-col", "justify-between", "h-100");
 

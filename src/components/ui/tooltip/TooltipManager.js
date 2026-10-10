@@ -26,8 +26,9 @@ class TooltipManager {
       return;
     }
 
+    const content = typeof text === "function" ? text() : text;
     this.tooltipElement = document.createElement("div");
-    this.tooltipElement.innerHTML = text;
+    this.tooltipElement.innerHTML = content;
     this.tooltipElement.classList.add("tooltip");
     if (additionalClass) {
       this.tooltipElement.classList.add(additionalClass);

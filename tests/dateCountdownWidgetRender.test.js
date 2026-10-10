@@ -1,6 +1,9 @@
 /** @jest-environment jsdom */
 
+import flatpickr from "flatpickr";
 import { DateCountdownRenderer } from "../src/components/widgets/dateCountdownWidget/dateCountdownWidgetRender.js";
+
+jest.mock("flatpickr", () => jest.fn());
 
 describe("date countdown recovery", () => {
   let renderer;
@@ -18,7 +21,7 @@ describe("date countdown recovery", () => {
 
   function openPicker() {
     document.querySelector(".button-select-day").click();
-    return global.flatpickr.mock.calls.at(-1)[1];
+    return flatpickr.mock.calls.at(-1)[1];
   }
 
   beforeEach(() => {
@@ -26,7 +29,7 @@ describe("date countdown recovery", () => {
     jest.setSystemTime(new Date(2026, 9, 10, 12));
     document.body.innerHTML = "";
     localStorage.clear();
-    global.flatpickr = jest.fn();
+    flatpickr.mockReset();
     renderer = new DateCountdownRenderer();
   });
 
@@ -221,8 +224,10 @@ describe("date countdown recovery", () => {
     expect(localStorage.getItem("selectedDate")).toBe("2026-10-11");
   });
 
-  test("selects a new date with the real flatpickr after recovering invalid storage", () => {
-    global.flatpickr = jest.requireActual("flatpickr");
+  test("selects a new date with the imported flatpickr without a browser global", () => {
+    flatpickr.mockImplementation(jest.requireActual("flatpickr"));
+    delete global.flatpickr;
+    expect(window.flatpickr).toBeUndefined();
     localStorage.setItem("selectedDate", "invalid");
     mountWidget();
     const button = document.querySelector(".button-select-day");
@@ -238,6 +243,29 @@ describe("date countdown recovery", () => {
       expect(document.getElementById("selected-date").textContent).toBe("2");
       expect(localStorage.getItem("selectedDate")).toBe("2026-10-12");
       expect(picker.isOpen).toBe(false);
+    } finally {
+      picker.destroy();
+    }
+  });
+
+  test("restores the saved date in the imported picker without a browser global", () => {
+    flatpickr.mockImplementation(jest.requireActual("flatpickr"));
+    delete global.flatpickr;
+    expect(window.flatpickr).toBeUndefined();
+    localStorage.setItem("selectedDate", "2026-10-12");
+    mountWidget();
+    const button = document.querySelector(".button-select-day");
+    button.click();
+    const picker = button._flatpickr;
+
+    try {
+      expect(picker.isOpen).toBe(true);
+      expect(picker.selectedDates).toHaveLength(1);
+      expect(picker.formatDate(picker.selectedDates[0], "Y-m-d")).toBe(
+        "2026-10-12",
+      );
+      expect(document.getElementById("selected-date").textContent).toBe("2");
+      expect(localStorage.getItem("selectedDate")).toBe("2026-10-12");
     } finally {
       picker.destroy();
     }

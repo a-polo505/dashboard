@@ -1,3 +1,4 @@
+import flatpickr from "flatpickr";
 import { BaseButton } from "../../ui/button/BaseButton.js";
 import { ButtonStyle } from "../../ui/button/ButtonStyle.js";
 import { diffDays } from "../../../utils/dateUtils.js";

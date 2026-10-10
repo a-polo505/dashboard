@@ -3,7 +3,7 @@ name: Run Tests and Style Check
 on:
   push:
     branches:
-      - "*"
+      - "**"
 
 jobs:
   test:
@@ -30,6 +30,9 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: Build production bundle
+        run: npm run build
 
   format-and-lint:
     name: Format and Lint Check

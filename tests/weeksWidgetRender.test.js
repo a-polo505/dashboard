@@ -5,6 +5,7 @@ import { WeeksWidgetRenderer } from "../src/components/widgets/weeksWidget/weeks
 jest.mock("../src/components/ui/tooltip/TooltipManager.js", () => ({
   TooltipManager: jest.fn().mockImplementation(() => ({
     handleInteraction: jest.fn(),
+    clearInteractions: jest.fn(),
   })),
 }));
 

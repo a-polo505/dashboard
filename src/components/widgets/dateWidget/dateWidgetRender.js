@@ -7,6 +7,7 @@ class DateWidgetRenderer {
   }
 
   render() {
+    this.tooltipManager.clearInteractions();
     const container = document.createElement("div");
     container.classList.add(
       "flex",

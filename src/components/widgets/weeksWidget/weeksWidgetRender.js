@@ -13,6 +13,7 @@ class WeeksWidgetRenderer {
   }
 
   render() {
+    this.tooltipManager.clearInteractions();
     const currentDate = getCurrentDate();
     const currentYear = currentDate.getFullYear();
     const weeksInYear = getWeeksInYear(currentYear);

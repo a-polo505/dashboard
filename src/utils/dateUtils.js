@@ -14,8 +14,7 @@ function getCalendarDateTimestamp(date) {
   return calendarDate.getTime();
 }
 
-export function diffDays(selectedDate) {
-  const currentDate = new Date();
+export function diffDays(selectedDate, currentDate = new Date()) {
   return (
     (getCalendarDateTimestamp(selectedDate) -
       getCalendarDateTimestamp(currentDate)) /
@@ -24,36 +23,24 @@ export function diffDays(selectedDate) {
 }
 
 export function getWeeksInYear(year) {
-  const firstDayOfYear = new Date(year, 0, 1);
-  const lastDayOfYear = new Date(year, 11, 31);
-
-  let firstWeek = firstDayOfYear.getDay();
-  if (firstWeek === 0) firstWeek = 7;
-
-  let lastWeek = lastDayOfYear.getDay();
-  if (lastWeek === 0) lastWeek = 7;
-
-  const weeksInYear =
-    Math.ceil((lastDayOfYear - firstDayOfYear + 1) / (24 * 60 * 60 * 1000)) / 7;
-
-  return weeksInYear;
+  const lastDayOfYear = new Date(0);
+  lastDayOfYear.setFullYear(year, 11, 31);
+  return getWeekNumber(lastDayOfYear);
 }
 
 export function getWeekNumber(date) {
-  const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-  let firstDayOfWeek = firstDayOfYear.getDay();
-  if (firstDayOfWeek === 0) firstDayOfWeek = 7;
+  const firstDayOfYear = new Date(0);
+  firstDayOfYear.setUTCFullYear(date.getFullYear(), 0, 1);
+  const mondayOffset = (firstDayOfYear.getUTCDay() + 6) % 7;
+  const daysOffset =
+    (getCalendarDateTimestamp(date) - firstDayOfYear.getTime()) / 86400000;
 
-  const millisecondsInDay = 86400000;
-  const daysOffset = (date - firstDayOfYear) / millisecondsInDay;
-
-  const weekNumber = Math.ceil((daysOffset + firstDayOfWeek) / 7);
-  return weekNumber;
+  // Week 1 contains January 1; subsequent weeks begin on local Mondays.
+  return Math.floor((daysOffset + mondayOffset) / 7) + 1;
 }
 
 export function getRemainingWeeksOfYear(weeksInYear, currentWeek) {
-  const remainingWeeks = Math.ceil(weeksInYear) - currentWeek;
-  return remainingWeeks;
+  return weeksInYear - currentWeek;
 }
 
 export function getDaysInCurrentMonth() {

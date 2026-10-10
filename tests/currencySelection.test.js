@@ -73,9 +73,9 @@ describe("currency selection without required browser storage", () => {
     expect(document.getElementById("rate").textContent).toBe(String(value));
   }
   function expectUpdated(data) {
-    document
-      .getElementById("percentageChange")
-      .dispatchEvent(new window.MouseEvent("mouseover", { bubbles: true }));
+    const event = new window.MouseEvent("pointerover", { bubbles: true });
+    Object.defineProperty(event, "pointerType", { value: "mouse" });
+    document.getElementById("percentageChange").dispatchEvent(event);
     const text = document.querySelector(".tooltip").textContent;
     expect(text).toBe(
       `Last updated: ${new Date(data.currencies[0].lastUpdated).toLocaleString(

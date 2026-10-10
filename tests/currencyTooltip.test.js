@@ -42,14 +42,25 @@ describe.each([false, true])(
     let documentAdd;
     let documentRemove;
 
+    function pointer(element, type, pointerType) {
+      const event = new window.MouseEvent(type, {
+        bubbles: true,
+        clientX: 20,
+        clientY: 30,
+      });
+      Object.defineProperty(event, "pointerType", { value: pointerType });
+      element.dispatchEvent(event);
+    }
+
     function open(element = document.getElementById("percentageChange")) {
-      element.dispatchEvent(
-        new window.MouseEvent(touch ? "click" : "mouseover", {
-          bubbles: true,
-          clientX: 20,
-          clientY: 30,
-        }),
-      );
+      pointer(element, "pointerover", touch ? "touch" : "mouse");
+      if (touch) {
+        pointer(element, "pointerdown", "touch");
+        pointer(element, "pointerup", "touch");
+        element.dispatchEvent(
+          new window.MouseEvent("click", { bubbles: true }),
+        );
+      }
     }
 
     function tooltip() {
@@ -123,10 +134,14 @@ describe.each([false, true])(
       jest.advanceTimersByTime(10);
       expect(tooltip().classList.contains("visible")).toBe(true);
       if (touch) document.body.click();
-      else
-        document
-          .getElementById("percentageChange")
-          .dispatchEvent(new window.MouseEvent("mouseleave"));
+      else {
+        pointer(
+          document.getElementById("percentageChange"),
+          "pointerleave",
+          "mouse",
+        );
+        jest.advanceTimersByTime(150);
+      }
       expect(tooltip()).toBeNull();
       open();
       window.dispatchEvent(new Event("scroll"));
@@ -184,7 +199,7 @@ describe.each([false, true])(
         window.dispatchEvent(new Event("scroll"));
       }
       expect(count(windowAdd, "scroll")).toBe(1);
-      expect(count(documentAdd, "click")).toBe(touch ? 1 : 0);
+      expect(count(documentAdd, "click")).toBe(1);
       for (let index = 0; index < 5; index++) renderRates();
       open(oldElement);
       expect(tooltip()).toBeNull();
@@ -194,7 +209,7 @@ describe.each([false, true])(
         1,
       );
       expect(count(documentAdd, "click") - count(documentRemove, "click")).toBe(
-        touch ? 1 : 0,
+        1,
       );
     });
 
@@ -218,35 +233,44 @@ describe.each([false, true])(
         );
         expect(
           count(documentAdd, "click") - count(documentRemove, "click"),
-        ).toBe(touch ? active : 0);
+        ).toBe(active);
         renderRates(nextUpdate);
         open();
         expect(tooltip().textContent).toBe(expectedText(nextUpdate));
       },
     );
 
-    test("does not remove another widget's tooltip during dismissal or rerender", () => {
+    test("switches between widgets and keeps another widget active during currency rerender", () => {
       const otherTarget = document.createElement("button");
       document.body.appendChild(otherTarget);
       otherManager = new TooltipManager();
       otherManager.handleInteraction(otherTarget, "Another widget");
-      open(otherTarget);
-      const otherTooltip = otherManager.tooltipElement;
       renderRates();
       open();
-      if (touch) open();
-      else
-        document
-          .getElementById("percentageChange")
-          .dispatchEvent(new window.MouseEvent("mouseleave"));
-      expect(otherManager.tooltipElement).toBe(otherTooltip);
-      expect(otherTooltip.isConnected).toBe(true);
-      open();
-      display.renderCurrencyLoading();
-      expect(otherManager.tooltipElement).toBe(otherTooltip);
+      const currencyTooltip = tooltip();
+      open(otherTarget);
+      const otherTooltip = otherManager.tooltipElement;
+      expect(currencyTooltip.isConnected).toBe(false);
       expect(document.querySelectorAll(".tooltip")).toHaveLength(1);
-      otherManager.removeTooltip();
-      expect(tooltip()).toBeNull();
+      expect(otherTooltip.textContent).toBe("Another widget");
+
+      for (const render of [
+        () => renderRates(nextUpdate),
+        () => display.renderCurrencyLoading(),
+        () => display.renderCurrencyError(jest.fn()),
+      ]) {
+        render();
+        expect(otherManager.tooltipElement).toBe(otherTooltip);
+        expect(otherTooltip.isConnected).toBe(true);
+        expect(document.querySelectorAll(".tooltip")).toHaveLength(1);
+      }
+
+      renderRates(nextUpdate);
+      open();
+      expect(otherTooltip.isConnected).toBe(false);
+      expect(otherManager.tooltipElement).toBeNull();
+      expect(tooltip().textContent).toBe(expectedText(nextUpdate));
+      expect(document.querySelectorAll(".tooltip")).toHaveLength(1);
     });
 
     test("preserves the currency selection button handler", () => {

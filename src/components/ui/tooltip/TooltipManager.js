@@ -2,6 +2,22 @@ class TooltipManager {
   constructor() {
     this.tooltipElement = null;
     this.isTooltipVisible = false;
+    this.activeElement = null;
+    this.visibilityTimeout = null;
+    this.interactions = new Map();
+    this.globalListenersAttached = false;
+    this.isTouchDevice =
+      "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    this.onScroll = () => this.removeTooltip();
+    this.onOutsideClick = (event) => {
+      if (
+        this.isTooltipVisible &&
+        this.activeElement &&
+        !this.activeElement.contains(event.target)
+      ) {
+        this.removeTooltip();
+      }
+    };
   }
 
   createTooltip(text, x, y, additionalClass = null) {
@@ -10,8 +26,9 @@ class TooltipManager {
       return;
     }
 
+    const content = typeof text === "function" ? text() : text;
     this.tooltipElement = document.createElement("div");
-    this.tooltipElement.innerHTML = text;
+    this.tooltipElement.innerHTML = content;
     this.tooltipElement.classList.add("tooltip");
     if (additionalClass) {
       this.tooltipElement.classList.add(additionalClass);
@@ -19,7 +36,8 @@ class TooltipManager {
     document.body.appendChild(this.tooltipElement);
     this.updateTooltipPosition(x, y);
 
-    setTimeout(() => {
+    this.visibilityTimeout = setTimeout(() => {
+      this.visibilityTimeout = null;
       if (this.tooltipElement) {
         this.tooltipElement.classList.add("visible");
       }
@@ -47,25 +65,41 @@ class TooltipManager {
   }
 
   removeTooltip() {
+    if (this.visibilityTimeout !== null) {
+      clearTimeout(this.visibilityTimeout);
+      this.visibilityTimeout = null;
+    }
     if (this.tooltipElement) {
       this.tooltipElement.remove();
       this.tooltipElement = null;
-      this.isTooltipVisible = false;
     }
+    this.isTooltipVisible = false;
+    this.activeElement = null;
   }
 
   handleDesktopEvents(element, text, additionalClass) {
-    element.addEventListener("mouseover", (event) => {
+    const onMouseover = (event) => {
+      if (this.activeElement !== element) this.removeTooltip();
+      this.activeElement = element;
       this.createTooltip(text, event.clientX, event.clientY, additionalClass);
-    });
-    element.addEventListener("mouseleave", () => this.removeTooltip());
+    };
+    const onMouseleave = () => {
+      if (this.activeElement === element) this.removeTooltip();
+    };
+    element.addEventListener("mouseover", onMouseover);
+    element.addEventListener("mouseleave", onMouseleave);
+    return () => {
+      element.removeEventListener("mouseover", onMouseover);
+      element.removeEventListener("mouseleave", onMouseleave);
+    };
   }
 
   handleTouchEvents(element, text, additionalClass) {
-    element.addEventListener("click", (event) => {
+    const onClick = (event) => {
       if (this.isTooltipVisible) {
         this.removeTooltip();
       } else {
+        this.activeElement = element;
         const rect = element.getBoundingClientRect();
         this.createTooltip(
           text,
@@ -75,24 +109,43 @@ class TooltipManager {
         );
       }
       event.stopPropagation();
-    });
-
-    document.addEventListener("click", (event) => {
-      if (this.isTooltipVisible && !element.contains(event.target)) {
-        this.removeTooltip();
-      }
-    });
+    };
+    element.addEventListener("click", onClick);
+    return () => element.removeEventListener("click", onClick);
   }
 
   handleInteraction(element, text, additionalClass = null) {
-    const isTouchDevice =
-      "ontouchstart" in window || navigator.maxTouchPoints > 0;
-    if (isTouchDevice) {
-      this.handleTouchEvents(element, text, additionalClass);
-    } else {
-      this.handleDesktopEvents(element, text, additionalClass);
+    const previousCleanup = this.interactions.get(element);
+    if (previousCleanup) {
+      previousCleanup();
+      if (this.activeElement === element) this.removeTooltip();
     }
-    window.addEventListener("scroll", () => this.removeTooltip());
+
+    const cleanup = this.isTouchDevice
+      ? this.handleTouchEvents(element, text, additionalClass)
+      : this.handleDesktopEvents(element, text, additionalClass);
+    this.interactions.set(element, cleanup);
+
+    if (!this.globalListenersAttached) {
+      window.addEventListener("scroll", this.onScroll);
+      if (this.isTouchDevice) {
+        document.addEventListener("click", this.onOutsideClick);
+      }
+      this.globalListenersAttached = true;
+    }
+  }
+
+  clearInteractions() {
+    this.removeTooltip();
+    for (const cleanup of this.interactions.values()) cleanup();
+    this.interactions.clear();
+    if (this.globalListenersAttached) {
+      window.removeEventListener("scroll", this.onScroll);
+      if (this.isTouchDevice) {
+        document.removeEventListener("click", this.onOutsideClick);
+      }
+      this.globalListenersAttached = false;
+    }
   }
 }
 

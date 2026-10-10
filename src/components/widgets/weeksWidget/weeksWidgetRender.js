@@ -3,6 +3,7 @@ import {
   getWeeksInYear,
   getRemainingWeeksOfYear,
   getWeekNumber,
+  diffDays,
 } from "../../../utils/dateUtils.js";
 import { TooltipManager } from "../../ui/tooltip/TooltipManager.js";
 
@@ -12,6 +13,7 @@ class WeeksWidgetRenderer {
   }
 
   render() {
+    this.tooltipManager.clearInteractions();
     const currentDate = getCurrentDate();
     const currentYear = currentDate.getFullYear();
     const weeksInYear = getWeeksInYear(currentYear);
@@ -28,10 +30,9 @@ class WeeksWidgetRenderer {
     const gridContainer = this.renderGrid(weeksInYear, currentWeek);
     weeksContentContainer.appendChild(gridContainer);
 
-    const daysLeft = Math.ceil(
-      (new Date(currentDate.getFullYear(), 11, 31) - currentDate) /
-        (1000 * 60 * 60 * 24),
-    );
+    const nextYear = new Date(currentDate);
+    nextYear.setFullYear(currentYear + 1, 0, 1);
+    const daysLeft = diffDays(nextYear, currentDate);
     const remainingWeeks = getRemainingWeeksOfYear(weeksInYear, currentWeek);
 
     this.displayDaysLeft(

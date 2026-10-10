@@ -1,9 +1,8 @@
 /** @jest-environment jsdom */
 
-import { widgetCurrencyRender } from "../src/utils/widgetCurrencyRender.js";
-
 jest.mock("../src/components/ui/contextMenu/currencyContextMenu.js", () => ({
   showContextMenu: jest.fn(),
+  closeContextMenu: jest.fn(),
 }));
 
 describe("currency loading and error states", () => {
@@ -22,6 +21,10 @@ describe("currency loading and error states", () => {
   beforeEach(() => {
     sessionStorage.clear();
     localStorage.clear();
+  });
+
+  afterEach(() => {
+    renderCurrencyLoading();
   });
 
   test("replaces the initial spinner with an accessible error and a working retry button", () => {
@@ -70,7 +73,7 @@ describe("currency loading and error states", () => {
     ];
     sessionStorage.setItem("currencies", JSON.stringify(currencies));
 
-    renderCurrencyContainer(widgetCurrencyRender(currencies, []));
+    renderCurrencyContainer({ currencies, currenciesDiff: [] });
 
     expect(document.querySelector('[role="alert"]')).toBeNull();
     expect(document.getElementById("loadingSpinner")).toBeNull();

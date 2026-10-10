@@ -94,9 +94,7 @@ describe("currency widget loading and recovery", () => {
     await fetchDataAndDisplay();
 
     expect(global.fetch).not.toHaveBeenCalled();
-    expect(renderCurrencyContainer).toHaveBeenCalledWith(
-      expect.stringContaining("USD / EUR"),
-    );
+    expect(renderCurrencyContainer).toHaveBeenCalledWith(cachedData);
     expect(renderCurrencyLoading).not.toHaveBeenCalled();
     expect(renderCurrencyError).not.toHaveBeenCalled();
     expectCache();
@@ -116,9 +114,7 @@ describe("currency widget loading and recovery", () => {
         headers: { "Cache-Control": "no-cache" },
       });
       expect(renderCurrencyLoading).toHaveBeenCalledTimes(1);
-      expect(renderCurrencyContainer).toHaveBeenCalledWith(
-        expect.stringContaining(">41<"),
-      );
+      expect(renderCurrencyContainer).toHaveBeenCalledWith(freshData);
       expect(renderCurrencyError).not.toHaveBeenCalled();
       expectCache(freshData);
       expect(jest.getTimerCount()).toBe(1);
@@ -214,9 +210,7 @@ describe("currency widget loading and recovery", () => {
 
     expect(global.fetch).toHaveBeenCalledTimes(2);
     expect(renderCurrencyLoading).toHaveBeenCalledTimes(2);
-    expect(renderCurrencyContainer).toHaveBeenCalledWith(
-      expect.stringContaining("USD / EUR"),
-    );
+    expect(renderCurrencyContainer).toHaveBeenCalledWith(freshData);
     expectCache(freshData);
     expect(jest.getTimerCount()).toBe(1);
   });
@@ -259,9 +253,10 @@ describe("currency widget loading and recovery", () => {
 
       await fetchDataAndDisplay();
 
-      expect(renderCurrencyContainer).toHaveBeenCalledWith(
-        expect.stringContaining("currency--percentage neutral"),
-      );
+      expect(renderCurrencyContainer).toHaveBeenCalledWith({
+        ...freshData,
+        currenciesDiff: [],
+      });
       expectCache({ ...freshData, currenciesDiff: [] });
     },
   );
@@ -273,9 +268,10 @@ describe("currency widget loading and recovery", () => {
     await fetchDataAndDisplay();
 
     expect(global.fetch).not.toHaveBeenCalled();
-    expect(renderCurrencyContainer).toHaveBeenCalledWith(
-      expect.stringContaining("0.00%"),
-    );
+    expect(renderCurrencyContainer).toHaveBeenCalledWith({
+      ...cachedData,
+      currenciesDiff: [],
+    });
   });
 
   test("keeps periodic refresh available after an initial failure", async () => {
@@ -344,9 +340,7 @@ describe("currency widget loading and recovery", () => {
     finishFetch(response);
     await request;
     expectCache(freshData);
-    expect(renderCurrencyContainer).toHaveBeenCalledWith(
-      expect.stringContaining(">41<"),
-    );
+    expect(renderCurrencyContainer).toHaveBeenCalledWith(freshData);
   });
 
   test("restores the old cache pair if the second storage write fails and keeps fresh rates visible", async () => {
@@ -366,9 +360,7 @@ describe("currency widget loading and recovery", () => {
     await fetchAndUpdateData();
 
     expectCache();
-    expect(renderCurrencyContainer).toHaveBeenLastCalledWith(
-      expect.stringContaining(">41<"),
-    );
+    expect(renderCurrencyContainer).toHaveBeenLastCalledWith(freshData);
     expect(renderCurrencyError).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalledWith("Error caching currency data");
 
@@ -393,9 +385,7 @@ describe("currency widget loading and recovery", () => {
 
     expect(sessionStorage.getItem("currencies")).toBeNull();
     expect(sessionStorage.getItem("currenciesDiff")).toBeNull();
-    expect(renderCurrencyContainer).toHaveBeenCalledWith(
-      expect.stringContaining(">41<"),
-    );
+    expect(renderCurrencyContainer).toHaveBeenCalledWith(freshData);
     expect(renderCurrencyError).not.toHaveBeenCalled();
   });
 
@@ -408,9 +398,7 @@ describe("currency widget loading and recovery", () => {
     await fetchAndUpdateData();
 
     expectCache();
-    expect(renderCurrencyContainer).toHaveBeenLastCalledWith(
-      expect.stringContaining(">41<"),
-    );
+    expect(renderCurrencyContainer).toHaveBeenLastCalledWith(freshData);
     expect(renderCurrencyError).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalledWith("Error caching currency data");
   });

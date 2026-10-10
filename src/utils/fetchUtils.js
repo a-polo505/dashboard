@@ -1,4 +1,4 @@
-import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
+import { isValidCurrencyData } from "./widgetCurrencyRender.js";
 import { getParsedData } from "./storageUtils.js";
 import {
   renderCurrencyContainer,
@@ -11,17 +11,21 @@ let pendingRequest;
 let hasDisplayedRates = false;
 
 function prepareCurrencyData(data) {
-  if (!Array.isArray(data?.currencies) || data.currencies.length !== 1) {
+  if (
+    !Array.isArray(data?.currencies) ||
+    data.currencies.length !== 1 ||
+    !isValidCurrencyData(data.currencies[0]?.data)
+  ) {
     throw new Error("Invalid currency response");
   }
 
-  // Historical rates are optional; current rates must pass the renderer's validation.
+  // Historical rates are optional; current rates must pass the shared validation.
   const currenciesDiff = Array.isArray(data.currenciesDiff)
     ? data.currenciesDiff
     : [];
   return {
-    data: { currencies: data.currencies, currenciesDiff },
-    content: widgetCurrencyRender(data.currencies, currenciesDiff),
+    currencies: data.currencies,
+    currenciesDiff,
   };
 }
 
@@ -31,7 +35,7 @@ function displayCachedData() {
       currencies: getParsedData("currencies"),
       currenciesDiff: getParsedData("currenciesDiff"),
     });
-    renderCurrencyContainer(prepared.content);
+    renderCurrencyContainer(prepared);
     hasDisplayedRates = true;
     return true;
   } catch {
@@ -83,9 +87,9 @@ async function requestCurrencyData() {
     }
 
     const prepared = prepareCurrencyData(await response.json());
-    renderCurrencyContainer(prepared.content);
+    renderCurrencyContainer(prepared);
     hasDisplayedRates = true;
-    cacheCurrencyData(prepared.data);
+    cacheCurrencyData(prepared);
   } catch (error) {
     console.error("Error fetching and updating data:", error);
     if (!hasDisplayedRates) {

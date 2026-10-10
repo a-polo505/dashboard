@@ -148,8 +148,8 @@ class TooltipManager {
       lastPointerType = null;
     };
     const onClick = (event) => {
-      // Some browsers deliver click as MouseEvent after a touch PointerEvent.
-      const pointerType = event.pointerType || lastPointerType;
+      // Safari may mislabel a touch click as mouse; trust its pointerdown first.
+      const pointerType = lastPointerType || event.pointerType;
       lastPointerType = null;
       if (pointerType === "mouse" || event.button !== 0) return;
       if (this.isTooltipVisible && this.activeElement === element) {

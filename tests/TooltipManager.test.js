@@ -242,6 +242,64 @@ describe("managed tooltip subscriptions", () => {
     expect(manager.tooltipElement.textContent).toBe("First");
   });
 
+  test.each(["p", "div", "path"])(
+    "handles a Safari touch click reported as mouse on a %s target",
+    (tagName) => {
+      const manager = createManager();
+      const element =
+        tagName === "path"
+          ? document.createElementNS("http://www.w3.org/2000/svg", tagName)
+          : document.createElement(tagName);
+      document.body.appendChild(element);
+      manager.handleInteraction(element, "Details");
+
+      for (const expected of ["Details", null]) {
+        pointer(element, "pointerover", "touch");
+        pointer(element, "pointerdown", "touch");
+        pointer(element, "pointerup", "touch");
+        // iOS Safari can mislabel the compatibility click as mouse input.
+        pointer(element, "click", "mouse");
+
+        expect(manager.tooltipElement?.textContent ?? null).toBe(expected);
+      }
+    },
+  );
+
+  test("keeps the Safari touch workaround scoped to the preceding pointer gesture", () => {
+    const manager = createManager();
+    const first = addTarget();
+    const second = addTarget();
+    manager.handleInteraction(first, "First");
+    manager.handleInteraction(second, "Second");
+    pointer(first, "pointerdown", "touch");
+    pointer(first, "pointerup", "touch");
+    pointer(first, "click", "mouse");
+    expect(manager.tooltipElement.textContent).toBe("First");
+    pointer(second, "pointerdown", "touch");
+    pointer(second, "pointerup", "touch");
+    pointer(second, "click", "mouse");
+    expect(manager.tooltipElement.textContent).toBe("Second");
+    expect(document.querySelectorAll(".tooltip")).toHaveLength(1);
+
+    hover(first);
+    pointer(first, "pointerdown", "mouse");
+    pointer(first, "click", "mouse");
+    expect(manager.tooltipElement.textContent).toBe("First");
+    pointer(first, "click", "mouse");
+    expect(manager.tooltipElement.textContent).toBe("First");
+  });
+
+  test("discards a canceled touch gesture before a mouse click", () => {
+    const manager = createManager();
+    const element = addTarget();
+    manager.handleInteraction(element, "Details");
+    pointer(element, "pointerdown", "touch");
+    pointer(element, "pointercancel", "touch");
+    pointer(element, "click", "mouse");
+
+    expect(manager.tooltipElement).toBeNull();
+  });
+
   test("ignores mouse clicks on a hovered target including legacy MouseEvent clicks", () => {
     const manager = createManager();
     const element = addTarget();

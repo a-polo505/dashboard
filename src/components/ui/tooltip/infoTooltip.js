@@ -1,7 +1,6 @@
 import { TooltipManager } from "./TooltipManager.js";
 
-const tooltipManager = new TooltipManager();
-const infoIconElement = document.querySelector(".info-icon");
+let tooltipManager;
 
 const tooltipText = `
   <p>Welcome to Widget Dashboard ✨</p>
@@ -9,4 +8,12 @@ const tooltipText = `
   <p>Created just for fun.</p>
 `;
 
-tooltipManager.handleInteraction(infoIconElement, tooltipText, "info-tooltip");
+export function initializeInfoTooltip() {
+  if (tooltipManager) return;
+  const infoIconElement = document.querySelector(".info-icon");
+  if (!infoIconElement) return;
+
+  const manager = new TooltipManager();
+  manager.handleInteraction(infoIconElement, tooltipText, "info-tooltip");
+  tooltipManager = manager;
+}

@@ -24,6 +24,9 @@ function parseSelectedDate(value) {
 class DateCountdownRenderer {
   constructor() {
     this.selectedDate = null;
+    this.selectedDateElement = null;
+    this.selectedTextElement = null;
+    this.buttonElement = null;
     this.button = new BaseButton(
       "Choose Date",
       () => this.onClick(),
@@ -54,11 +57,12 @@ class DateCountdownRenderer {
     `;
 
     container.innerHTML = containerContent;
-    const buttonSelectDay = this.button.render();
-    buttonSelectDay.classList.add("button-select-day");
+    this.selectedDateElement = container.querySelector("#selected-date");
+    this.selectedTextElement = container.querySelector("#selected-text");
+    this.buttonElement = this.button.render();
+    this.buttonElement.classList.add("button-select-day");
 
-    container.appendChild(buttonSelectDay);
-    document.body.appendChild(container);
+    container.appendChild(this.buttonElement);
 
     this.checkStoredDate();
 
@@ -71,7 +75,7 @@ class DateCountdownRenderer {
 
   showDatePicker() {
     const selectedDate = this.refreshSelectedDate();
-    flatpickr(".button-select-day", {
+    flatpickr(this.buttonElement, {
       clickOpens: true,
       dateFormat: "Y-m-d",
       minDate: "today",
@@ -129,16 +133,15 @@ class DateCountdownRenderer {
     if (!Number.isFinite(diffDays) || diffDays <= 0) {
       this.resetDisplay();
     } else {
-      document.getElementById("selected-date").innerHTML =
-        `<p class="days-left">${diffDays}</p>`;
-      document.getElementById("selected-text").textContent = "Days Left";
+      this.selectedDateElement.innerHTML = `<p class="days-left">${diffDays}</p>`;
+      this.selectedTextElement.textContent = "Days Left";
     }
   }
 
   resetDisplay() {
-    document.getElementById("selected-date").innerHTML =
+    this.selectedDateElement.innerHTML =
       "Choose your special day to count down! 🥳";
-    document.getElementById("selected-text").textContent = "";
+    this.selectedTextElement.textContent = "";
   }
 }
 

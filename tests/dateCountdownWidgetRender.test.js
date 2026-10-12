@@ -41,6 +41,71 @@ describe("date countdown recovery", () => {
   });
 
   test.each([
+    ["2026-10-12", "2", "Days Left"],
+    ["invalid", prompt, ""],
+  ])(
+    "prepares stored date %s before mounting without touching page elements",
+    (date, expectedCount, expectedLabel) => {
+      document.body.innerHTML = `
+        <div id="selected-date">Unrelated date</div>
+        <p id="selected-text">Unrelated label</p>
+      `;
+      const originalHTML = document.body.innerHTML;
+      localStorage.setItem("selectedDate", date);
+
+      const content = renderer.render();
+
+      expect(content.isConnected).toBe(false);
+      expect(content.parentElement).toBeNull();
+      expect(content.querySelector("#selected-date").textContent).toBe(
+        expectedCount,
+      );
+      expect(content.querySelector("#selected-text").textContent).toBe(
+        expectedLabel,
+      );
+      expect(document.body.innerHTML).toBe(originalHTML);
+    },
+  );
+
+  test("keeps restored dates, picker targets, and updates local to each renderer", () => {
+    localStorage.setItem("selectedDate", "2026-10-12");
+    const firstContent = renderer.render();
+    document.body.appendChild(firstContent);
+    localStorage.setItem("selectedDate", "2026-10-13");
+    const secondRenderer = new DateCountdownRenderer();
+    const secondContent = secondRenderer.render();
+    document.body.appendChild(secondContent);
+    const firstDate = firstContent.querySelector("#selected-date");
+    const secondDate = secondContent.querySelector("#selected-date");
+    const firstButton = firstContent.querySelector(".button-select-day");
+    const secondButton = secondContent.querySelector(".button-select-day");
+    expect(firstDate.textContent).toBe("2");
+    expect(secondDate.textContent).toBe("3");
+
+    firstButton.click();
+    const [firstTarget, firstOptions] = flatpickr.mock.calls.at(-1);
+    expect(firstTarget).toBe(firstButton);
+    expect(firstOptions.defaultDate.getDate()).toBe(12);
+    firstOptions.onChange([new Date(2026, 9, 14)], "2026-10-14", {
+      close: jest.fn(),
+    });
+    expect(firstDate.textContent).toBe("4");
+    expect(secondDate.textContent).toBe("3");
+
+    secondButton.click();
+    const [secondTarget, secondOptions] = flatpickr.mock.calls.at(-1);
+    expect(secondTarget).toBe(secondButton);
+    expect(secondOptions.defaultDate.getDate()).toBe(13);
+    secondOptions.onChange([], "invalid", { close: jest.fn() });
+    expect(secondDate.textContent).toBe(prompt);
+    expect(secondContent.querySelector("#selected-text").textContent).toBe("");
+    expect(firstDate.textContent).toBe("4");
+    expect(firstContent.querySelector("#selected-text").textContent).toBe(
+      "Days Left",
+    );
+  });
+
+  test.each([
     "",
     "invalid",
     "null",
@@ -268,6 +333,39 @@ describe("date countdown recovery", () => {
       expect(localStorage.getItem("selectedDate")).toBe("2026-10-12");
     } finally {
       picker.destroy();
+    }
+  });
+
+  test("initializes the real picker only for its own button", () => {
+    flatpickr.mockImplementation(jest.requireActual("flatpickr"));
+    localStorage.setItem("selectedDate", "2026-10-12");
+    const firstContent = renderer.render();
+    localStorage.setItem("selectedDate", "2026-10-13");
+    const secondContent = new DateCountdownRenderer().render();
+    document.body.append(firstContent, secondContent);
+    const firstButton = firstContent.querySelector(".button-select-day");
+    const secondButton = secondContent.querySelector(".button-select-day");
+
+    try {
+      firstButton.click();
+      expect(firstButton._flatpickr.isOpen).toBe(true);
+      expect(secondButton._flatpickr).toBeUndefined();
+      firstButton._flatpickr.calendarContainer
+        .querySelector('.flatpickr-day[aria-label="October 14, 2026"]')
+        .click();
+      expect(firstContent.querySelector("#selected-date").textContent).toBe(
+        "4",
+      );
+      expect(secondContent.querySelector("#selected-date").textContent).toBe(
+        "3",
+      );
+      secondButton.click();
+      expect(secondButton._flatpickr.isOpen).toBe(true);
+      expect(secondButton._flatpickr.selectedDates[0].getDate()).toBe(13);
+      expect(firstButton._flatpickr.selectedDates[0].getDate()).toBe(14);
+    } finally {
+      firstButton._flatpickr?.destroy();
+      secondButton._flatpickr?.destroy();
     }
   });
 });

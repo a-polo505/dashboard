@@ -1,4 +1,4 @@
-const contextMenuContainer = document.getElementById("contextMenuContainer");
+let contextMenuContainer;
 let contextMenuOpen = false;
 let searchInput;
 let currencyCodes;
@@ -26,6 +26,7 @@ export const closeContextMenu = () => {
 
     contextMenuContainer.remove();
     document.removeEventListener("mousedown", handleClickOutside);
+    document.removeEventListener("keydown", handleKeydown);
 
     animateAndRemoveCircle(animationCircle);
   }
@@ -95,6 +96,12 @@ const handleSearchInput = () => {
 
 export const showContextMenu = (codes) => {
   if (!Array.isArray(codes) || codes.length === 0) return;
+  if (!contextMenuContainer) {
+    contextMenuContainer = document.getElementById("contextMenuContainer");
+    if (!contextMenuContainer) {
+      throw new Error("Currency context menu container not found");
+    }
+  }
   currencyCodes = codes;
   contextMenuContainer.innerHTML = "";
   contextMenuContainer.classList.add("context-menu-container");
@@ -121,7 +128,10 @@ export const showContextMenu = (codes) => {
     e.stopPropagation();
   });
 
-  document.addEventListener("mousedown", handleClickOutside);
+  if (!contextMenuOpen) {
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeydown);
+  }
 
   document.body.appendChild(contextMenuContainer);
   contextMenuOpen = true;
@@ -178,7 +188,7 @@ const createContextMenu = (currencyList) => {
   return contextMenu;
 };
 
-document.addEventListener("keydown", (event) => {
+const handleKeydown = (event) => {
   if (event.key === "Escape") {
     if (document.activeElement === searchInput) {
       searchInput.blur();
@@ -187,4 +197,4 @@ document.addEventListener("keydown", (event) => {
       closeContextMenu();
     }
   }
-});
+};

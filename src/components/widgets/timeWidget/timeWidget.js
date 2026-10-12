@@ -25,9 +25,7 @@ class TimeWidget {
 
   renderWidgetContent() {
     const elapsedPercentage = getDayProgressPercentage();
-    const widgetContent = this.timeWidgetRenderer.render(elapsedPercentage);
-    this.timeWidgetContainer.container.innerHTML = "";
-    this.timeWidgetContainer.appendContent(widgetContent);
+    this.timeWidgetContainer.renderWidgetContent(elapsedPercentage);
   }
 }
 

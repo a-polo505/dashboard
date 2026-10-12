@@ -1,10 +1,12 @@
 import { getCurrentDate } from "../../../utils/dateUtils.js";
+import {
+  readCoffeeProgress,
+  saveCoffeeProgress,
+} from "../../../utils/coffeeProgressStorage.js";
 
 class CoffeeWidgetRenderer {
   constructor() {
     this.maxCups = 6;
-    this.progressKey = "coffeeCupsProgress";
-    this.dateKey = "coffeeCupsDate";
     this.cups = [];
     this.progressDate = null;
     this.container = null;
@@ -150,35 +152,15 @@ class CoffeeWidgetRenderer {
   loadProgress() {
     const currentDate = getCurrentDate().toDateString();
     this.progressDate = currentDate;
-    this.cups = Array(this.maxCups).fill(false);
-
-    try {
-      if (localStorage.getItem(this.dateKey) === currentDate) {
-        const progress = JSON.parse(localStorage.getItem(this.progressKey));
-        if (
-          Array.isArray(progress) &&
-          progress.length === this.maxCups &&
-          progress.every((cup) => typeof cup === "boolean")
-        ) {
-          this.cups = progress;
-          return;
-        }
-      }
-    } catch {
-      // Invalid or inaccessible storage falls back to today's empty progress.
+    const progress = readCoffeeProgress(currentDate, this.maxCups);
+    this.cups = progress ?? Array(this.maxCups).fill(false);
+    if (progress === null) {
+      this.saveProgress();
     }
-
-    this.saveProgress();
   }
 
   saveProgress() {
-    try {
-      // Write progress first so a failed reset cannot relabel old data as today.
-      localStorage.setItem(this.progressKey, JSON.stringify(this.cups));
-      localStorage.setItem(this.dateKey, this.progressDate);
-    } catch {
-      // Keep the widget interactive in memory when persistence is unavailable.
-    }
+    saveCoffeeProgress(this.cups, this.progressDate);
   }
 }
 

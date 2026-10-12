@@ -148,9 +148,11 @@ describe("explicit currency widget initialization", () => {
       "USD / UAH",
     );
     expect(document.getElementById("loadingSpinner")).toBeNull();
-    expect(JSON.parse(sessionStorage.getItem("currencies"))).toEqual(
-      payload.currencies,
+    expect(JSON.parse(sessionStorage.getItem("currencySnapshot"))).toEqual(
+      payload,
     );
+    expect(sessionStorage.getItem("currencies")).toBeNull();
+    expect(sessionStorage.getItem("currenciesDiff")).toBeNull();
     expect(jest.getTimerCount()).toBe(1);
   });
 

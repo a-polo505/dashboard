@@ -43,11 +43,7 @@ describe("currency selection without required browser storage", () => {
   let pointsDescriptor;
 
   function saveCache(data = initial) {
-    sessionStorage.setItem("currencies", JSON.stringify(data.currencies));
-    sessionStorage.setItem(
-      "currenciesDiff",
-      JSON.stringify(data.currenciesDiff),
-    );
+    sessionStorage.setItem("currencySnapshot", JSON.stringify(data));
   }
 
   function openMenu() {
@@ -165,7 +161,7 @@ describe("currency selection without required browser storage", () => {
     expectRate("UAH", 41);
     expect(document.querySelector("#contextMenu")).toBeNull();
     expect(localStorage.getItem("userCurrency")).toBe("UAH");
-    expect(sessionStorage.getItem("currencies")).toBeNull();
+    expect(sessionStorage.getItem("currencySnapshot")).toBeNull();
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
@@ -259,9 +255,9 @@ describe("currency selection without required browser storage", () => {
   test.each(["not JSON", "{}", "[{}]"])(
     "uses API data despite corrupt cache (%s)",
     async (cache) => {
-      sessionStorage.setItem("currencies", cache);
+      sessionStorage.setItem("currencySnapshot", cache);
       await initialize();
-      sessionStorage.setItem("currencies", cache);
+      sessionStorage.setItem("currencySnapshot", cache);
       openMenu();
       expect(menuCodes()).toEqual(["USD", "UAH", "EUR"]);
       select("EUR");
@@ -270,7 +266,7 @@ describe("currency selection without required browser storage", () => {
     },
   );
 
-  test("uses the fresh snapshot even if a failed history write restores the old cache pair", async () => {
+  test("uses fresh rates in memory even if a failed snapshot write preserves the old cache", async () => {
     saveCache();
     localStorage.setItem("userCurrency", "EUR");
     await initialize();
@@ -279,7 +275,7 @@ describe("currency selection without required browser storage", () => {
     jest
       .spyOn(window.Storage.prototype, "setItem")
       .mockImplementation(function (key, value) {
-        if (this === sessionStorage && key === "currenciesDiff" && !failed) {
+        if (this === sessionStorage && key === "currencySnapshot" && !failed) {
           failed = true;
           throw new Error("Synthetic quota failure");
         }
@@ -293,11 +289,8 @@ describe("currency selection without required browser storage", () => {
     });
     await refresh();
     expect(document.querySelector("#contextMenu")).toBeNull();
-    expect(JSON.parse(sessionStorage.getItem("currencies"))).toEqual(
-      initial.currencies,
-    );
-    expect(JSON.parse(sessionStorage.getItem("currenciesDiff"))).toEqual(
-      initial.currenciesDiff,
+    expect(JSON.parse(sessionStorage.getItem("currencySnapshot"))).toEqual(
+      initial,
     );
     expectRate("EUR", 0.8);
     expectUpdated(refreshed);
@@ -322,8 +315,8 @@ describe("currency selection without required browser storage", () => {
       expect(removeItem).toHaveBeenCalledTimes(1);
       expect(removeItem).toHaveBeenCalledWith("userCurrency");
       expect(localStorage.getItem("otherSetting")).toBe("retained");
-      expect(JSON.parse(sessionStorage.getItem("currencies"))).toEqual(
-        initial.currencies,
+      expect(JSON.parse(sessionStorage.getItem("currencySnapshot"))).toEqual(
+        initial,
       );
     },
   );

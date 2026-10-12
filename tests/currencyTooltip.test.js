@@ -18,6 +18,13 @@ function rates(lastUpdated = firstUpdate) {
   ];
 }
 
+function cacheSnapshot(lastUpdated = firstUpdate) {
+  return JSON.stringify({
+    currencies: rates(lastUpdated),
+    currenciesDiff: historicalRates,
+  });
+}
+
 function expectedText(lastUpdated) {
   return `Last updated: ${new Date(lastUpdated).toLocaleString("en-US", {
     year: "numeric",
@@ -68,7 +75,7 @@ describe.each([false, true])(
     }
 
     function renderRates(lastUpdated = firstUpdate) {
-      sessionStorage.setItem("currencies", JSON.stringify(rates(lastUpdated)));
+      sessionStorage.setItem("currencySnapshot", cacheSnapshot(lastUpdated));
       display.renderCurrencyContainer({
         currencies: rates(lastUpdated),
         currenciesDiff: historicalRates,
@@ -167,27 +174,27 @@ describe.each([false, true])(
     });
 
     test("uses the displayed snapshot even when the cache contains older data", () => {
-      sessionStorage.setItem("currencies", JSON.stringify(rates()));
+      sessionStorage.setItem("currencySnapshot", cacheSnapshot());
       display.renderCurrencyContainer({
         currencies: rates(nextUpdate),
         currenciesDiff: historicalRates,
       });
       // The fetch flow writes the fresh cache only after rendering.
-      sessionStorage.setItem("currencies", JSON.stringify(rates(nextUpdate)));
+      sessionStorage.setItem("currencySnapshot", cacheSnapshot(nextUpdate));
       open();
       expect(tooltip().textContent).toBe(expectedText(nextUpdate));
       window.dispatchEvent(new Event("scroll"));
-      sessionStorage.setItem("currencies", JSON.stringify(rates(firstUpdate)));
+      sessionStorage.setItem("currencySnapshot", cacheSnapshot(firstUpdate));
       open();
       expect(tooltip().textContent).toBe(expectedText(nextUpdate));
     });
 
-    test.each([null, "[]", JSON.stringify(rates(null)), "broken JSON"])(
+    test.each([null, "[]", cacheSnapshot(null), "broken JSON"])(
       "preserves the displayed last-update date despite unusable cache (%s)",
       (cache) => {
         renderRates();
-        if (cache === null) sessionStorage.removeItem("currencies");
-        else sessionStorage.setItem("currencies", cache);
+        if (cache === null) sessionStorage.removeItem("currencySnapshot");
+        else sessionStorage.setItem("currencySnapshot", cache);
         open();
         expect(tooltip().textContent).toBe(expectedText(firstUpdate));
       },

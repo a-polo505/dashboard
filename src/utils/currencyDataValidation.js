@@ -15,3 +15,22 @@ export function isValidCurrencyData(currencyData) {
     )
   );
 }
+
+export function prepareCurrencyData(data) {
+  if (
+    !Array.isArray(data?.currencies) ||
+    data.currencies.length !== 1 ||
+    !isValidCurrencyData(data.currencies[0]?.data)
+  ) {
+    throw new Error("Invalid currency response");
+  }
+
+  // Historical rates are optional; current rates must pass the shared validation.
+  const currenciesDiff = Array.isArray(data.currenciesDiff)
+    ? data.currenciesDiff
+    : [];
+  return {
+    currencies: data.currencies,
+    currenciesDiff,
+  };
+}

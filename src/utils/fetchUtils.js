@@ -1,4 +1,4 @@
-import { isValidCurrencyData } from "./widgetCurrencyRender.js";
+import { isValidCurrencyData } from "./currencyDataValidation.js";
 import { getParsedData } from "./storageUtils.js";
 import {
   renderCurrencyContainer,

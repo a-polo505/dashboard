@@ -124,8 +124,6 @@ class TimeWidgetRenderer {
     return path;
   }
 
-  createCircle() {}
-
   getEndCoordinates(elapsedPercentage) {
     const radius = 40;
     const totalLength = 2 * Math.PI * radius;

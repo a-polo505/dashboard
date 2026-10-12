@@ -1,25 +1,7 @@
 import flatpickr from "flatpickr";
 import { BaseButton } from "../../ui/button/BaseButton.js";
 import { ButtonStyle } from "../../ui/button/ButtonStyle.js";
-import { diffDays } from "../../../utils/dateUtils.js";
-
-function parseSelectedDate(value) {
-  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return null;
-  }
-
-  const [year, month, day] = value.split("-").map(Number);
-  const date = new Date(0);
-  date.setHours(0, 0, 0, 0);
-  date.setFullYear(year, month - 1, day);
-
-  // Reject normalized dates such as February 30 and preserve local calendar days.
-  return date.getFullYear() === year &&
-    date.getMonth() === month - 1 &&
-    date.getDate() === day
-    ? date
-    : null;
-}
+import { diffDays, parseSelectedDate } from "../../../utils/dateUtils.js";
 
 class DateCountdownRenderer {
   constructor() {

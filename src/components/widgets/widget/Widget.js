@@ -13,10 +13,6 @@ class Widget {
       console.error(`Parent element with class ${parentClass} not found`);
     }
   }
-
-  appendContent(content) {
-    this.container.appendChild(content);
-  }
 }
 
 export { Widget };

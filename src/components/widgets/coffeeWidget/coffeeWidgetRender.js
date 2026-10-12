@@ -91,28 +91,27 @@ class CoffeeWidgetRenderer {
     const textContainer = this.container.querySelector(
       ".max-cups-text-container",
     );
+    let textElement = textContainer.querySelector(".max-cups-text");
 
     if (this.isMaxCupsReached()) {
-      if (!textContainer.querySelector(".max-cups-text")) {
-        const textElement = document.createElement("p");
+      if (!textElement) {
+        textElement = document.createElement("p");
         textElement.classList.add("max-cups-text");
         textElement.textContent = this.getMaxCupsText();
         textContainer.appendChild(textElement);
 
-        setTimeout(() => textElement.classList.add("visible"), 10);
+        textElement.addEventListener("transitionend", () => {
+          if (!this.isMaxCupsReached()) textElement.remove();
+        });
+
+        setTimeout(() => {
+          if (this.isMaxCupsReached()) textElement.classList.add("visible");
+        }, 10);
+      } else {
+        textElement.classList.add("visible");
       }
-    } else {
-      const textElement = textContainer.querySelector(".max-cups-text");
-      if (textElement) {
-        textElement.classList.remove("visible");
-        textElement.addEventListener(
-          "transitionend",
-          () => {
-            textElement.remove();
-          },
-          { once: true },
-        );
-      }
+    } else if (textElement) {
+      textElement.classList.remove("visible");
     }
   }
 

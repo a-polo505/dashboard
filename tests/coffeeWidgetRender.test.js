@@ -93,6 +93,72 @@ describe("coffee widget progress recovery", () => {
     );
   });
 
+  test.each([0, 10])(
+    "restores the maximum message after a rapid toggle and ignores a stale transition (%s ms)",
+    (delay) => {
+      storeProgress(JSON.stringify(Array(6).fill(true)));
+      mountWidget();
+      jest.advanceTimersByTime(delay);
+      const message = document.querySelector(".max-cups-text");
+
+      document.querySelectorAll(".coffee-cup")[5].click();
+      expect(message.classList.contains("visible")).toBe(false);
+      document.querySelectorAll(".coffee-cup")[5].click();
+
+      expect(renderer.cups).toEqual(Array(6).fill(true));
+      expect(document.querySelector(".max-cups-text")).toBe(message);
+      expect(message.classList.contains("visible")).toBe(true);
+      message.dispatchEvent(new Event("transitionend"));
+      jest.advanceTimersByTime(10);
+      expect(message.isConnected).toBe(true);
+      expect(message.classList.contains("visible")).toBe(true);
+      expect(document.querySelectorAll(".max-cups-text")).toHaveLength(1);
+    },
+  );
+
+  test("keeps one message through repeated rapid toggles and removes it after a completed dismissal", () => {
+    storeProgress(JSON.stringify(Array(6).fill(true)));
+    mountWidget();
+    jest.advanceTimersByTime(10);
+    const message = document.querySelector(".max-cups-text");
+
+    for (let cycle = 0; cycle < 3; cycle++) {
+      document.querySelectorAll(".coffee-cup")[5].click();
+      document.querySelectorAll(".coffee-cup")[5].click();
+      message.dispatchEvent(new Event("transitionend"));
+      expect(document.querySelector(".max-cups-text")).toBe(message);
+      expect(message.classList.contains("visible")).toBe(true);
+      expect(document.querySelectorAll(".max-cups-text")).toHaveLength(1);
+    }
+
+    document.querySelectorAll(".coffee-cup")[5].click();
+    message.dispatchEvent(new Event("transitionend"));
+    expect(message.isConnected).toBe(false);
+    expect(document.querySelector(".max-cups-text")).toBeNull();
+
+    document.querySelectorAll(".coffee-cup")[5].click();
+    jest.advanceTimersByTime(10);
+    const nextMessage = document.querySelector(".max-cups-text");
+    expect(nextMessage).not.toBe(message);
+    expect(nextMessage.classList.contains("visible")).toBe(true);
+    expect(document.querySelectorAll(".max-cups-text")).toHaveLength(1);
+  });
+
+  test("does not show the delayed maximum message after a cup has already been cleared", () => {
+    mountWidget();
+    document.querySelectorAll(".coffee-cup")[5].click();
+    const message = document.querySelector(".max-cups-text");
+    document.querySelectorAll(".coffee-cup")[5].click();
+
+    jest.advanceTimersByTime(10);
+
+    expect(renderer.cups[5]).toBe(false);
+    expect(message.classList.contains("visible")).toBe(false);
+    document.querySelectorAll(".coffee-cup")[5].click();
+    expect(message.classList.contains("visible")).toBe(true);
+    expect(document.querySelectorAll(".max-cups-text")).toHaveLength(1);
+  });
+
   test.each([null, "invalid date", "Fri Oct 09 2026", "Sun Oct 11 2026"])(
     "resets progress for a missing or different date (%s)",
     (date) => {

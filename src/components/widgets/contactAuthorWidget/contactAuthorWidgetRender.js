@@ -9,8 +9,8 @@ class ContactAuthorWidgetRenderer {
       github: "https://github.com/a-polo505",
     };
 
-    this.buttonTwitter = this.createButton("btn-twitter", this.links.twitter);
-    this.buttonBlueSky = this.createButton("btn-bluesky", this.links.bluesky);
+    this.buttonTwitter = this.createButton(this.links.twitter);
+    this.buttonBlueSky = this.createButton(this.links.bluesky);
   }
 
   render() {
@@ -99,12 +99,11 @@ class ContactAuthorWidgetRenderer {
     return textContainer;
   }
 
-  createButton(buttonClass, url) {
+  createButton(url) {
     return new BaseButton(
       null,
       () => this.openLink(url),
       ButtonStyle.default(),
-      buttonClass,
     );
   }
 

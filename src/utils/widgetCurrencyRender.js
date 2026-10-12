@@ -1,3 +1,5 @@
+const RATE_DECIMAL_PLACES = 4;
+
 export function truncateDecimals(number, digits) {
   const numString = number.toString();
   const decimalIndex = numString.indexOf(".");
@@ -38,14 +40,25 @@ export function calculatePercentageChange(
     return { percentageChange: "0.00%", percentageClass: "neutral" };
   }
 
-  const diffValue = quoteCurrencyData.value;
-  const change = quoteCurrency.value - diffValue;
-  const percentage = (change / diffValue) * 100;
+  const diffValue = truncateDecimals(
+    quoteCurrencyData.value,
+    RATE_DECIMAL_PLACES,
+  );
+  if (diffValue === 0) {
+    return { percentageChange: "0.00%", percentageClass: "neutral" };
+  }
+
+  const currentValue = truncateDecimals(
+    quoteCurrency.value,
+    RATE_DECIMAL_PLACES,
+  );
+  const change = currentValue - diffValue;
+  // Text, color and direction must agree at the displayed percentage precision.
+  const percentage = Number(((change / diffValue) * 100).toFixed(2));
 
   const icon = percentage > 0 ? "up" : percentage < 0 ? "down" : "equal";
 
-  const formattedPercentage =
-    percentage !== 0 ? Math.abs(percentage.toFixed(2)) : "0.00";
+  const formattedPercentage = percentage !== 0 ? Math.abs(percentage) : "0.00";
   const percentageChange = `
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
               <path fill-rule="evenodd" d="${getIconPath(icon)}" />
@@ -85,7 +98,7 @@ export function widgetCurrencyRender(
   );
 
   const quoteCurrencyValue = truncateText(
-    truncateDecimals(quoteCurrency.value, 4),
+    truncateDecimals(quoteCurrency.value, RATE_DECIMAL_PLACES),
     9,
   );
 

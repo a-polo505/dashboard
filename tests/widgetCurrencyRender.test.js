@@ -20,6 +20,35 @@ const currenciesDiff = [
 ];
 
 describe("currency rendering with an explicit selection", () => {
+  test.each([
+    [44.9776059592, 44.9776084585],
+    [44.9776084585, 44.9776059592],
+  ])(
+    "renders identical displayed rates with a neutral zero (%s -> %s)",
+    (previous, current) => {
+      const currentCurrencies = [
+        {
+          data: {
+            ...currencies[0].data,
+            UAH: { code: "UAH", value: current },
+          },
+        },
+      ];
+      const history = [{ data: { UAH: { code: "UAH", value: previous } } }];
+
+      const content = widgetCurrencyRender(currentCurrencies, history);
+
+      expect(content).toContain(
+        'id="rate" class="flex currency--rate">44.9776<',
+      );
+      expect(content).toContain("currency--percentage neutral");
+      expect(content).toContain("0.00%");
+      expect(content).toContain('d=""');
+      expect(currentCurrencies[0].data.UAH.value).toBe(current);
+      expect(history[0].data.UAH.value).toBe(previous);
+    },
+  );
+
   test.each(["BYN", "RUB", "ZZZ", "toString", "", "UAH "])(
     "renders UAH for an unavailable explicit selection (%#)",
     (code) => {

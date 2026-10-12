@@ -1,12 +1,8 @@
+import { createContainer } from "../../../utils/container.js";
+
 class Widget {
   constructor(containerType = "Default", contentHTML = "") {
-    this.container = document.createElement("div");
-    this.container.classList.add(
-      "Container",
-      "gradient-border",
-      `Container--${containerType.toLowerCase()}`,
-    );
-    this.container.innerHTML = contentHTML;
+    this.container = createContainer(containerType, contentHTML);
   }
 
   addToDOM(parentClass = "widgets") {

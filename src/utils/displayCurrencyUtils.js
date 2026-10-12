@@ -113,7 +113,7 @@ export function renderCurrencyLoading() {
   spinner.setAttribute("role", "status");
   spinner.setAttribute("aria-label", "Loading currency rates");
   currencyContainer.replaceChildren(spinner);
-  showLoader();
+  showLoader(spinner);
 }
 
 export function renderCurrencyError(retry) {

@@ -61,6 +61,35 @@ describe("currency loading and error states", () => {
     ).toBe("Loading currency rates");
   });
 
+  test("shows only its own spinner despite an earlier element with the same ID", () => {
+    const outsideSpinner = document.createElement("div");
+    outsideSpinner.id = "loadingSpinner";
+    outsideSpinner.style.display = "none";
+    document.body.prepend(outsideSpinner);
+    const container = document.getElementById("currencyWidget");
+
+    try {
+      for (let cycle = 0; cycle < 2; cycle++) {
+        renderCurrencyError(jest.fn());
+        renderCurrencyLoading();
+        const spinner = container.querySelector("#loadingSpinner");
+        expect(document.getElementById("loadingSpinner")).toBe(outsideSpinner);
+        expect(spinner.style.display).toBe("flex");
+        expect(outsideSpinner.style.display).toBe("none");
+
+        renderCurrencyLoading();
+        expect(spinner.isConnected).toBe(false);
+        expect(container.querySelectorAll("#loadingSpinner")).toHaveLength(1);
+        expect(container.querySelector("#loadingSpinner").style.display).toBe(
+          "flex",
+        );
+        expect(outsideSpinner.style.display).toBe("none");
+      }
+    } finally {
+      outsideSpinner.remove();
+    }
+  });
+
   test("restores the normal currency view after error recovery", () => {
     renderCurrencyError(jest.fn());
     const currencies = [

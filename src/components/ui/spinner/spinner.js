@@ -21,8 +21,7 @@ export function createLoadingSpinner() {
   return loaderContainer;
 }
 
-export function showLoader() {
-  const loader = document.getElementById("loadingSpinner");
+export function showLoader(loader) {
   if (loader) {
     loader.style.display = "flex";
   }

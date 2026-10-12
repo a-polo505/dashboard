@@ -1,18 +1,9 @@
 import { isValidCurrencyData } from "./currencyDataValidation.js";
-
-const RATE_DECIMAL_PLACES = 4;
-
-export function truncateDecimals(number, digits) {
-  const numString = number.toString();
-  const decimalIndex = numString.indexOf(".");
-
-  if (decimalIndex !== -1) {
-    const truncatedNumber = numString.slice(0, decimalIndex + digits + 1);
-    return parseFloat(truncatedNumber);
-  }
-
-  return number;
-}
+import {
+  calculatePercentageChange,
+  RATE_DECIMAL_PLACES,
+  truncateDecimals,
+} from "./currencyCalculations.js";
 
 export function truncateText(text, maxLength) {
   const textString = text.toString();
@@ -28,35 +19,10 @@ export function truncateText(text, maxLength) {
   return truncatedText;
 }
 
-export function calculatePercentageChange(
-  quoteCurrencyCode,
-  currenciesDiff,
-  quoteCurrency,
-) {
-  const quoteCurrencyData = currenciesDiff?.[0]?.data?.[quoteCurrencyCode];
-  if (
-    !quoteCurrencyData ||
-    !Number.isFinite(quoteCurrencyData.value) ||
-    quoteCurrencyData.value <= 0
-  ) {
+function renderPercentageChange(percentage) {
+  if (percentage === null) {
     return { percentageChange: "0.00%", percentageClass: "neutral" };
   }
-
-  const diffValue = truncateDecimals(
-    quoteCurrencyData.value,
-    RATE_DECIMAL_PLACES,
-  );
-  if (diffValue === 0) {
-    return { percentageChange: "0.00%", percentageClass: "neutral" };
-  }
-
-  const currentValue = truncateDecimals(
-    quoteCurrency.value,
-    RATE_DECIMAL_PLACES,
-  );
-  const change = currentValue - diffValue;
-  // Text, color and direction must agree at the displayed percentage precision.
-  const percentage = Number(((change / diffValue) * 100).toFixed(2));
 
   const icon = percentage > 0 ? "up" : percentage < 0 ? "down" : "equal";
 
@@ -93,11 +59,13 @@ export function widgetCurrencyRender(
   const quoteCurrency = currencyData[quoteCurrencyCode];
   const quoteCurrencyName = quoteCurrency.code;
 
-  const { percentageChange, percentageClass } = calculatePercentageChange(
+  const percentage = calculatePercentageChange(
     quoteCurrencyCode,
     currenciesDiff,
     quoteCurrency,
   );
+  const { percentageChange, percentageClass } =
+    renderPercentageChange(percentage);
 
   const quoteCurrencyValue = truncateText(
     truncateDecimals(quoteCurrency.value, RATE_DECIMAL_PLACES),

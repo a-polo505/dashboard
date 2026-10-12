@@ -1,4 +1,4 @@
-import { truncateDecimals } from "../src/utils/widgetCurrencyRender";
+import { truncateDecimals } from "../src/utils/currencyCalculations.js";
 
 describe("truncateDecimals function", () => {
   test("should truncate decimals correctly", () => {

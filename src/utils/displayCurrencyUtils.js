@@ -36,7 +36,7 @@ export function mountCurrencyWidget() {
 }
 
 function currencyButtonEventListeners() {
-  const currencyPairButton = document.getElementById("currencyPair");
+  const currencyPairButton = currencyContainer.querySelector("#currencyPair");
   currencyPairButton.addEventListener("click", () => {
     if (currentData)
       showContextMenu(
@@ -47,7 +47,8 @@ function currencyButtonEventListeners() {
 }
 
 function percentageEventListeners() {
-  const percentageChangeElement = document.getElementById("percentageChange");
+  const percentageChangeElement =
+    currencyContainer.querySelector("#percentageChange");
   tooltipManager.handleInteraction(percentageChangeElement, getTooltipText);
 }
 

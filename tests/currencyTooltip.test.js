@@ -305,5 +305,53 @@ describe.each([false, true])(
         ).showContextMenu,
       ).toHaveBeenCalledWith(Object.keys(rates()[0].data), button);
     });
+
+    test("binds currency selection only inside its own container despite an earlier duplicate ID", () => {
+      const outsideButton = document.createElement("button");
+      outsideButton.id = "currencyPair";
+      outsideButton.textContent = "Another widget";
+      document.body.prepend(outsideButton);
+      const container = display.mountCurrencyWidget();
+      const { showContextMenu } = jest.requireMock(
+        "../src/components/ui/contextMenu/currencyContextMenu.js",
+      );
+
+      for (const [index, updated] of [firstUpdate, nextUpdate].entries()) {
+        renderRates(updated);
+        expect(document.getElementById("currencyPair")).toBe(outsideButton);
+        outsideButton.click();
+        expect(showContextMenu).toHaveBeenCalledTimes(index);
+
+        const button = container.querySelector("#currencyPair");
+        button.click();
+        expect(showContextMenu).toHaveBeenCalledTimes(index + 1);
+        expect(showContextMenu).toHaveBeenLastCalledWith(
+          Object.keys(rates(updated)[0].data),
+          button,
+        );
+      }
+    });
+
+    test("binds the tooltip only inside its own container despite an earlier duplicate ID", () => {
+      const outsidePercentage = document.createElement("span");
+      outsidePercentage.id = "percentageChange";
+      outsidePercentage.textContent = "Another widget";
+      document.body.prepend(outsidePercentage);
+      const container = display.mountCurrencyWidget();
+
+      for (const updated of [firstUpdate, nextUpdate]) {
+        renderRates(updated);
+        expect(document.getElementById("percentageChange")).toBe(
+          outsidePercentage,
+        );
+        open(outsidePercentage);
+        expect(tooltip()).toBeNull();
+
+        open(container.querySelector("#percentageChange"));
+        expect(tooltip().textContent).toBe(expectedText(updated));
+        window.dispatchEvent(new Event("scroll"));
+        expect(tooltip()).toBeNull();
+      }
+    });
   },
 );

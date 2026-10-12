@@ -4,7 +4,9 @@ jest.mock("../src/styles/styles.css", () => ({}));
 jest.mock("../src/utils/widgetInitializer.js", () => ({
   initializeWidgets: jest.fn(),
 }));
-jest.mock("../src/components/ui/tooltip/infoTooltip.js", () => ({}));
+jest.mock("../src/components/ui/tooltip/infoTooltip.js", () => ({
+  initializeInfoTooltip: jest.fn(),
+}));
 jest.mock("../src/components/widgets/currencyWidget/currencyWidget.js", () => ({
   initializeCurrencyWidget: jest.fn(),
 }));
@@ -12,6 +14,7 @@ jest.mock("../src/components/widgets/currencyWidget/currencyWidget.js", () => ({
 describe("widget startup in the application entry point", () => {
   let initializeWidgets;
   let initializeCurrencyWidget;
+  let initializeInfoTooltip;
   let addEventListener;
 
   beforeEach(() => {
@@ -21,6 +24,9 @@ describe("widget startup in the application entry point", () => {
     ));
     ({ initializeCurrencyWidget } = jest.requireMock(
       "../src/components/widgets/currencyWidget/currencyWidget.js",
+    ));
+    ({ initializeInfoTooltip } = jest.requireMock(
+      "../src/components/ui/tooltip/infoTooltip.js",
     ));
     addEventListener = jest.spyOn(document, "addEventListener");
   });
@@ -39,12 +45,17 @@ describe("widget startup in the application entry point", () => {
 
     expect(initializeWidgets).not.toHaveBeenCalled();
     expect(initializeCurrencyWidget).not.toHaveBeenCalled();
+    expect(initializeInfoTooltip).not.toHaveBeenCalled();
     document.dispatchEvent(new Event("DOMContentLoaded"));
     document.dispatchEvent(new Event("DOMContentLoaded"));
     expect(initializeWidgets).toHaveBeenCalledTimes(1);
     expect(initializeCurrencyWidget).toHaveBeenCalledTimes(1);
+    expect(initializeInfoTooltip).toHaveBeenCalledTimes(1);
     expect(initializeWidgets.mock.invocationCallOrder[0]).toBeLessThan(
       initializeCurrencyWidget.mock.invocationCallOrder[0],
+    );
+    expect(initializeCurrencyWidget.mock.invocationCallOrder[0]).toBeLessThan(
+      initializeInfoTooltip.mock.invocationCallOrder[0],
     );
   });
 
@@ -58,8 +69,12 @@ describe("widget startup in the application entry point", () => {
 
       expect(initializeWidgets).toHaveBeenCalledTimes(1);
       expect(initializeCurrencyWidget).toHaveBeenCalledTimes(1);
+      expect(initializeInfoTooltip).toHaveBeenCalledTimes(1);
       expect(initializeWidgets.mock.invocationCallOrder[0]).toBeLessThan(
         initializeCurrencyWidget.mock.invocationCallOrder[0],
+      );
+      expect(initializeCurrencyWidget.mock.invocationCallOrder[0]).toBeLessThan(
+        initializeInfoTooltip.mock.invocationCallOrder[0],
       );
     },
   );

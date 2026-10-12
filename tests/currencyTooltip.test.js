@@ -292,12 +292,18 @@ describe.each([false, true])(
 
     test("preserves the currency selection button handler", () => {
       renderRates();
-      document.getElementById("currencyPair").click();
+      const button = document.getElementById("currencyPair");
+      button.click();
       expect(
         jest.requireMock(
           "../src/components/ui/contextMenu/currencyContextMenu.js",
         ).showContextMenu,
       ).toHaveBeenCalledTimes(1);
+      expect(
+        jest.requireMock(
+          "../src/components/ui/contextMenu/currencyContextMenu.js",
+        ).showContextMenu,
+      ).toHaveBeenCalledWith(Object.keys(rates()[0].data), button);
     });
   },
 );

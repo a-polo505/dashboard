@@ -169,6 +169,40 @@ describe("currency selection without required browser storage", () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
+  test("anchors each menu opening to the current button after the widget is rendered again", async () => {
+    await initialize();
+    const firstButton = document.getElementById("currencyPair");
+    jest
+      .spyOn(firstButton, "getBoundingClientRect")
+      .mockReturnValue({ left: 20, bottom: 40 });
+    openMenu();
+    expect(document.getElementById("contextMenuContainer").style.left).toBe(
+      "20px",
+    );
+    select("EUR");
+    expectRate("EUR", 0.9);
+    expect(firstButton.isConnected).toBe(false);
+    jest.advanceTimersByTime(300);
+
+    const currentButton = document.getElementById("currencyPair");
+    expect(currentButton).not.toBe(firstButton);
+    jest
+      .spyOn(currentButton, "getBoundingClientRect")
+      .mockReturnValue({ left: 120, bottom: 140 });
+    openMenu();
+    const container = document.getElementById("contextMenuContainer");
+    expect(container.style.left).toBe("120px");
+    expect(container.style.top).toBe("140px");
+    display.renderCurrencyLoading();
+    expect(currentButton.isConnected).toBe(false);
+    expect(container.isConnected).toBe(false);
+    const circle = document.querySelector(".animation-circle");
+    expect(circle.style.left).toBe("120px");
+    expect(circle.style.top).toBe("140px");
+    jest.advanceTimersByTime(300);
+    expect(circle.isConnected).toBe(false);
+  });
+
   test("keeps selection and refresh working when every storage operation throws", async () => {
     for (const method of ["getItem", "setItem", "removeItem"]) {
       jest.spyOn(window.Storage.prototype, method).mockImplementation(() => {

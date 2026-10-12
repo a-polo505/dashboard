@@ -39,7 +39,10 @@ function currencyButtonEventListeners() {
   const currencyPairButton = document.getElementById("currencyPair");
   currencyPairButton.addEventListener("click", () => {
     if (currentData)
-      showContextMenu(Object.keys(currentData.currencies[0].data));
+      showContextMenu(
+        Object.keys(currentData.currencies[0].data),
+        currencyPairButton,
+      );
   });
 }
 

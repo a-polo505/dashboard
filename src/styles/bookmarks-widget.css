@@ -1,12 +1,16 @@
 .bookmarks-widget-container {
   order: 8;
   padding: 0px !important;
-  background: linear-gradient(180deg, #d5deff, #ffffff);
+  background: linear-gradient(
+    180deg,
+    var(--bookmarks-background-start),
+    var(--bookmarks-background-end)
+  );
   position: relative;
 }
 
 .bookmarks-widget-container::after {
-  background: #ffffff;
+  background: var(--bookmarks-border);
 }
 
 .bookmarks-widget-container .header {
@@ -36,7 +40,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  box-shadow: 0 2px 4px #304af222;
+  box-shadow: 0 2px 4px var(--bookmarks-tile-shadow-color);
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -45,7 +49,7 @@
 
 .bookmarks-widget-container .bookmarks-link-box:hover {
   transform: translateY(-5px) scale(1.1);
-  box-shadow: 0 4px 8px #5068ff33;
+  box-shadow: 0 4px 8px var(--bookmarks-tile-hover-shadow-color);
 }
 
 .bookmarks-widget-container .title {
@@ -55,7 +59,7 @@
   font-optical-sizing: auto;
   font-weight: 800;
   font-style: normal;
-  color: #114db3;
+  color: var(--bookmarks-title-text);
 }
 
 .bookmarks-widget-container .link-total {
@@ -67,7 +71,7 @@
   font-weight: 600;
   font-style: normal;
   text-align: center;
-  color: rgba(91, 128, 194, 0.8);
+  color: var(--bookmarks-count-text);
 }
 
 .bookmarks-widget-container .bookmark-icon {
@@ -82,47 +86,51 @@
   font-optical-sizing: auto;
   font-weight: 600;
   font-style: normal;
-  color: #114db3;
+  color: var(--bookmarks-link-text);
 }
 
 .bg-github {
-  background: #191717;
+  background: var(--bookmarks-github-background);
 }
 
 .bg-chatgpt {
-  background: #74a89b;
+  background: var(--bookmarks-chatgpt-background);
 }
 
 .bg-readcv {
-  background: #222222;
+  background: var(--bookmarks-readcv-background);
 }
 
 .bg-twitter {
-  background: #000000;
+  background: var(--bookmarks-twitter-background);
 }
 
 .bg-dribbble {
-  background: #ffffff;
+  background: var(--bookmarks-dribbble-background);
 }
 
 .bg-figma {
-  background: linear-gradient(180deg, #2a221f, #151616);
+  background: linear-gradient(
+    180deg,
+    var(--bookmarks-figma-background-start),
+    var(--bookmarks-figma-background-end)
+  );
 }
 
 .bg-linkedin {
-  background: #0a66c2;
+  background: var(--bookmarks-linkedin-background);
 }
 
 .bg-layers {
-  background: #ffffff;
+  background: var(--bookmarks-layers-background);
 }
 
 .bg-mobbin {
-  background: #111111;
+  background: var(--bookmarks-mobbin-background);
 }
 
 .bg-medium {
-  background: #000000;
+  background: var(--bookmarks-medium-background);
 }
 
 @media screen and (max-width: 480px) {

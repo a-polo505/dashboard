@@ -120,4 +120,27 @@
   --coffee-border-end: #2e1d17;
   --coffee-text: #b69b88;
   --coffee-max-cups-text: #d9d9d9;
+
+  /* Bookmarks widget */
+  --bookmarks-background-start: #d5deff;
+  --bookmarks-background-end: #ffffff;
+  --bookmarks-border: #ffffff;
+  --bookmarks-tile-shadow-color: #304af222;
+  --bookmarks-tile-hover-shadow-color: #5068ff33;
+  --bookmarks-title-text: #114db3;
+  --bookmarks-count-text: rgba(91, 128, 194, 0.8);
+  --bookmarks-link-text: #114db3;
+
+  /* Bookmark tiles */
+  --bookmarks-github-background: #191717;
+  --bookmarks-chatgpt-background: #74a89b;
+  --bookmarks-readcv-background: #222222;
+  --bookmarks-twitter-background: #000000;
+  --bookmarks-dribbble-background: #ffffff;
+  --bookmarks-figma-background-start: #2a221f;
+  --bookmarks-figma-background-end: #151616;
+  --bookmarks-linkedin-background: #0a66c2;
+  --bookmarks-layers-background: #ffffff;
+  --bookmarks-mobbin-background: #111111;
+  --bookmarks-medium-background: #000000;
 }

@@ -1,4 +1,9 @@
 import { TooltipManager } from "../../ui/tooltip/TooltipManager.js";
+import {
+  getEndCoordinates,
+  getArc,
+  getArcBackground,
+} from "./timeWidgetGeometry.js";
 
 class SVGElementFactory {
   static createSVGElement(tagName, attributes = {}, textContent = null) {
@@ -68,7 +73,7 @@ class TimeWidgetRenderer {
       this.createPath(
         "#progress-path",
         "#201E43",
-        this.getArcBackground(),
+        getArcBackground(),
         elapsedPercentage,
       ),
     );
@@ -76,14 +81,14 @@ class TimeWidgetRenderer {
       this.createPath(
         "#progress-path-filled",
         "url(#gradient)",
-        this.getArc(elapsedPercentage),
+        getArc(elapsedPercentage),
         elapsedPercentage,
       ),
     );
     svg.appendChild(
       SVGElementFactory.createCircle({ cx: 50, cy: 10, r: 6, fill: "#FFFFFF" }),
     );
-    const [endX, endY] = this.getEndCoordinates(elapsedPercentage);
+    const [endX, endY] = getEndCoordinates(elapsedPercentage);
     svg.appendChild(
       SVGElementFactory.createCircle({
         cx: endX,
@@ -122,29 +127,6 @@ class TimeWidgetRenderer {
       `Remaining time until end of day: ${remainingPercentage.toFixed(2)}%`,
     );
     return path;
-  }
-
-  getEndCoordinates(elapsedPercentage) {
-    const radius = 40;
-    const totalLength = 2 * Math.PI * radius;
-    const arcLength = (elapsedPercentage / 100) * totalLength;
-    const endX = 50 + Math.sin(arcLength / radius) * radius;
-    const endY = 50 - Math.cos(arcLength / radius) * radius;
-    return [endX, endY];
-  }
-
-  getArc(elapsedPercentage) {
-    const radius = 40;
-    const startX = 50 + Math.sin(0) * radius;
-    const startY = 50 - Math.cos(0) * radius;
-    const [endX, endY] = this.getEndCoordinates(elapsedPercentage);
-    const largeArcFlag = elapsedPercentage > 50 ? 1 : 0;
-    return `M${startX},${startY} A${radius},${radius} 0 ${largeArcFlag},1 ${endX},${endY}`;
-  }
-
-  getArcBackground() {
-    const radius = 40;
-    return `M50,50 m0,-${radius} a${radius},${radius} 0 1,0 0,${2 * radius} a${radius},${radius} 0 1,0 0,-${2 * radius}`;
   }
 
   createGradient() {

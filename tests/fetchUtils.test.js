@@ -50,6 +50,17 @@ describe("currency widget loading and recovery", () => {
     );
   }
 
+  function waitForAbort(signal) {
+    return new Promise((resolve, reject) => {
+      signal.addEventListener(
+        "abort",
+        () =>
+          reject(new window.DOMException("Synthetic timeout", "AbortError")),
+        { once: true },
+      );
+    });
+  }
+
   beforeEach(() => {
     jest.resetModules();
     jest.useFakeTimers();
@@ -142,6 +153,7 @@ describe("currency widget loading and recovery", () => {
       expect(global.fetch).toHaveBeenCalledTimes(1);
       expect(global.fetch).toHaveBeenCalledWith("/api/currencies", {
         headers: { "Cache-Control": "no-cache" },
+        signal: expect.any(window.AbortSignal),
       });
       expect(renderCurrencyLoading).toHaveBeenCalledTimes(1);
       expect(renderCurrencyContainer).toHaveBeenCalledWith(freshData);
@@ -331,6 +343,7 @@ describe("currency widget loading and recovery", () => {
   });
 
   test("shares a pending request across initialization, manual retry and periodic refresh", async () => {
+    const intervals = jest.spyOn(global, "setInterval");
     let finishFetch;
     global.fetch.mockImplementationOnce(
       () =>
@@ -341,9 +354,11 @@ describe("currency widget loading and recovery", () => {
     const initialization = fetchDataAndDisplay();
     const first = fetchAndUpdateData();
     const second = fetchAndUpdateData();
-    await jest.advanceTimersByTimeAsync(60 * 60 * 1000);
+    const periodic = intervals.mock.calls[0][0]();
+    await jest.advanceTimersByTimeAsync(5_000);
 
     expect(first).toBe(second);
+    expect(first).toBe(periodic);
     expect(global.fetch).toHaveBeenCalledTimes(1);
     finishFetch(response);
     await initialization;
@@ -353,6 +368,136 @@ describe("currency widget loading and recovery", () => {
     await fetchAndUpdateData();
     expect(global.fetch).toHaveBeenCalledTimes(2);
   });
+
+  test.each([
+    ["fetch", false],
+    ["body", false],
+    ["fetch", true],
+    ["body", true],
+  ])(
+    "recovers after a %s timeout with displayed rates=%s",
+    async (stage, hasCachedRates) => {
+      localStorage.setItem("userCurrency", "EUR");
+      if (hasCachedRates) {
+        saveCache();
+        await fetchDataAndDisplay();
+        renderCurrencyContainer.mockClear();
+      }
+      let signal;
+      global.fetch.mockImplementationOnce((url, options) => {
+        signal = options.signal;
+        if (stage === "fetch") return waitForAbort(signal);
+        response.json.mockImplementationOnce(() => waitForAbort(signal));
+        return Promise.resolve(response);
+      });
+
+      const request = fetchAndUpdateData();
+      expect(fetchAndUpdateData()).toBe(request);
+      await jest.advanceTimersByTimeAsync(14_999);
+      expect(signal.aborted).toBe(false);
+      expect(renderCurrencyError).not.toHaveBeenCalled();
+
+      await jest.advanceTimersByTimeAsync(1);
+      await request;
+
+      expect(signal.aborted).toBe(true);
+      expect(renderCurrencyContainer).not.toHaveBeenCalled();
+      expect(localStorage.getItem("userCurrency")).toBe("EUR");
+      expect(jest.getTimerCount()).toBe(hasCachedRates ? 1 : 0);
+      expect(sessionStorage.getItem("currencySnapshot")).toBe(
+        hasCachedRates ? JSON.stringify(cachedData) : null,
+      );
+      expect(renderCurrencyError.mock.calls).toEqual(
+        hasCachedRates ? [] : [[fetchAndUpdateData]],
+      );
+      expect(renderCurrencyLoading).toHaveBeenCalledTimes(
+        hasCachedRates ? 0 : 1,
+      );
+      const retry = hasCachedRates
+        ? fetchAndUpdateData
+        : renderCurrencyError.mock.calls[0][0];
+      await retry();
+
+      expect(global.fetch).toHaveBeenCalledTimes(2);
+      const retrySignal = global.fetch.mock.calls[1][1].signal;
+      expect(retrySignal).not.toBe(signal);
+      expect(retrySignal.aborted).toBe(false);
+      expect(renderCurrencyContainer).toHaveBeenCalledWith(freshData);
+      expectCache(freshData);
+      expect(jest.getTimerCount()).toBe(hasCachedRates ? 1 : 0);
+    },
+  );
+
+  test("uses one deadline for receiving headers and consuming the response body", async () => {
+    let finishFetch;
+    let signal;
+    global.fetch.mockImplementationOnce((url, options) => {
+      signal = options.signal;
+      response.json.mockImplementationOnce(() => waitForAbort(signal));
+      return new Promise((resolve) => {
+        finishFetch = resolve;
+      });
+    });
+    const request = fetchAndUpdateData();
+    await jest.advanceTimersByTimeAsync(10_000);
+    finishFetch(response);
+    await jest.advanceTimersByTimeAsync(4_999);
+
+    expect(response.json).toHaveBeenCalledTimes(1);
+    expect(signal.aborted).toBe(false);
+    await jest.advanceTimersByTimeAsync(1);
+    await request;
+
+    expect(signal.aborted).toBe(true);
+    expect(renderCurrencyError).toHaveBeenCalledWith(expect.any(Function));
+    expect(jest.getTimerCount()).toBe(0);
+  });
+
+  test("clears the deadline after a response just before the timeout", async () => {
+    let finishFetch;
+    global.fetch.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finishFetch = resolve;
+        }),
+    );
+    const request = fetchAndUpdateData();
+    const signal = global.fetch.mock.calls[0][1].signal;
+    await jest.advanceTimersByTimeAsync(14_999);
+    finishFetch(response);
+    await request;
+    await jest.advanceTimersByTimeAsync(15_000);
+
+    expect(signal.aborted).toBe(false);
+    expect(renderCurrencyContainer).toHaveBeenCalledWith(freshData);
+    expect(renderCurrencyError).not.toHaveBeenCalled();
+    expect(jest.getTimerCount()).toBe(0);
+  });
+
+  test.each(["network", "HTTP", "JSON", "payload"])(
+    "clears the deadline after an early %s failure",
+    async (stage) => {
+      if (stage === "network")
+        global.fetch.mockRejectedValueOnce(new Error("Synthetic failure"));
+      if (stage === "HTTP") response.ok = false;
+      if (stage === "JSON")
+        response.json.mockRejectedValueOnce(
+          new SyntaxError("Synthetic JSON failure"),
+        );
+      if (stage === "payload")
+        response.json.mockResolvedValueOnce({ currencies: [] });
+
+      await fetchAndUpdateData();
+      const signal = global.fetch.mock.calls[0][1].signal;
+      expect(jest.getTimerCount()).toBe(0);
+      await jest.advanceTimersByTimeAsync(15_000);
+
+      expect(signal.aborted).toBe(false);
+      expect(renderCurrencyError).toHaveBeenCalledWith(expect.any(Function));
+      expect(renderCurrencyContainer).not.toHaveBeenCalled();
+      expect(sessionStorage.getItem("currencySnapshot")).toBeNull();
+    },
+  );
 
   test("does not replace the visible rates with a loader during a background refresh", async () => {
     saveCache();

@@ -101,4 +101,23 @@
   --weeks-summary-text: #c6c0f2;
   --weeks-summary-accent-text: #ffffff;
   --weeks-summary-accent-shadow-color: #e17fff;
+
+  /* Calendar widget */
+  --calendar-background-start: #1d4b3e;
+  --calendar-background-end: #1a3e34;
+  --calendar-border-start: #134336;
+  --calendar-border-end: #0d3328;
+  --calendar-month-text: #8cc9b1;
+  --calendar-weekday-text: #bae0cf;
+  --calendar-today-background: #ff463a;
+  --calendar-today-text: #ffffff;
+  --calendar-weekend-text: #5cab8e;
+
+  /* Coffee widget */
+  --coffee-background-start: #54372f;
+  --coffee-background-end: #2e1d17;
+  --coffee-border-start: #54372f;
+  --coffee-border-end: #2e1d17;
+  --coffee-text: #b69b88;
+  --coffee-max-cups-text: #d9d9d9;
 }

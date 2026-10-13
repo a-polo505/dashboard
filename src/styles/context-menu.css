@@ -12,15 +12,15 @@
   flex-direction: column;
   gap: 10px;
   width: 94px;
-  color: white;
+  color: var(--currency-menu-text);
   height: 180px;
   margin-top: 2px;
   padding: 16px;
-  background-color: #1b1b1b;
+  background-color: var(--currency-menu-background);
   position: absolute;
   border-radius: 4px;
-  border: 1px solid #4a3d23;
-  box-shadow: 0 0 2px #4a3d23;
+  border: 1px solid var(--currency-menu-border);
+  box-shadow: 0 0 2px var(--currency-menu-shadow-color);
 }
 
 .context-menu {
@@ -52,33 +52,33 @@
   background-color: transparent;
   border: none;
   font-size: 14px;
-  color: #ffffff;
+  color: var(--currency-menu-item-text);
   cursor: pointer;
   border-radius: 4px;
 }
 
 .context-menu button:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--currency-menu-item-hover-background);
 }
 
 .context-menu-search {
   text-transform: uppercase;
-  background-color: #1b1b1b;
+  background-color: var(--currency-menu-search-background);
   padding: 4px;
-  border: 1px solid #494949;
+  border: 1px solid var(--currency-menu-search-border);
   border-radius: 4px;
   font-size: 14px;
-  color: #ffffff;
+  color: var(--currency-menu-search-text);
 }
 
 .context-menu-search::placeholder {
-  color: #818181;
+  color: var(--currency-menu-search-placeholder-text);
 }
 
 .context-menu-search:focus {
   outline: none;
-  border-color: #4a3d23;
-  box-shadow: 0 0 4px #4a3d23;
+  border-color: var(--currency-menu-search-focus-border);
+  box-shadow: 0 0 4px var(--currency-menu-search-focus-shadow-color);
 }
 
 @media screen and (max-width: 480px) {

@@ -3,12 +3,12 @@
 }
 
 .currency--button {
-  color: #ffc44c;
+  color: var(--currency-button-text);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.25rem;
-  background: rgba(255, 196, 76, 0.08);
-  border: 1px solid rgba(255, 196, 76, 0.14);
+  background: var(--currency-button-background);
+  border: 1px solid var(--currency-button-border);
   border-radius: 4px;
   padding-left: 12px;
   padding-right: 12px;
@@ -17,7 +17,7 @@
 }
 
 .currency--button:hover {
-  box-shadow: 0 0 4px #4a3d23;
+  box-shadow: 0 0 4px var(--currency-button-hover-shadow-color);
 }
 
 .currency--button::before {
@@ -30,7 +30,7 @@
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(255, 255, 255, 0.5) 50%,
+    var(--currency-button-shine-color) 50%,
     transparent 100%
   );
   transition: left 0.8s ease;
@@ -43,13 +43,13 @@
 .currency--rate {
   font-size: 24px;
   font-weight: 800;
-  color: #fbc142;
+  color: var(--currency-rate-text);
 }
 
 .currency--base {
   font-size: 16px;
   font-weight: normal;
-  color: #fdfdfd;
+  color: var(--currency-base-text);
 }
 
 .currency--percentage {
@@ -58,19 +58,23 @@
 }
 
 .currency--percentage.positive {
-  color: #61b664;
+  color: var(--currency-change-positive);
 }
 
 .currency--percentage.negative {
-  color: #b66161;
+  color: var(--currency-change-negative);
 }
 
 .currency--percentage.neutral {
-  color: #a1a1a1;
+  color: var(--currency-change-neutral);
 }
 
 .currency-widget-container {
-  background: linear-gradient(to bottom, #262626, #212121);
+  background: linear-gradient(
+    to bottom,
+    var(--currency-background-start),
+    var(--currency-background-end)
+  );
 }
 
 @media screen and (max-width: 480px) {

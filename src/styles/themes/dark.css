@@ -47,4 +47,32 @@
   --widget-green-background-end: #063b31;
   --widget-green-border-start: #15574b;
   --widget-green-border-end: #2d5a53;
+
+  /* Currency widget */
+  --currency-background-start: #262626;
+  --currency-background-end: #212121;
+  --currency-button-text: #ffc44c;
+  --currency-button-background: rgba(255, 196, 76, 0.08);
+  --currency-button-border: rgba(255, 196, 76, 0.14);
+  --currency-button-hover-shadow-color: #4a3d23;
+  --currency-button-shine-color: rgba(255, 255, 255, 0.5);
+  --currency-rate-text: #fbc142;
+  --currency-base-text: #fdfdfd;
+  --currency-change-positive: #61b664;
+  --currency-change-negative: #b66161;
+  --currency-change-neutral: #a1a1a1;
+
+  /* Currency selection menu */
+  --currency-menu-background: #1b1b1b;
+  --currency-menu-text: white;
+  --currency-menu-border: #4a3d23;
+  --currency-menu-shadow-color: #4a3d23;
+  --currency-menu-item-text: #ffffff;
+  --currency-menu-item-hover-background: rgba(255, 255, 255, 0.05);
+  --currency-menu-search-background: #1b1b1b;
+  --currency-menu-search-text: #ffffff;
+  --currency-menu-search-border: #494949;
+  --currency-menu-search-placeholder-text: #818181;
+  --currency-menu-search-focus-border: #4a3d23;
+  --currency-menu-search-focus-shadow-color: #4a3d23;
 }

@@ -1,4 +1,4 @@
-import { truncateText } from "../src/utils/widgetCurrencyRender";
+import { truncateText } from "../src/utils/currencyFormatting.js";
 
 describe("truncateText function", () => {
   test("should truncate text correctly", () => {

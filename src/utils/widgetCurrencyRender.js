@@ -1,23 +1,6 @@
 import { isValidCurrencyData } from "./currencyDataValidation.js";
-import {
-  calculatePercentageChange,
-  RATE_DECIMAL_PLACES,
-  truncateDecimals,
-} from "./currencyCalculations.js";
-
-export function truncateText(text, maxLength) {
-  const textString = text.toString();
-  if (textString.length <= maxLength) {
-    return textString;
-  }
-
-  let truncatedText = textString.slice(0, maxLength);
-  if (truncatedText.endsWith(".")) {
-    truncatedText = truncatedText.slice(0, -1);
-  }
-
-  return truncatedText;
-}
+import { calculatePercentageChange } from "./currencyCalculations.js";
+import { formatCurrencyRate } from "./currencyFormatting.js";
 
 function renderPercentageChange(percentage) {
   if (percentage === null) {
@@ -67,10 +50,7 @@ export function widgetCurrencyRender(
   const { percentageChange, percentageClass } =
     renderPercentageChange(percentage);
 
-  const quoteCurrencyValue = truncateText(
-    truncateDecimals(quoteCurrency.value, RATE_DECIMAL_PLACES),
-    9,
-  );
+  const quoteCurrencyValue = formatCurrencyRate(quoteCurrency.value);
 
   const currencyContent = `
           <div class="flex align-left flex-col justify-between h-100">

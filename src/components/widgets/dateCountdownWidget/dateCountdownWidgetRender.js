@@ -2,6 +2,11 @@ import flatpickr from "flatpickr";
 import { BaseButton } from "../../ui/button/BaseButton.js";
 import { ButtonStyle } from "../../ui/button/ButtonStyle.js";
 import { diffDays, parseSelectedDate } from "../../../utils/dateUtils.js";
+import {
+  readCountdownDate,
+  saveCountdownDate,
+  removeCountdownDate,
+} from "../../../utils/countdownDateStorage.js";
 
 class DateCountdownRenderer {
   constructor() {
@@ -67,11 +72,7 @@ class DateCountdownRenderer {
       onChange: (selectedDates, dateStr, instance) => {
         this.selectedDate = dateStr;
         if (this.refreshSelectedDate()) {
-          try {
-            localStorage.setItem("selectedDate", dateStr);
-          } catch {
-            // Keep the selected date usable in memory if storage is unavailable.
-          }
+          saveCountdownDate(dateStr);
         }
 
         instance.close();
@@ -83,11 +84,7 @@ class DateCountdownRenderer {
   }
 
   checkStoredDate() {
-    try {
-      this.selectedDate = localStorage.getItem("selectedDate");
-    } catch {
-      // A missing storage backend must not interrupt widget initialization.
-    }
+    this.selectedDate = readCountdownDate(this.selectedDate);
     this.refreshSelectedDate();
   }
 
@@ -100,11 +97,7 @@ class DateCountdownRenderer {
     }
 
     if (this.selectedDate !== null) {
-      try {
-        localStorage.removeItem("selectedDate");
-      } catch {
-        // Invalid cached dates can still be discarded from the active widget.
-      }
+      removeCountdownDate();
     }
     this.selectedDate = null;
     this.resetDisplay();

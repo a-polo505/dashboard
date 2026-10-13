@@ -289,6 +289,22 @@ describe("date countdown recovery", () => {
     expect(localStorage.getItem("selectedDate")).toBe("2026-10-11");
   });
 
+  test("retains the active date on rerender when reading storage fails", () => {
+    localStorage.setItem("selectedDate", "2026-10-12");
+    mountWidget();
+    jest.spyOn(window.Storage.prototype, "getItem").mockImplementation(() => {
+      throw new Error("Storage unavailable");
+    });
+
+    document.body.replaceChildren(renderer.render());
+
+    expect(document.getElementById("selected-date").textContent).toBe("2");
+    expect(document.getElementById("selected-text").textContent).toBe(
+      "Days Left",
+    );
+    expect(openPicker().defaultDate.getDate()).toBe(12);
+  });
+
   test("selects a new date with the imported flatpickr without a browser global", () => {
     flatpickr.mockImplementation(jest.requireActual("flatpickr"));
     delete global.flatpickr;

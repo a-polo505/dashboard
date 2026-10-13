@@ -5,9 +5,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@500..800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap");
 
+@import url("themes/light.css");
+@import url("themes/dark.css");
 @import url("flex.css");
 @import url("currency-widget.css");
 @import url("context-menu.css");
@@ -27,9 +29,9 @@
 @import url("contact-author-widget.css");
 
 :root {
-  --text-black: rgb(41, 41, 41);
-  --text-gray-400: rgb(156, 163, 175);
-  --text-gray-500: rgb(107 114 128);
+  --text-black: var(--footer-link-hover-text);
+  --text-gray-400: var(--text-primary);
+  --text-gray-500: var(--text-secondary);
   --vh: 100%;
 }
 
@@ -44,8 +46,8 @@ html {
 body {
   margin: 0;
   padding: 0;
-  color: var(--text-gray-400);
-  background-color: #f6f7fb;
+  color: var(--text-primary);
+  background-color: var(--page-background);
   font-family: "Inter", sans-serif;
   font-size: 14px;
   min-height: var(--vh);
@@ -58,7 +60,11 @@ body::before {
   left: 0;
   width: 100vw;
   height: var(--vh);
-  background: linear-gradient(to bottom, #ffffff, #c1c3ff);
+  background: linear-gradient(
+    to bottom,
+    var(--page-background-start),
+    var(--page-background-end)
+  );
   z-index: -1;
 }
 
@@ -159,7 +165,7 @@ a {
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
-  background: #45059d;
+  background: var(--project-title-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -171,15 +177,15 @@ header {
 
 .tooltip {
   position: fixed;
-  background-color: rgba(12, 12, 12, 0.9);
-  color: #fff;
+  background-color: var(--tooltip-background);
+  color: var(--tooltip-text);
   padding: 10px 14px;
   border-radius: 8px;
   max-width: 250px;
   font-size: 12px;
   font-family: Arial, sans-serif;
   line-height: 1.4;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 8px var(--tooltip-shadow-color);
   transition:
     opacity 0.3s ease,
     transform 0.3s ease;
@@ -202,11 +208,11 @@ header {
 .cta-button {
   overflow: hidden;
   gap: 4px;
-  background-color: #8987df;
+  background-color: var(--cta-button-background);
   border-radius: 24px;
   cursor: pointer;
   font-weight: 600;
-  box-shadow: 0 1px 6px #b7bef8;
+  box-shadow: 0 1px 6px var(--cta-button-shadow-color);
 }
 
 .info {
@@ -214,13 +220,13 @@ header {
 }
 
 .cta-button:hover {
-  box-shadow: 0 0 4px #8e8e8e23;
+  box-shadow: 0 0 4px var(--cta-button-hover-shadow-color);
 }
 
 .cta-button a {
   position: relative;
   padding: 8px 8px;
-  color: #161616;
+  color: var(--cta-button-text);
 }
 
 .cta-button a::before {
@@ -233,7 +239,7 @@ header {
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(255, 255, 255, 0.5) 50%,
+    var(--cta-button-shine-color) 50%,
     transparent 100%
   );
   transition: left 0.8s ease;
@@ -254,20 +260,20 @@ header {
   order: 2;
   font-family: "Space Mono", monospace;
   font-size: 12px;
-  color: #4b4694c4;
+  color: var(--footer-text);
 }
 
 .footer-link {
-  color: #4b4694;
+  color: var(--footer-link-text);
   text-decoration-line: underline;
-  text-decoration-color: #4b4694;
+  text-decoration-color: var(--footer-link-text);
   text-decoration-thickness: 2px;
   text-underline-offset: 2px;
   transition-duration: 0.3s;
 }
 
 .footer-link:hover {
-  color: var(--text-black);
+  color: var(--footer-link-hover-text);
   text-decoration-color: transparent;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 0.7s;
@@ -285,18 +291,18 @@ header {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #454545;
+  background-color: var(--scrollbar-thumb-background);
   border-radius: 6px;
-  border: 3px solid #454545;
+  border: 3px solid var(--scrollbar-thumb-background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #848484;
-  border-color: #848484;
+  background-color: var(--scrollbar-thumb-hover-background);
+  border-color: var(--scrollbar-thumb-hover-background);
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background-color: #5d5d5d;
+  background-color: var(--scrollbar-thumb-active-background);
 }
 
 ::-moz-scrollbar {
@@ -304,17 +310,17 @@ header {
 }
 
 ::-moz-scrollbar-thumb {
-  background-color: #aeaeae;
+  background-color: var(--moz-scrollbar-thumb-background);
   border-radius: 6px;
-  border: 3px solid #fff;
+  border: 3px solid var(--moz-scrollbar-thumb-border);
 }
 
 ::-moz-scrollbar-thumb:hover {
-  background-color: #848484;
+  background-color: var(--scrollbar-thumb-hover-background);
 }
 
 ::-moz-scrollbar-thumb:active {
-  background-color: #5d5d5d;
+  background-color: var(--scrollbar-thumb-active-background);
 }
 
 @media screen and (max-width: 768px) {

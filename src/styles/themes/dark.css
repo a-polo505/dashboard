@@ -1,0 +1,50 @@
+/*
+ * Initial values intentionally match the light theme to preserve the design.
+ * Customize this palette when dark-theme colors are ready.
+ * Keep token names and group order aligned with light.css.
+ */
+:root[data-theme="dark"] {
+  /* Page */
+  --page-background: #f6f7fb;
+  --page-background-start: #ffffff;
+  --page-background-end: #c1c3ff;
+  --text-primary: rgb(156, 163, 175);
+  --text-secondary: rgb(107 114 128);
+  --project-title-text: #45059d;
+
+  /* Tooltips */
+  --tooltip-background: rgba(12, 12, 12, 0.9);
+  --tooltip-text: #fff;
+  --tooltip-shadow-color: rgba(0, 0, 0, 0.2);
+
+  /* Footer buttons */
+  --cta-button-background: #8987df;
+  --cta-button-text: #161616;
+  --cta-button-shadow-color: #b7bef8;
+  --cta-button-hover-shadow-color: #8e8e8e23;
+  --cta-button-shine-color: rgba(255, 255, 255, 0.5);
+
+  /* Footer text and links */
+  --footer-text: #4b4694c4;
+  --footer-link-text: #4b4694;
+  --footer-link-hover-text: rgb(41, 41, 41);
+
+  /* Scrollbars */
+  --scrollbar-thumb-background: #454545;
+  --scrollbar-thumb-hover-background: #848484;
+  --scrollbar-thumb-active-background: #5d5d5d;
+  --moz-scrollbar-thumb-background: #aeaeae;
+  --moz-scrollbar-thumb-border: #fff;
+
+  /* Shared widget containers */
+  --widget-text: #fff;
+  --widget-muted-text: #ffffff92;
+  --widget-border-start: #303030;
+  --widget-border-end: #161616;
+  --widget-blue-background: #14309d;
+  --widget-blue-border: #2954a8;
+  --widget-green-background-start: #064c3f;
+  --widget-green-background-end: #063b31;
+  --widget-green-border-start: #15574b;
+  --widget-green-border-end: #2d5a53;
+}

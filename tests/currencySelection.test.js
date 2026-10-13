@@ -252,6 +252,23 @@ describe("currency selection without required browser storage", () => {
     expectRate("USD", 1);
   });
 
+  test("keeps the active choice after the stored preference changes", async () => {
+    saveCache();
+    localStorage.setItem("userCurrency", "EUR");
+    await initialize();
+    expectRate("EUR", 0.9);
+    localStorage.setItem("userCurrency", "UAH");
+
+    await refresh();
+
+    expectRate("EUR", 0.9);
+    expect(localStorage.getItem("userCurrency")).toBe("UAH");
+    openMenu();
+    select("USD");
+    expectRate("USD", 1);
+    expect(localStorage.getItem("userCurrency")).toBe("USD");
+  });
+
   test.each(["not JSON", "{}", "[{}]"])(
     "uses API data despite corrupt cache (%s)",
     async (cache) => {

@@ -6,6 +6,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap');
 
 @import url("flex.css");
 @import url("currency-widget.css");
@@ -153,13 +154,15 @@ a {
 .project-title {
   margin: 0;
 
+  font-family: "Syne", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
   font-weight: 400;
   font-size: 16px;
   background: #45059d;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-fill-color: transparent;
 }
 
 header {
@@ -250,6 +253,7 @@ header {
 .footer-label {
   order: 2;
   font-family: "Space Mono", monospace;
+  font-size: 12px;
   color: #4b4694c4;
 }
 
@@ -334,8 +338,5 @@ header {
   .info-tooltip {
     min-width: 300px !important;
     line-height: 1.5;
-  }
-  .footer-label {
-    text-align: center;
   }
 }

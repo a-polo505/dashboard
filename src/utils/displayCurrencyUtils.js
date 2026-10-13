@@ -9,6 +9,11 @@ import {
 } from "../components/ui/spinner/spinner.js";
 import { widgetCurrencyRender } from "./widgetCurrencyRender.js";
 import { TooltipManager } from "../components/ui/tooltip/TooltipManager.js";
+import {
+  readCurrencyPreference,
+  saveCurrencyPreference,
+  removeCurrencyPreference,
+} from "./currencyPreferenceStorage.js";
 
 let currencyContainer;
 let currentData;
@@ -70,16 +75,8 @@ function formatLastUpdate(data) {
   return new Date(data).toLocaleString("en-US", options);
 }
 
-function readStoredCurrency() {
-  try {
-    return localStorage.getItem("userCurrency");
-  } catch {
-    return null;
-  }
-}
-
 export function renderCurrencyContainer(data) {
-  const selection = userCurrency ?? readStoredCurrency();
+  const selection = userCurrency ?? readCurrencyPreference();
   const content = widgetCurrencyRender(
     data.currencies,
     data.currenciesDiff,
@@ -90,11 +87,7 @@ export function renderCurrencyContainer(data) {
     selection,
   );
   if (selection !== null && !available) {
-    try {
-      localStorage.removeItem("userCurrency");
-    } catch {
-      // Recover in memory even if the invalid preference cannot be removed.
-    }
+    removeCurrencyPreference();
   }
   closeContextMenu();
   tooltipManager.clearInteractions();
@@ -150,9 +143,5 @@ function handleCurrencyChange(event) {
     return;
   userCurrency = selection;
   renderCurrencyContainer(currentData);
-  try {
-    localStorage.setItem("userCurrency", selection);
-  } catch {
-    // Persistence is optional; the current selection already works in memory.
-  }
+  saveCurrencyPreference(selection);
 }

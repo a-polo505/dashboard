@@ -6,6 +6,8 @@ import {
   renderCurrencyError,
 } from "./displayCurrencyUtils.js";
 
+const CURRENCY_REQUEST_TIMEOUT_MS = 15_000;
+
 let refreshInterval;
 let pendingRequest;
 let hasDisplayedRates = false;
@@ -27,9 +29,15 @@ async function requestCurrencyData() {
     renderCurrencyLoading();
   }
 
+  const controller = new AbortController();
+  const timeout = setTimeout(
+    () => controller.abort(),
+    CURRENCY_REQUEST_TIMEOUT_MS,
+  );
   try {
     const response = await fetch("/api/currencies", {
       headers: { "Cache-Control": "no-cache" },
+      signal: controller.signal,
     });
     if (!response.ok) {
       throw new Error(`Currency request failed (HTTP ${response.status})`);
@@ -44,6 +52,8 @@ async function requestCurrencyData() {
     if (!hasDisplayedRates) {
       renderCurrencyError(fetchAndUpdateData);
     }
+  } finally {
+    clearTimeout(timeout);
   }
 }
 

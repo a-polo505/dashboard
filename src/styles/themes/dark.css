@@ -143,4 +143,20 @@
   --bookmarks-layers-background: #ffffff;
   --bookmarks-mobbin-background: #111111;
   --bookmarks-medium-background: #000000;
+
+  /* Air widget */
+  --air-background-start: #165fa0;
+  --air-background-end: #3895dc;
+  --air-border-start: rgba(32, 101, 162, 0.75);
+  --air-border-end: #7ebceb;
+  --air-hours-shadow-color: #2a699e;
+  --air-recommendation-text: #9ce2ff;
+
+  /* Day progress widget */
+  --time-background-start: #363a7e;
+  --time-background-end: #000223;
+  --time-border-start: rgba(54, 58, 126, 0.8);
+  --time-border-end: #363a7e;
+  --time-label-text: #d9c4ff;
+  --time-progress-text: #ffffff;
 }

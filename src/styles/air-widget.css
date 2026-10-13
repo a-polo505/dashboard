@@ -1,16 +1,24 @@
 .air-widget-container {
   order: 4;
-  background: linear-gradient(140deg, #165fa0, #3895dc);
+  background: linear-gradient(
+    140deg,
+    var(--air-background-start),
+    var(--air-background-end)
+  );
 }
 
 .air-widget-container:after {
-  background: linear-gradient(140deg, rgba(32, 101, 162, 0.75), #7ebceb);
+  background: linear-gradient(
+    140deg,
+    var(--air-border-start),
+    var(--air-border-end)
+  );
 }
 
 .air-widget-container--hours {
   font-size: 64px;
   font-weight: 800;
-  text-shadow: 0 0 2px #2a699e;
+  text-shadow: 0 0 2px var(--air-hours-shadow-color);
 }
 
 .air-widget-container--lable {
@@ -22,7 +30,7 @@
   font-size: 12px;
   font-family: "Rubik", sans-serif;
   font-optical-sizing: auto;
-  color: #9ce2ff;
+  color: var(--air-recommendation-text);
 }
 
 .air-widget-container--icon {

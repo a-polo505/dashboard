@@ -1,6 +1,45 @@
 import { calculatePercentageChange } from "../src/utils/currencyCalculations.js";
 
 describe("calculatePercentageChange function", () => {
+  test.each([1e-7, 1.234567e-7, 9.999999e-7])(
+    "avoids dividing by an exponential historical rate that truncates to zero (%s)",
+    (previous) => {
+      expect(
+        calculatePercentageChange(
+          "EUR",
+          [{ data: { EUR: { value: previous } } }],
+          { value: 0.0001 },
+        ),
+      ).toBeNull();
+    },
+  );
+
+  test("truncates a tiny current rate to zero before calculating the change", () => {
+    expect(
+      calculatePercentageChange("EUR", [{ data: { EUR: { value: 0.0001 } } }], {
+        value: 1.234567e-7,
+      }),
+    ).toBe(-100);
+  });
+
+  test.each([
+    [1.2e21, 1.8e21, 50],
+    [1.8e21, 1.2e21, -33.33],
+    [1.2e21, 1.2e21, 0],
+    [1.2e21, 1.2e22, 900],
+  ])(
+    "preserves magnitude for exponential rates (%s -> %s)",
+    (previous, current, expected) => {
+      expect(
+        calculatePercentageChange(
+          "EUR",
+          [{ data: { EUR: { value: previous } } }],
+          { value: current },
+        ),
+      ).toBe(expected);
+    },
+  );
+
   test.each([
     [44.9776059592, 44.9776084585],
     [44.9776084585, 44.9776059592],

@@ -1,7 +1,18 @@
 export const RATE_DECIMAL_PLACES = 4;
 
 export function truncateDecimals(number, digits) {
-  const numString = number.toString();
+  let numString = number.toString();
+  if (numString.includes("e")) {
+    const [coefficient, exponentText] = numString.split("e");
+    const exponent = Number(exponentText);
+    // Number.toString uses positive exponents only for large integer values.
+    if (exponent >= 0) return number;
+
+    // Expand small values before slicing; scaling could introduce rounding errors.
+    const sign = number < 0 ? "-" : "";
+    const coefficientDigits = coefficient.replace("-", "").replace(".", "");
+    numString = `${sign}0.${"0".repeat(-exponent - 1)}${coefficientDigits}`;
+  }
   const decimalIndex = numString.indexOf(".");
 
   if (decimalIndex !== -1) {

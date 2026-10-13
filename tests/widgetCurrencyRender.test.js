@@ -54,7 +54,7 @@ describe("currency rendering with an explicit selection", () => {
     },
   );
 
-  test.each([0.00001, 0.00009])(
+  test.each([0.00001, 0.00009, 1e-7, 1.234567e-7, 9.999999e-7])(
     "preserves the plain neutral fallback when a historical rate truncates to zero (%s)",
     (previous) => {
       const currentCurrencies = [
@@ -73,6 +73,69 @@ describe("currency rendering with an explicit selection", () => {
       expect(content).not.toContain("<svg");
     },
   );
+
+  test("renders a tiny exponential rate as zero with neutral unavailable history", () => {
+    const tinyRate = 1.234567e-7;
+    const currentCurrencies = [
+      {
+        data: { ...currencies[0].data, EUR: { code: "EUR", value: tinyRate } },
+      },
+    ];
+
+    const content = widgetCurrencyRender(
+      currentCurrencies,
+      [{ data: { EUR: { value: tinyRate } } }],
+      "EUR",
+    );
+
+    expect(content).toContain('id="rate" class="flex currency--rate">0<');
+    expect(content).toContain('currency--percentage neutral">0.00%</div>');
+    expect(content).not.toContain("<svg");
+    expect(currentCurrencies[0].data.EUR.value).toBe(tinyRate);
+  });
+
+  test("renders a tiny current rate as zero with a negative full change", () => {
+    const currentCurrencies = [
+      {
+        data: {
+          ...currencies[0].data,
+          EUR: { code: "EUR", value: 1.234567e-7 },
+        },
+      },
+    ];
+
+    const content = widgetCurrencyRender(
+      currentCurrencies,
+      [{ data: { EUR: { value: 0.0001 } } }],
+      "EUR",
+    );
+
+    expect(content).toContain('id="rate" class="flex currency--rate">0<');
+    expect(content).toContain("currency--percentage negative");
+    expect(content).toContain("100%");
+    expect(content).toContain(downArrow);
+  });
+
+  test("retains the exponent when rendering a large rate and its change", () => {
+    const currentCurrencies = [
+      {
+        data: { ...currencies[0].data, EUR: { code: "EUR", value: 1.23e21 } },
+      },
+    ];
+
+    const content = widgetCurrencyRender(
+      currentCurrencies,
+      [{ data: { EUR: { value: 1.23e22 } } }],
+      "EUR",
+    );
+
+    expect(content).toContain(
+      'id="rate" class="flex currency--rate">1.23e+21<',
+    );
+    expect(content).toContain("currency--percentage negative");
+    expect(content).toContain("90%");
+    expect(content).toContain(downArrow);
+  });
 
   test.each([
     [44.9776059592, 44.9776084585],

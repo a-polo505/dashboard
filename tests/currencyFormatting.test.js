@@ -15,6 +15,10 @@ describe("currency rate formatting without HTML", () => {
     [12345678.9, "12345678"],
     [123456789.9, "123456789"],
     [1234567890, "123456789"],
+    [1e-7, "0"],
+    [1.234567e-7, "0"],
+    [9.999999e-7, "0"],
+    [1.23e21, "1.23e+21"],
   ])("formats rate %s as %s", (rate, expected) => {
     expect(formatCurrencyRate(rate)).toBe(expected);
   });

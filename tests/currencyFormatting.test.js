@@ -22,4 +22,23 @@ describe("currency rate formatting without HTML", () => {
   ])("formats rate %s as %s", (rate, expected) => {
     expect(formatCurrencyRate(rate)).toBe(expected);
   });
+
+  test.each([
+    [1e21, "1e+21"],
+    [1.234e21, "1.234e+21"],
+    [1.234567e21, "1.234e+21"],
+    [9.999999e21, "9.999e+21"],
+    [1.234567e100, "1.23e+100"],
+    [Number.MAX_VALUE, "1.79e+308"],
+    [-1.234567e21, "-1.23e+21"],
+    [-Number.MAX_VALUE, "-1.7e+308"],
+  ])("shortens only the mantissa of %s to %s", (rate, expected) => {
+    const result = formatCurrencyRate(rate);
+
+    expect(result).toBe(expected);
+    expect(result.length).toBeLessThanOrEqual(9);
+    expect(result.split("e")[1]).toBe(rate.toString().split("e")[1]);
+    expect(Number.isFinite(Number(result))).toBe(true);
+    expect(Math.abs(Number(result))).toBeLessThanOrEqual(Math.abs(rate));
+  });
 });

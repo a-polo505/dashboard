@@ -137,6 +137,25 @@ describe("currency rendering with an explicit selection", () => {
     expect(content).toContain(downArrow);
   });
 
+  test("preserves a long rate's exponent without changing the percentage calculation", () => {
+    const rate = 1.234567e21;
+    const currentCurrencies = [
+      { data: { ...currencies[0].data, EUR: { code: "EUR", value: rate } } },
+    ];
+    const history = [{ data: { EUR: { value: rate * 2 } } }];
+
+    const content = widgetCurrencyRender(currentCurrencies, history, "EUR");
+
+    expect(content).toContain(
+      'id="rate" class="flex currency--rate">1.234e+21<',
+    );
+    expect(content).toContain("currency--percentage negative");
+    expect(content).toContain("50%");
+    expect(content).toContain(downArrow);
+    expect(currentCurrencies[0].data.EUR.value).toBe(rate);
+    expect(history[0].data.EUR.value).toBe(rate * 2);
+  });
+
   test.each([
     [44.9776059592, 44.9776084585],
     [44.9776084585, 44.9776059592],

@@ -20,8 +20,13 @@ export function truncateText(text, maxLength) {
 }
 
 export function formatCurrencyRate(value) {
-  return truncateText(
-    truncateDecimals(value, RATE_DECIMAL_PLACES),
-    RATE_MAX_LENGTH,
-  );
+  const rate = truncateDecimals(value, RATE_DECIMAL_PLACES).toString();
+  const exponentIndex = rate.indexOf("e");
+  if (exponentIndex !== -1) {
+    const mantissa = rate.slice(0, exponentIndex);
+    const exponent = rate.slice(exponentIndex);
+    // Reserve the complete exponent before shortening the displayed mantissa.
+    return truncateText(mantissa, RATE_MAX_LENGTH - exponent.length) + exponent;
+  }
+  return truncateText(rate, RATE_MAX_LENGTH);
 }

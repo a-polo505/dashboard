@@ -2,14 +2,18 @@
   order: 1;
   background-image: radial-gradient(
     circle,
-    rgba(255, 255, 255, 0.03) 1px,
+    var(--date-pattern-dot) 1px,
     rgba(0, 0, 0, 0) 1px
   );
   background-size: 0.5rem 0.5rem;
 }
 
 .date-widget-container.gradient-border:after {
-  background: linear-gradient(180deg, #042742, #05172f);
+  background: linear-gradient(
+    180deg,
+    var(--date-border-start),
+    var(--date-border-end)
+  );
 }
 
 .date--month {
@@ -17,7 +21,7 @@
   margin: 0;
   font-size: 14px;
   font-weight: normal;
-  color: #fbdbc1;
+  color: var(--date-month-text);
 }
 
 .date--day {
@@ -25,8 +29,8 @@
   padding: 0;
   font-size: 64px;
   font-weight: 800;
-  color: #ff4f4f;
-  text-shadow: 0 2px 4px #00132e9c;
+  color: var(--date-day-text);
+  text-shadow: 0 2px 4px var(--date-day-shadow-color);
 }
 
 @media screen and (max-width: 480px) {

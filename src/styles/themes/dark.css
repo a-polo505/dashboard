@@ -75,4 +75,30 @@
   --currency-menu-search-placeholder-text: #818181;
   --currency-menu-search-focus-border: #4a3d23;
   --currency-menu-search-focus-shadow-color: #4a3d23;
+
+  /* Date widget */
+  --date-pattern-dot: rgba(255, 255, 255, 0.03);
+  --date-border-start: #042742;
+  --date-border-end: #05172f;
+  --date-month-text: #fbdbc1;
+  --date-day-text: #ff4f4f;
+  --date-day-shadow-color: #00132e9c;
+
+  /* Weeks widget */
+  --weeks-background-start: #503392;
+  --weeks-background-end: #1e075b;
+  --weeks-border-start: #ffffff;
+  --weeks-border-highlight: #e17fff;
+  --weeks-border-accent: #7c3bff;
+  --weeks-border-end: #390fa9;
+  --weeks-cell-hover-border: #ffffff;
+  --weeks-past-background: #a99ce9;
+  --weeks-past-shadow-color: #1b0d62;
+  --weeks-future-background: #5f3da9;
+  --weeks-future-shadow-color: rgba(41, 12, 110, 0.5);
+  --weeks-current-background: #dfdcf8;
+  --weeks-current-shadow-color: #1b0d62;
+  --weeks-summary-text: #c6c0f2;
+  --weeks-summary-accent-text: #ffffff;
+  --weeks-summary-accent-shadow-color: #e17fff;
 }

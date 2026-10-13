@@ -1,6 +1,110 @@
-import { calculatePercentageChange } from "../src/utils/widgetCurrencyRender";
+import { calculatePercentageChange } from "../src/utils/currencyCalculations.js";
 
 describe("calculatePercentageChange function", () => {
+  test.each([1e-7, 1.234567e-7, 9.999999e-7])(
+    "avoids dividing by an exponential historical rate that truncates to zero (%s)",
+    (previous) => {
+      expect(
+        calculatePercentageChange(
+          "EUR",
+          [{ data: { EUR: { value: previous } } }],
+          { value: 0.0001 },
+        ),
+      ).toBeNull();
+    },
+  );
+
+  test("truncates a tiny current rate to zero before calculating the change", () => {
+    expect(
+      calculatePercentageChange("EUR", [{ data: { EUR: { value: 0.0001 } } }], {
+        value: 1.234567e-7,
+      }),
+    ).toBe(-100);
+  });
+
+  test.each([
+    [1.2e21, 1.8e21, 50],
+    [1.8e21, 1.2e21, -33.33],
+    [1.2e21, 1.2e21, 0],
+    [1.2e21, 1.2e22, 900],
+  ])(
+    "preserves magnitude for exponential rates (%s -> %s)",
+    (previous, current, expected) => {
+      expect(
+        calculatePercentageChange(
+          "EUR",
+          [{ data: { EUR: { value: previous } } }],
+          { value: current },
+        ),
+      ).toBe(expected);
+    },
+  );
+
+  test.each([
+    [44.9776059592, 44.9776084585],
+    [44.9776084585, 44.9776059592],
+    [44.9776, 44.9777],
+    [44.9777, 44.9776],
+  ])(
+    "returns zero for a change below displayed precision (%s -> %s)",
+    (previous, current) => {
+      const result = calculatePercentageChange(
+        "UAH",
+        [{ data: { UAH: { value: previous } } }],
+        { value: current },
+      );
+
+      expect(result).toBe(0);
+    },
+  );
+
+  test.each([
+    [100.0049, 0],
+    [100.0051, 0.01],
+    [99.9951, 0],
+    [99.9949, -0.01],
+  ])(
+    "returns a signed percentage rounded to two places (%s)",
+    (current, expected) => {
+      const result = calculatePercentageChange(
+        "UAH",
+        [{ data: { UAH: { value: 100 } } }],
+        { value: current },
+      );
+
+      expect(result).toBe(expected);
+    },
+  );
+
+  test.each([
+    [1.23459, 1.23461, 0.01],
+    [1.23461, 1.23459, -0.01],
+  ])(
+    "calculates from both rates truncated to four places, without rounding them (%s -> %s)",
+    (previous, current, expected) => {
+      const result = calculatePercentageChange(
+        "EUR",
+        [{ data: { EUR: { value: previous } } }],
+        { value: current },
+      );
+
+      expect(result).toBe(expected);
+    },
+  );
+
+  test.each([0.00001, 0.00009])(
+    "avoids dividing by a historical rate that truncates to zero (%s)",
+    (previous) => {
+      const result = calculatePercentageChange(
+        "EUR",
+        [{ data: { EUR: { value: previous } } }],
+        { value: 0.0001 },
+      );
+
+      expect(result).toBeNull();
+    },
+  );
+
   test.each([
     ["missing history", undefined],
     ["null history", null],
@@ -10,13 +114,10 @@ describe("calculatePercentageChange function", () => {
     ["null historical data", [{ data: null }]],
     ["empty historical data", [{ data: {} }]],
     ["missing selected currency", [{ data: { UAH: { value: 40 } } }]],
-  ])("returns the neutral state for %s", (description, history) => {
+  ])("returns no calculation for %s", (description, history) => {
     const result = calculatePercentageChange("EUR", history, { value: 0.9 });
 
-    expect(result).toEqual({
-      percentageChange: "0.00%",
-      percentageClass: "neutral",
-    });
+    expect(result).toBeNull();
   });
 
   test("should return equal percentage change when quote currency value equals diff value", () => {
@@ -30,10 +131,7 @@ describe("calculatePercentageChange function", () => {
       quoteCurrency,
     );
 
-    expect(result.percentageChange).toContain("<svg");
-    expect(result.percentageChange).toContain("0.00%");
-    expect(result.percentageChange).toContain('d=""');
-    expect(result.percentageClass).toBe("neutral");
+    expect(result).toBe(0);
   });
 
   test("should return positive percentage change when quote currency value is greater than diff value", () => {
@@ -47,12 +145,7 @@ describe("calculatePercentageChange function", () => {
       quoteCurrency,
     );
 
-    expect(result.percentageChange).toContain("<svg");
-    expect(result.percentageChange).toContain("100%");
-    expect(result.percentageChange).toContain(
-      'd="M10 17a.75.75 0 0 1-.75-.75V5.612L5.29 9.77a.75.75 0 0 1-1.08-1.04l5.25-5.5a.75.75 0 0 1 1.08 0l5.25 5.5a.75.75 0 1 1-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0 1 10 17Z"',
-    );
-    expect(result.percentageClass).toBe("positive");
+    expect(result).toBe(100);
   });
 
   test("should return negative percentage change when quote currency value is less than diff value", () => {
@@ -66,11 +159,6 @@ describe("calculatePercentageChange function", () => {
       quoteCurrency,
     );
 
-    expect(result.percentageChange).toContain("<svg");
-    expect(result.percentageChange).toContain("33.33%");
-    expect(result.percentageChange).toContain(
-      'd="M10 3a.75.75 0 0 1 .75.75v10.638l3.96-4.158a.75.75 0 1 1 1.08 1.04l-5.25 5.5a.75.75 0 0 1-1.08 0l-5.25-5.5a.75.75 0 1 1 1.08-1.04l3.96 4.158V3.75A.75.75 0 0 1 10 3Z"',
-    );
-    expect(result.percentageClass).toBe("negative");
+    expect(result).toBe(-33.33);
   });
 });

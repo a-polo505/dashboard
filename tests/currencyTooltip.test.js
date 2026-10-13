@@ -18,6 +18,13 @@ function rates(lastUpdated = firstUpdate) {
   ];
 }
 
+function cacheSnapshot(lastUpdated = firstUpdate) {
+  return JSON.stringify({
+    currencies: rates(lastUpdated),
+    currenciesDiff: historicalRates,
+  });
+}
+
 function expectedText(lastUpdated) {
   return `Last updated: ${new Date(lastUpdated).toLocaleString("en-US", {
     year: "numeric",
@@ -68,7 +75,7 @@ describe.each([false, true])(
     }
 
     function renderRates(lastUpdated = firstUpdate) {
-      sessionStorage.setItem("currencies", JSON.stringify(rates(lastUpdated)));
+      sessionStorage.setItem("currencySnapshot", cacheSnapshot(lastUpdated));
       display.renderCurrencyContainer({
         currencies: rates(lastUpdated),
         currenciesDiff: historicalRates,
@@ -167,27 +174,27 @@ describe.each([false, true])(
     });
 
     test("uses the displayed snapshot even when the cache contains older data", () => {
-      sessionStorage.setItem("currencies", JSON.stringify(rates()));
+      sessionStorage.setItem("currencySnapshot", cacheSnapshot());
       display.renderCurrencyContainer({
         currencies: rates(nextUpdate),
         currenciesDiff: historicalRates,
       });
       // The fetch flow writes the fresh cache only after rendering.
-      sessionStorage.setItem("currencies", JSON.stringify(rates(nextUpdate)));
+      sessionStorage.setItem("currencySnapshot", cacheSnapshot(nextUpdate));
       open();
       expect(tooltip().textContent).toBe(expectedText(nextUpdate));
       window.dispatchEvent(new Event("scroll"));
-      sessionStorage.setItem("currencies", JSON.stringify(rates(firstUpdate)));
+      sessionStorage.setItem("currencySnapshot", cacheSnapshot(firstUpdate));
       open();
       expect(tooltip().textContent).toBe(expectedText(nextUpdate));
     });
 
-    test.each([null, "[]", JSON.stringify(rates(null)), "broken JSON"])(
+    test.each([null, "[]", cacheSnapshot(null), "broken JSON"])(
       "preserves the displayed last-update date despite unusable cache (%s)",
       (cache) => {
         renderRates();
-        if (cache === null) sessionStorage.removeItem("currencies");
-        else sessionStorage.setItem("currencies", cache);
+        if (cache === null) sessionStorage.removeItem("currencySnapshot");
+        else sessionStorage.setItem("currencySnapshot", cache);
         open();
         expect(tooltip().textContent).toBe(expectedText(firstUpdate));
       },
@@ -292,12 +299,66 @@ describe.each([false, true])(
 
     test("preserves the currency selection button handler", () => {
       renderRates();
-      document.getElementById("currencyPair").click();
+      const button = document.getElementById("currencyPair");
+      button.click();
       expect(
         jest.requireMock(
           "../src/components/ui/contextMenu/currencyContextMenu.js",
         ).showContextMenu,
       ).toHaveBeenCalledTimes(1);
+      expect(
+        jest.requireMock(
+          "../src/components/ui/contextMenu/currencyContextMenu.js",
+        ).showContextMenu,
+      ).toHaveBeenCalledWith(Object.keys(rates()[0].data), button);
+    });
+
+    test("binds currency selection only inside its own container despite an earlier duplicate ID", () => {
+      const outsideButton = document.createElement("button");
+      outsideButton.id = "currencyPair";
+      outsideButton.textContent = "Another widget";
+      document.body.prepend(outsideButton);
+      const container = display.mountCurrencyWidget();
+      const { showContextMenu } = jest.requireMock(
+        "../src/components/ui/contextMenu/currencyContextMenu.js",
+      );
+
+      for (const [index, updated] of [firstUpdate, nextUpdate].entries()) {
+        renderRates(updated);
+        expect(document.getElementById("currencyPair")).toBe(outsideButton);
+        outsideButton.click();
+        expect(showContextMenu).toHaveBeenCalledTimes(index);
+
+        const button = container.querySelector("#currencyPair");
+        button.click();
+        expect(showContextMenu).toHaveBeenCalledTimes(index + 1);
+        expect(showContextMenu).toHaveBeenLastCalledWith(
+          Object.keys(rates(updated)[0].data),
+          button,
+        );
+      }
+    });
+
+    test("binds the tooltip only inside its own container despite an earlier duplicate ID", () => {
+      const outsidePercentage = document.createElement("span");
+      outsidePercentage.id = "percentageChange";
+      outsidePercentage.textContent = "Another widget";
+      document.body.prepend(outsidePercentage);
+      const container = display.mountCurrencyWidget();
+
+      for (const updated of [firstUpdate, nextUpdate]) {
+        renderRates(updated);
+        expect(document.getElementById("percentageChange")).toBe(
+          outsidePercentage,
+        );
+        open(outsidePercentage);
+        expect(tooltip()).toBeNull();
+
+        open(container.querySelector("#percentageChange"));
+        expect(tooltip().textContent).toBe(expectedText(updated));
+        window.dispatchEvent(new Event("scroll"));
+        expect(tooltip()).toBeNull();
+      }
     });
   },
 );

@@ -5,7 +5,94 @@ import {
   getWeeksInYear,
   getWeekNumber,
   getRemainingWeeksOfYear,
+  parseSelectedDate,
 } from "../src/utils/dateUtils.js";
+
+describe("parseSelectedDate without widget UI", () => {
+  test.each([
+    ["2026-10-12", 2026, 9, 12],
+    ["2028-02-29", 2028, 1, 29],
+    ["2000-02-29", 2000, 1, 29],
+    ["0099-12-31", 99, 11, 31],
+    ["0000-02-29", 0, 1, 29],
+  ])(
+    "parses %s with its exact local calendar components",
+    (value, year, month, day) => {
+      const date = parseSelectedDate(value);
+
+      expect(date).toBeInstanceOf(Date);
+      expect([
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds(),
+        date.getMilliseconds(),
+      ]).toEqual([year, month, day, 0, 0, 0, 0]);
+    },
+  );
+
+  test.each([
+    undefined,
+    null,
+    20261012,
+    {},
+    [],
+    new Date(2026, 9, 12),
+    "",
+    "invalid",
+    "2026-1-01",
+    "2026-10-1",
+    " 2026-10-12",
+    "2026-10-12 ",
+    "2026-10-12T00:00:00Z",
+    "12/10/2026",
+    "2026-00-12",
+    "2026-13-12",
+    "2026-10-00",
+    "2026-10-32",
+    "2026-02-30",
+    "2026-04-31",
+    "2027-02-29",
+    "1900-02-29",
+    "2100-02-29",
+  ])("rejects unusable values or impossible dates (%#)", (value) => {
+    expect(parseSelectedDate(value)).toBeNull();
+  });
+
+  test.each(["UTC", "Europe/Kyiv", "America/Los_Angeles"])(
+    "preserves local dates around clock changes in %s",
+    (timezone) => {
+      const moduleUrl = pathToFileURL(
+        require.resolve("../src/utils/dateUtils.js"),
+      ).href;
+      const script = `
+        const { parseSelectedDate } = await import(${JSON.stringify(moduleUrl)});
+        const dates = ["2026-03-29", "2026-10-25"].map(value => {
+          const date = parseSelectedDate(value);
+          return [date.getFullYear(), date.getMonth(), date.getDate(),
+            date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()];
+        });
+        console.log(JSON.stringify(dates));
+      `;
+      const output = execFileSync(
+        process.execPath,
+        ["--input-type=module", "-e", script],
+        {
+          env: { ...process.env, TZ: timezone },
+          encoding: "utf8",
+          timeout: 10000,
+        },
+      );
+
+      expect(JSON.parse(output)).toEqual([
+        [2026, 2, 29, 0, 0, 0, 0],
+        [2026, 9, 25, 0, 0, 0, 0],
+      ]);
+    },
+  );
+});
 
 describe("diffDays calendar arithmetic", () => {
   beforeEach(() => {

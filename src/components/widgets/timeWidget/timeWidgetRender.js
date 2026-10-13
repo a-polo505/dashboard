@@ -1,4 +1,9 @@
 import { TooltipManager } from "../../ui/tooltip/TooltipManager.js";
+import {
+  getEndCoordinates,
+  getArc,
+  getArcBackground,
+} from "./timeWidgetGeometry.js";
 
 class SVGElementFactory {
   static createSVGElement(tagName, attributes = {}, textContent = null) {
@@ -32,7 +37,7 @@ class TimeWidgetRenderer {
     this.tooltipManager = new TooltipManager();
   }
 
-  render(remainingPercentage) {
+  render(elapsedPercentage) {
     this.tooltipManager.clearInteractions();
     const container = document.createElement("div");
     container.classList.add(
@@ -52,11 +57,11 @@ class TimeWidgetRenderer {
 
     container.innerHTML = containerText;
 
-    container.appendChild(this.createTimeSVG(remainingPercentage));
+    container.appendChild(this.createTimeSVG(elapsedPercentage));
     return container;
   }
 
-  createTimeSVG(remainingPercentage) {
+  createTimeSVG(elapsedPercentage) {
     const svg = SVGElementFactory.createSVGElement("svg", {
       id: "progress-circle",
       width: "100%",
@@ -68,22 +73,22 @@ class TimeWidgetRenderer {
       this.createPath(
         "#progress-path",
         "#201E43",
-        this.getArcBackground(),
-        remainingPercentage,
+        getArcBackground(),
+        elapsedPercentage,
       ),
     );
     svg.appendChild(
       this.createPath(
         "#progress-path-filled",
         "url(#gradient)",
-        this.getArc(remainingPercentage),
-        remainingPercentage,
+        getArc(elapsedPercentage),
+        elapsedPercentage,
       ),
     );
     svg.appendChild(
       SVGElementFactory.createCircle({ cx: 50, cy: 10, r: 6, fill: "#FFFFFF" }),
     );
-    const [endX, endY] = this.getEndCoordinates(remainingPercentage);
+    const [endX, endY] = getEndCoordinates(elapsedPercentage);
     svg.appendChild(
       SVGElementFactory.createCircle({
         cx: endX,
@@ -100,15 +105,15 @@ class TimeWidgetRenderer {
           "text-anchor": "middle",
           id: "svgText",
           "alignment-baseline": "central",
-          textContent: remainingPercentage,
+          textContent: elapsedPercentage,
         },
-        `${remainingPercentage}%`,
+        `${elapsedPercentage}%`,
       ),
     );
     return svg;
   }
 
-  createPath(id, strokeColor, pathData, remainingPercentage) {
+  createPath(id, strokeColor, pathData, elapsedPercentage) {
     const path = SVGElementFactory.createPath({
       id,
       fill: "none",
@@ -116,37 +121,12 @@ class TimeWidgetRenderer {
       stroke: strokeColor,
       d: pathData,
     });
-    const leftPercentage = 100 - remainingPercentage;
+    const remainingPercentage = 100 - elapsedPercentage;
     this.tooltipManager.handleInteraction(
       path,
-      `Remaining time until end of day: ${leftPercentage.toFixed(2)}%`,
+      `Remaining time until end of day: ${remainingPercentage.toFixed(2)}%`,
     );
     return path;
-  }
-
-  createCircle() {}
-
-  getEndCoordinates(remainingPercentage) {
-    const radius = 40;
-    const totalLength = 2 * Math.PI * radius;
-    const arcLength = (remainingPercentage / 100) * totalLength;
-    const endX = 50 + Math.sin(arcLength / radius) * radius;
-    const endY = 50 - Math.cos(arcLength / radius) * radius;
-    return [endX, endY];
-  }
-
-  getArc(remainingPercentage) {
-    const radius = 40;
-    const startX = 50 + Math.sin(0) * radius;
-    const startY = 50 - Math.cos(0) * radius;
-    const [endX, endY] = this.getEndCoordinates(remainingPercentage);
-    const largeArcFlag = remainingPercentage > 50 ? 1 : 0;
-    return `M${startX},${startY} A${radius},${radius} 0 ${largeArcFlag},1 ${endX},${endY}`;
-  }
-
-  getArcBackground() {
-    const radius = 40;
-    return `M50,50 m0,-${radius} a${radius},${radius} 0 1,0 0,${2 * radius} a${radius},${radius} 0 1,0 0,-${2 * radius}`;
   }
 
   createGradient() {

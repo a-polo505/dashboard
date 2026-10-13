@@ -107,15 +107,35 @@ describe("explicit widget initialization", () => {
   });
 
   test("keeps the time widget refresh working without replacing its container", () => {
+    jest.setSystemTime(new Date(2026, 9, 10, 18, 0));
     initializeWidgets();
     const container = document.querySelector(".time-widget-container");
     const firstContent = container.firstElementChild;
+    const firstPath = container.querySelector("path");
+    const hover = (path) => {
+      const event = new window.MouseEvent("pointerover", { bubbles: true });
+      Object.defineProperty(event, "pointerType", { value: "mouse" });
+      path.dispatchEvent(event);
+    };
+    expect(container.querySelector("#svgText").textContent).toBe("75.00%");
+    hover(firstPath);
+    expect(document.querySelector(".tooltip").textContent).toBe(
+      "Remaining time until end of day: 25.00%",
+    );
 
     jest.advanceTimersByTime(5 * 60 * 1000);
 
     expect(document.querySelector(".time-widget-container")).toBe(container);
     expect(container.children).toHaveLength(1);
     expect(container.firstElementChild).not.toBe(firstContent);
+    expect(container.querySelector("#svgText").textContent).toBe("75.35%");
+    expect(document.querySelector(".tooltip")).toBeNull();
+    hover(firstPath);
+    expect(document.querySelector(".tooltip")).toBeNull();
+    hover(container.querySelector("path"));
+    expect(document.querySelector(".tooltip").textContent).toBe(
+      "Remaining time until end of day: 24.65%",
+    );
     expect(document.querySelector(".widgets").children).toHaveLength(11);
     expect(interval).toHaveBeenCalledTimes(1);
   });

@@ -63,12 +63,40 @@ class BookmarksWidgetRenderer {
     const linksBox = document.createElement("div");
     linksBox.classList.add("flex", "links-box");
 
-    linksBox.addEventListener("wheel", (event) => {
-      if (event.deltaY !== 0) {
+    linksBox.addEventListener(
+      "wheel",
+      (event) => {
+        if (
+          !event.cancelable ||
+          event.ctrlKey ||
+          event.deltaY === 0 ||
+          event.deltaX !== 0
+        ) {
+          return;
+        }
+
+        const maxScrollLeft = Math.max(
+          0,
+          linksBox.scrollWidth - linksBox.clientWidth,
+        );
+        // Safari bounce can report positions outside the normal LTR range.
+        const scrollLeft = Math.min(
+          maxScrollLeft,
+          Math.max(0, linksBox.scrollLeft),
+        );
+        const remaining =
+          event.deltaY > 0 ? maxScrollLeft - scrollLeft : scrollLeft;
+        // Widths are integers while scrollLeft may contain fractional pixels.
+        if (remaining <= 1) return;
+
         event.preventDefault();
-        linksBox.scrollLeft += event.deltaY;
-      }
-    });
+        linksBox.scrollLeft = Math.min(
+          maxScrollLeft,
+          Math.max(0, scrollLeft + event.deltaY),
+        );
+      },
+      { passive: false },
+    );
 
     this.bookmarks.forEach((bookmark) => {
       const linkElement = this.createLinkElement(bookmark);

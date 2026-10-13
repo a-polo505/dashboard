@@ -12,9 +12,9 @@ class WidgetContainer extends Widget {
     this.container.classList.add(widgetClass);
   }
 
-  renderWidgetContent() {
-    const widgetContent = this.widgetRenderer.render();
-    this.appendContent(widgetContent);
+  renderWidgetContent(...renderArgs) {
+    const widgetContent = this.widgetRenderer.render(...renderArgs);
+    this.container.replaceChildren(widgetContent);
   }
 }
 

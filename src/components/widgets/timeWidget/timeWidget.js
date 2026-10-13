@@ -1,6 +1,6 @@
 import { WidgetContainer } from "../widget/WidgetContainer.js";
 import { TimeWidgetRenderer } from "./timeWidgetRender.js";
-import { getRemainingPercentage } from "../../../utils/timeUtils.js";
+import { getDayProgressPercentage } from "../../../utils/timeUtils.js";
 
 class TimeWidget {
   constructor() {
@@ -24,10 +24,8 @@ class TimeWidget {
   }
 
   renderWidgetContent() {
-    const remainingPercentage = getRemainingPercentage();
-    const widgetContent = this.timeWidgetRenderer.render(remainingPercentage);
-    this.timeWidgetContainer.container.innerHTML = "";
-    this.timeWidgetContainer.appendContent(widgetContent);
+    const elapsedPercentage = getDayProgressPercentage();
+    this.timeWidgetContainer.renderWidgetContent(elapsedPercentage);
   }
 }
 

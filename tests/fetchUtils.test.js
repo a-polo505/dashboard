@@ -41,19 +41,12 @@ describe("currency widget loading and recovery", () => {
   let response;
 
   function saveCache(data = cachedData) {
-    sessionStorage.setItem("currencies", JSON.stringify(data.currencies));
-    sessionStorage.setItem(
-      "currenciesDiff",
-      JSON.stringify(data.currenciesDiff),
-    );
+    sessionStorage.setItem("currencySnapshot", JSON.stringify(data));
   }
 
   function expectCache(data = cachedData) {
-    expect(sessionStorage.getItem("currencies")).toBe(
-      JSON.stringify(data.currencies),
-    );
-    expect(sessionStorage.getItem("currenciesDiff")).toBe(
-      JSON.stringify(data.currenciesDiff),
+    expect(sessionStorage.getItem("currencySnapshot")).toBe(
+      JSON.stringify(data),
     );
   }
 
@@ -102,10 +95,47 @@ describe("currency widget loading and recovery", () => {
     expect(jest.getTimerCount()).toBe(1);
   });
 
+  test.each([false, true])(
+    "displays legacy rates without a request even when migration fails (%s)",
+    async (migrationFails) => {
+      sessionStorage.setItem(
+        "currencies",
+        JSON.stringify(cachedData.currencies),
+      );
+      sessionStorage.setItem(
+        "currenciesDiff",
+        JSON.stringify(cachedData.currenciesDiff),
+      );
+      if (migrationFails) {
+        jest
+          .spyOn(window.Storage.prototype, "setItem")
+          .mockImplementation(() => {
+            throw new Error("Synthetic migration failure");
+          });
+      }
+
+      await fetchDataAndDisplay();
+
+      expect(global.fetch).not.toHaveBeenCalled();
+      expect(renderCurrencyContainer).toHaveBeenCalledWith(cachedData);
+      expect(renderCurrencyLoading).not.toHaveBeenCalled();
+      expect(renderCurrencyError).not.toHaveBeenCalled();
+      expect(jest.getTimerCount()).toBe(1);
+      expect(sessionStorage.getItem("currencySnapshot")).toBe(
+        migrationFails ? null : JSON.stringify(cachedData),
+      );
+      for (const key of ["currencies", "currenciesDiff"]) {
+        expect(sessionStorage.getItem(key)).toBe(
+          migrationFails ? JSON.stringify(cachedData[key]) : null,
+        );
+      }
+    },
+  );
+
   test.each([null, "not JSON", "[]", "{}", "[{}]", "true"])(
     "fetches fresh data after unusable cached current rates (%s)",
     async (cache) => {
-      if (cache !== null) sessionStorage.setItem("currencies", cache);
+      if (cache !== null) sessionStorage.setItem("currencySnapshot", cache);
 
       await fetchDataAndDisplay();
 
@@ -193,7 +223,7 @@ describe("currency widget loading and recovery", () => {
   );
 
   test("shows an error with retry when no usable rates exist, then recovers", async () => {
-    sessionStorage.setItem("currencies", "[]");
+    sessionStorage.setItem("currencySnapshot", "[]");
     localStorage.setItem("userCurrency", "EUR");
     global.fetch.mockRejectedValueOnce(new Error("Synthetic failure"));
 
@@ -202,7 +232,7 @@ describe("currency widget loading and recovery", () => {
     expect(renderCurrencyContainer).not.toHaveBeenCalled();
     expect(renderCurrencyError).toHaveBeenCalledWith(expect.any(Function));
     expect(localStorage.getItem("userCurrency")).toBe("EUR");
-    expect(sessionStorage.getItem("currencies")).toBe("[]");
+    expect(sessionStorage.getItem("currencySnapshot")).toBe("[]");
     expect(jest.getTimerCount()).toBe(1);
 
     const retry = renderCurrencyError.mock.calls[0][0];
@@ -223,6 +253,7 @@ describe("currency widget loading and recovery", () => {
 
     expect(renderCurrencyError).toHaveBeenCalledWith(expect.any(Function));
     expect(localStorage.getItem("userCurrency")).toBe("BYN");
+    expect(sessionStorage.getItem("currencySnapshot")).toBeNull();
     expect(sessionStorage.getItem("currencies")).toBeNull();
     expect(sessionStorage.getItem("currenciesDiff")).toBeNull();
   });
@@ -262,7 +293,7 @@ describe("currency widget loading and recovery", () => {
   );
 
   test("renders cached current rates with a corrupt historical cache without a network request", async () => {
-    saveCache();
+    sessionStorage.setItem("currencies", JSON.stringify(cachedData.currencies));
     sessionStorage.setItem("currenciesDiff", "bad JSON");
 
     await fetchDataAndDisplay();
@@ -272,6 +303,9 @@ describe("currency widget loading and recovery", () => {
       ...cachedData,
       currenciesDiff: [],
     });
+    expectCache({ ...cachedData, currenciesDiff: [] });
+    expect(sessionStorage.getItem("currencies")).toBeNull();
+    expect(sessionStorage.getItem("currenciesDiff")).toBeNull();
   });
 
   test("keeps periodic refresh available after an initial failure", async () => {
@@ -343,14 +377,14 @@ describe("currency widget loading and recovery", () => {
     expect(renderCurrencyContainer).toHaveBeenCalledWith(freshData);
   });
 
-  test("restores the old cache pair if the second storage write fails and keeps fresh rates visible", async () => {
+  test("preserves the previous snapshot when its replacement fails and keeps fresh rates visible", async () => {
     saveCache();
     const setItem = window.Storage.prototype.setItem;
     let failed = false;
     jest
       .spyOn(window.Storage.prototype, "setItem")
       .mockImplementation(function (key, value) {
-        if (this === sessionStorage && key === "currenciesDiff" && !failed) {
+        if (this === sessionStorage && key === "currencySnapshot" && !failed) {
           failed = true;
           throw new Error("Synthetic quota failure");
         }
@@ -370,12 +404,12 @@ describe("currency widget loading and recovery", () => {
     expect(renderCurrencyLoading).not.toHaveBeenCalled();
   });
 
-  test("removes a partial new cache when the historical write fails on the first load", async () => {
+  test("leaves no snapshot when its first write fails but displays fresh rates", async () => {
     const setItem = window.Storage.prototype.setItem;
     jest
       .spyOn(window.Storage.prototype, "setItem")
       .mockImplementation(function (key, value) {
-        if (this === sessionStorage && key === "currenciesDiff") {
+        if (this === sessionStorage && key === "currencySnapshot") {
           throw new Error("Synthetic quota failure");
         }
         return setItem.call(this, key, value);
@@ -383,13 +417,14 @@ describe("currency widget loading and recovery", () => {
 
     await fetchDataAndDisplay();
 
+    expect(sessionStorage.getItem("currencySnapshot")).toBeNull();
     expect(sessionStorage.getItem("currencies")).toBeNull();
     expect(sessionStorage.getItem("currenciesDiff")).toBeNull();
     expect(renderCurrencyContainer).toHaveBeenCalledWith(freshData);
     expect(renderCurrencyError).not.toHaveBeenCalled();
   });
 
-  test("keeps fresh rates visible even when storage writes and restoration are unavailable", async () => {
+  test("keeps fresh rates visible when storage writes are unavailable", async () => {
     saveCache();
     jest.spyOn(window.Storage.prototype, "setItem").mockImplementation(() => {
       throw new Error("Synthetic storage failure");

@@ -1,51 +1,15 @@
-export function truncateDecimals(number, digits) {
-  const numString = number.toString();
-  const decimalIndex = numString.indexOf(".");
+import { isValidCurrencyData } from "./currencyDataValidation.js";
+import { calculatePercentageChange } from "./currencyCalculations.js";
+import { formatCurrencyRate } from "./currencyFormatting.js";
 
-  if (decimalIndex !== -1) {
-    const truncatedNumber = numString.slice(0, decimalIndex + digits + 1);
-    return parseFloat(truncatedNumber);
-  }
-
-  return number;
-}
-
-export function truncateText(text, maxLength) {
-  const textString = text.toString();
-  if (textString.length <= maxLength) {
-    return textString;
-  }
-
-  let truncatedText = textString.slice(0, maxLength);
-  if (truncatedText.endsWith(".")) {
-    truncatedText = truncatedText.slice(0, -1);
-  }
-
-  return truncatedText;
-}
-
-export function calculatePercentageChange(
-  quoteCurrencyCode,
-  currenciesDiff,
-  quoteCurrency,
-) {
-  const quoteCurrencyData = currenciesDiff?.[0]?.data?.[quoteCurrencyCode];
-  if (
-    !quoteCurrencyData ||
-    !Number.isFinite(quoteCurrencyData.value) ||
-    quoteCurrencyData.value <= 0
-  ) {
+function renderPercentageChange(percentage) {
+  if (percentage === null) {
     return { percentageChange: "0.00%", percentageClass: "neutral" };
   }
 
-  const diffValue = quoteCurrencyData.value;
-  const change = quoteCurrency.value - diffValue;
-  const percentage = (change / diffValue) * 100;
-
   const icon = percentage > 0 ? "up" : percentage < 0 ? "down" : "equal";
 
-  const formattedPercentage =
-    percentage !== 0 ? Math.abs(percentage.toFixed(2)) : "0.00";
+  const formattedPercentage = percentage !== 0 ? Math.abs(percentage) : "0.00";
   const percentageChange = `
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
               <path fill-rule="evenodd" d="${getIconPath(icon)}" />
@@ -78,16 +42,15 @@ export function widgetCurrencyRender(
   const quoteCurrency = currencyData[quoteCurrencyCode];
   const quoteCurrencyName = quoteCurrency.code;
 
-  const { percentageChange, percentageClass } = calculatePercentageChange(
+  const percentage = calculatePercentageChange(
     quoteCurrencyCode,
     currenciesDiff,
     quoteCurrency,
   );
+  const { percentageChange, percentageClass } =
+    renderPercentageChange(percentage);
 
-  const quoteCurrencyValue = truncateText(
-    truncateDecimals(quoteCurrency.value, 4),
-    9,
-  );
+  const quoteCurrencyValue = formatCurrencyRate(quoteCurrency.value);
 
   const currencyContent = `
           <div class="flex align-left flex-col justify-between h-100">
@@ -103,24 +66,6 @@ export function widgetCurrencyRender(
       `;
 
   return currencyContent;
-}
-
-export function isValidCurrencyData(currencyData) {
-  return (
-    currencyData !== null &&
-    typeof currencyData === "object" &&
-    !Array.isArray(currencyData) &&
-    Object.prototype.hasOwnProperty.call(currencyData, "USD") &&
-    Object.prototype.hasOwnProperty.call(currencyData, "UAH") &&
-    Object.entries(currencyData).every(
-      ([code, currency]) =>
-        code.length > 0 &&
-        !/[^A-Z0-9]/.test(code) &&
-        currency?.code === code &&
-        Number.isFinite(currency.value) &&
-        currency.value > 0,
-    )
-  );
 }
 
 function getIconPath(icon) {

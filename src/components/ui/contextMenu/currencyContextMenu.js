@@ -3,6 +3,7 @@ let contextMenuOpen = false;
 let searchInput;
 let currencyCodes;
 let currencyList;
+let menuTrigger;
 
 const triggerCurrencyChangeEvent = (userCurrency) => {
   const currencyChangeEvent = new CustomEvent("currencyChange", {
@@ -22,7 +23,8 @@ const handleClickOutside = (e) => {
 export const closeContextMenu = () => {
   if (contextMenuOpen) {
     contextMenuOpen = false;
-    const animationCircle = createAnimationCircle();
+    const animationCircle = createAnimationCircle(menuTrigger);
+    menuTrigger = undefined;
 
     contextMenuContainer.remove();
     document.removeEventListener("mousedown", handleClickOutside);
@@ -32,12 +34,11 @@ export const closeContextMenu = () => {
   }
 };
 
-const createAnimationCircle = () => {
+const createAnimationCircle = (trigger) => {
   const animationCircle = document.createElement("div");
   animationCircle.classList.add("animation-circle");
 
-  const currencyPairButton = document.getElementById("currencyPair");
-  const buttonRect = currencyPairButton.getBoundingClientRect();
+  const buttonRect = trigger.getBoundingClientRect();
   const left = buttonRect.left + window.scrollX;
   const top = buttonRect.bottom + window.scrollY;
 
@@ -94,14 +95,18 @@ const handleSearchInput = () => {
   renderCurrencyList(filteredCurrencies);
 };
 
-export const showContextMenu = (codes) => {
+export const showContextMenu = (codes, trigger) => {
   if (!Array.isArray(codes) || codes.length === 0) return;
+  if (!trigger || typeof trigger.getBoundingClientRect !== "function") {
+    throw new Error("Currency context menu trigger not found");
+  }
   if (!contextMenuContainer) {
     contextMenuContainer = document.getElementById("contextMenuContainer");
     if (!contextMenuContainer) {
       throw new Error("Currency context menu container not found");
     }
   }
+  menuTrigger = trigger;
   currencyCodes = codes;
   contextMenuContainer.innerHTML = "";
   contextMenuContainer.classList.add("context-menu-container");
@@ -116,8 +121,7 @@ export const showContextMenu = (codes) => {
   contextMenuContainer.appendChild(contextMenu);
   contextMenuContainer.classList.add("open");
 
-  const currencyPairButton = document.getElementById("currencyPair");
-  const buttonRect = currencyPairButton.getBoundingClientRect();
+  const buttonRect = trigger.getBoundingClientRect();
 
   const left = buttonRect.left + window.scrollX;
   const top = buttonRect.bottom + window.scrollY;

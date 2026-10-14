@@ -1,23 +1,47 @@
 .time-widget-container {
   order: 2;
   padding: 12px !important;
-  background: linear-gradient(180deg, #363a7e, #000223);
+  background: linear-gradient(
+    180deg,
+    var(--time-background-start),
+    var(--time-background-end)
+  );
   font-family: "Montserrat", sans-serif;
 }
 
 .time-widget-container:after {
-  background: linear-gradient(140deg, rgba(54, 58, 126, 0.8), #363a7e);
+  background: linear-gradient(
+    140deg,
+    var(--time-border-start),
+    var(--time-border-end)
+  );
 }
 
 .time-widget-container .label {
-  color: #d9c4ff;
+  color: var(--time-label-text);
   font-size: 12px;
+}
+
+.time-widget-container .time-progress-track {
+  color: var(--time-progress-track);
+}
+
+.time-widget-container .time-progress-marker {
+  color: var(--time-progress-marker);
+}
+
+.time-widget-container .time-progress-gradient-start {
+  stop-color: var(--time-progress-gradient-start);
+}
+
+.time-widget-container .time-progress-gradient-end {
+  stop-color: var(--time-progress-gradient-end);
 }
 
 .time-widget-container #svgText {
   font-weight: 600;
   font-size: 14px;
-  fill: #ffffff;
+  fill: var(--time-progress-text);
 }
 
 @media screen and (max-width: 480px) {

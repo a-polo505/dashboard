@@ -1,0 +1,284 @@
+/*
+ * Color tokens are named by role and grouped by the element they style.
+ * Add each new token to both themes, keeping the same name and group order.
+ * Keep typography, layout, and gradient geometry in component stylesheets.
+ */
+:root {
+  /* Page */
+  --page-background: #f6f7fb;
+  --page-background-start: #ffffff;
+  /* Only the dark theme's three-stop gradient uses the middle color. */
+  --page-background-middle: var(--page-background-end);
+  --page-background-end: #c1c3ff;
+  --text-primary: rgb(156, 163, 175);
+  --text-secondary: rgb(107 114 128);
+  --project-title-text: #45059d;
+
+  /* Logotype */
+  --logotype-base-fill: #45059d;
+  --logotype-middle-gradient-start: #e9ddf7;
+  --logotype-middle-gradient-end: #9035fa;
+  --logotype-top-gradient-start: #efe9f8;
+  --logotype-top-gradient-end: #bc93fc;
+
+  /* Theme toggle */
+  --theme-toggle-icon: var(--tooltip-text);
+  --theme-toggle-focus-ring: var(--project-title-text);
+
+  /* Tooltips */
+  --tooltip-background: rgba(12, 12, 12, 0.9);
+  --tooltip-text: #fff;
+  --tooltip-shadow-color: rgba(0, 0, 0, 0.2);
+
+  /* Primary buttons */
+  --cta-button-background: #8987df;
+  --cta-button-hover-background: #afadff;
+  --cta-button-border: transparent;
+
+  /* Footer text and links */
+  --footer-text: #4b4694c4;
+  --footer-link-text: #4b4694;
+  --footer-link-hover-text: rgb(41, 41, 41);
+
+  /* Scrollbars */
+  --scrollbar-thumb-background: #454545;
+  --scrollbar-thumb-hover-background: #848484;
+  --scrollbar-thumb-active-background: #5d5d5d;
+  --moz-scrollbar-thumb-background: #aeaeae;
+  --moz-scrollbar-thumb-border: #fff;
+
+  /* Shared buttons (ButtonStyle) */
+  --button-background: #007bff;
+  --button-text: #ffffff;
+
+  /* Shared widget containers */
+  --widget-text: #fff;
+  --widget-muted-text: #ffffff92;
+  --widget-border-start: #303030;
+  --widget-border-end: #161616;
+  --widget-blue-background: #14309d;
+  --widget-blue-border: #2954a8;
+  --widget-green-background-start: #064c3f;
+  --widget-green-background-end: #063b31;
+  --widget-green-border-start: #15574b;
+  --widget-green-border-end: #2d5a53;
+
+  /* Currency widget */
+  --currency-background-start: #262626;
+  --currency-background-end: #212121;
+  --currency-button-text: #ffc44c;
+  --currency-button-background: rgba(255, 196, 76, 0.08);
+  --currency-button-border: rgba(255, 196, 76, 0.14);
+  --currency-button-hover-shadow-color: #4a3d23;
+  --currency-button-shine-color: rgba(255, 255, 255, 0.5);
+  --currency-rate-text: #fbc142;
+  --currency-loading-icon: #fbc142;
+  --currency-base-text: #fdfdfd;
+  --currency-change-positive: #61b664;
+  --currency-change-negative: #b66161;
+  --currency-change-neutral: #a1a1a1;
+
+  /* Currency selection menu */
+  --currency-menu-background: #1b1b1b;
+  --currency-menu-text: white;
+  --currency-menu-border: #4a3d23;
+  --currency-menu-shadow-color: #4a3d23;
+  --currency-menu-animation-circle: rgba(255, 255, 255, 0.1);
+  --currency-menu-item-text: #ffffff;
+  --currency-menu-item-hover-background: rgba(255, 255, 255, 0.05);
+  --currency-menu-search-background: #1b1b1b;
+  --currency-menu-search-text: #ffffff;
+  --currency-menu-search-border: #494949;
+  --currency-menu-search-placeholder-text: #818181;
+  --currency-menu-search-focus-border: #4a3d23;
+  --currency-menu-search-focus-shadow-color: #4a3d23;
+
+  /* Date widget */
+  --date-pattern-dot: rgba(255, 255, 255, 0.03);
+  --date-border-start: #042742;
+  --date-border-end: #05172f;
+  --date-month-text: #fbdbc1;
+  --date-day-text: #ff4f4f;
+  --date-day-shadow-color: #00132e9c;
+
+  /* Weeks widget */
+  --weeks-background-start: #503392;
+  --weeks-background-end: #1e075b;
+  --weeks-border-start: #ffffff;
+  --weeks-border-highlight: #e17fff;
+  --weeks-border-accent: #7c3bff;
+  --weeks-border-end: #390fa9;
+  --weeks-cell-hover-border: #ffffff;
+  --weeks-past-background: #a99ce9;
+  --weeks-past-shadow-color: #1b0d62;
+  --weeks-future-background: #5f3da9;
+  --weeks-future-shadow-color: rgba(41, 12, 110, 0.5);
+  --weeks-current-background: #dfdcf8;
+  --weeks-current-shadow-color: #1b0d62;
+  --weeks-summary-text: #c6c0f2;
+  --weeks-summary-accent-text: #ffffff;
+  --weeks-summary-accent-shadow-color: #e17fff;
+
+  /* Calendar widget */
+  --calendar-background-start: #1d4b3e;
+  --calendar-background-end: #1a3e34;
+  --calendar-border-start: #134336;
+  --calendar-border-end: #0d3328;
+  --calendar-month-text: #8cc9b1;
+  --calendar-weekday-text: #bae0cf;
+  --calendar-today-background: #ff463a;
+  --calendar-today-text: #ffffff;
+  --calendar-weekend-text: #5cab8e;
+
+  /* Coffee widget */
+  --coffee-background-start: #54372f;
+  --coffee-background-end: #2e1d17;
+  --coffee-border-start: #54372f;
+  --coffee-border-end: #2e1d17;
+  --coffee-text: #b69b88;
+  --coffee-max-cups-text: #d9d9d9;
+  --coffee-filled-icon-drink: #ab604b;
+  --coffee-filled-icon-outline: #d9d9d9;
+  --coffee-empty-icon-outline: #614132;
+
+  /* Bookmarks widget */
+  --bookmarks-background-start: #d5deff;
+  --bookmarks-background-end: #ffffff;
+  --bookmarks-border: #ffffff;
+  --bookmarks-tile-shadow-color: #304af222;
+  --bookmarks-tile-hover-shadow-color: #5068ff33;
+  --bookmarks-title-text: #114db3;
+  --bookmarks-icon: #114db3;
+  --bookmarks-count-text: rgba(91, 128, 194, 0.8);
+  --bookmarks-link-text: #114db3;
+
+  /* Bookmark tiles */
+  --bookmarks-github-background: #191717;
+  --bookmarks-chatgpt-background: #74a89b;
+  --bookmarks-readcv-background: #222222;
+  --bookmarks-twitter-background: #000000;
+  --bookmarks-dribbble-background: #ffffff;
+  --bookmarks-figma-background-start: #2a221f;
+  --bookmarks-figma-background-end: #151616;
+  --bookmarks-linkedin-background: #0a66c2;
+  --bookmarks-layers-background: #ffffff;
+  --bookmarks-mobbin-background: #111111;
+  --bookmarks-medium-background: #000000;
+
+  /* Air widget */
+  --air-background-start: #165fa0;
+  --air-background-end: #3895dc;
+  --air-border-start: rgba(32, 101, 162, 0.75);
+  --air-border-end: #7ebceb;
+  --air-hours-shadow-color: #2a699e;
+  --air-recommendation-text: #9ce2ff;
+
+  /* Day progress widget */
+  --time-background-start: #363a7e;
+  --time-background-end: #000223;
+  --time-border-start: rgba(54, 58, 126, 0.8);
+  --time-border-end: #363a7e;
+  --time-label-text: #d9c4ff;
+  --time-progress-text: #ffffff;
+  --time-progress-track: #201e43;
+  --time-progress-marker: #ffffff;
+  --time-progress-gradient-start: #7afb7a;
+  --time-progress-gradient-end: #a87ff2;
+
+  /* Countdown widget */
+  --countdown-background-start: #102651;
+  --countdown-background-end: #0f1f48;
+  --countdown-icon: #74b1ff;
+  --countdown-label-text: #74b1ff;
+  --countdown-button-background-start: #2788ff;
+  --countdown-button-background-end: #1672f9;
+  --countdown-button-border: rgba(255, 255, 255, 8%);
+  --countdown-button-hover-background-start: #3c93fd;
+  --countdown-button-hover-shadow-color: rgba(0, 0, 0, 0.3);
+
+  /* Quote widget */
+  --quote-header-background-start: #ffd952;
+  --quote-header-background-end: #ffc801;
+  --quote-header-divider: #dfdfdf;
+  --quote-paper-background: #ffffff;
+  --quote-paper-line: #efefef;
+  --quote-paper-background-end: #fffdf1;
+  --quote-pattern-background: #ffc801ff;
+  --quote-pattern-stroke: #ffce21;
+  --quote-symbol-text: #2e2e2e;
+  --quote-text: #2e2e2e;
+  --quote-accent-text: #d03860;
+
+  /* Music widget */
+  --music-background-start: #872116;
+  --music-background-end: #4a110a;
+  --music-pattern-background-start: #912418;
+  --music-pattern-background-end: #5b160d;
+  --music-title-text: #a4281a;
+  --music-icon: #a5281a;
+  --music-button-background-start: #731b11;
+  --music-button-background-end: #5e160e;
+  --music-button-hover-background-start: #aa1a0f;
+  --music-bubble-background: #e83b1f;
+  --music-fast-bubble-background: #ff3700;
+  --music-bubble-primary-background: #e72c0e;
+  --music-bubble-secondary-background: #ea4126;
+
+  /* Contact author widget */
+  --contact-background-start: #3a2765;
+  --contact-background-middle: #241476;
+  --contact-background-end: #0c0049;
+  --contact-twitter-icon: #debeff;
+  --contact-bluesky-icon: #debeff;
+  --contact-twitter-background-start: #391f8c;
+  --contact-twitter-background-end: #4b2587;
+  --contact-bluesky-background-start: #442083;
+  --contact-bluesky-background-end: #42197c;
+  --contact-button-border-start: #ff9aff;
+  --contact-button-border-middle: #a356ff;
+  --contact-button-border-end: #6532b6;
+  --contact-twitter-border-highlight: #ff9dff;
+  --contact-button-hover-background-start: #4d137a;
+  --contact-button-hover-background-end: #42197c;
+  --contact-secondary-text-start: #fcaefc;
+  --contact-secondary-text-end: #d978fc;
+
+  /* Date picker (Flatpickr) */
+  --datepicker-background: #102651;
+  --datepicker-border: #e6e6e6;
+  --datepicker-shadow-color: rgba(0, 0, 0, 0.08);
+  --datepicker-pointer-background: #fff;
+  --datepicker-control-text: rgba(0, 0, 0, 0.9);
+  --datepicker-navigation-icon: #74b1ff;
+  --datepicker-navigation-hover-text: #959ea9;
+  --datepicker-navigation-hover-icon: #fff;
+  --datepicker-number-stepper-border: rgba(57, 57, 57, 0.15);
+  --datepicker-number-stepper-hover-background: rgba(0, 0, 0, 0.1);
+  --datepicker-number-stepper-active-background: rgba(0, 0, 0, 0.2);
+  --datepicker-number-stepper-arrow: rgba(57, 57, 57, 0.6);
+  --datepicker-number-stepper-icon: rgba(0, 0, 0, 0.5);
+  --datepicker-control-hover-background: rgba(0, 0, 0, 0.05);
+  --datepicker-month-text: #74b1ff;
+  --datepicker-stepper-accent: #74b1ff;
+  --datepicker-year-disabled-text: rgba(0, 0, 0, 0.5);
+  --datepicker-month-option-text: #011d50;
+  --datepicker-weekday-text: #dbdbdb;
+  --datepicker-day-border: #0f4698;
+  --datepicker-day-text: #74b1ff;
+  --datepicker-day-interaction-border: #ececec;
+  --datepicker-day-interaction-text: #74b1ff;
+  --datepicker-today-border: #ececec;
+  --datepicker-today-text: #fff;
+  --datepicker-selected-background: #0e74f9;
+  --datepicker-selected-text: #fff;
+  --datepicker-selected-border: #0e74f9;
+  --datepicker-range-shadow-color: #e6e6e6;
+  --datepicker-selected-range-shadow-color: #569ff7;
+  --datepicker-adjacent-day-text: #011d50;
+  --datepicker-adjacent-day-background: #184282;
+  --datepicker-disabled-day-text: #011d50;
+  --datepicker-disabled-day-background: #122e5e;
+  --datepicker-week-number-text: rgba(57, 57, 57, 0.3);
+  --datepicker-time-text: #393939;
+  --datepicker-time-interaction-background: #eee;
+}

@@ -1,14 +1,22 @@
 .datecount-widget-container {
   order: 6;
-  background: linear-gradient(180deg, #102651, #0f1f48);
+  background: linear-gradient(
+    180deg,
+    var(--countdown-background-start),
+    var(--countdown-background-end)
+  );
   padding: 12px !important;
   font-family: "Montserrat", sans-serif;
   overflow: hidden;
 }
 
+.datecount-widget-container .bi-calendar-heart-fill {
+  color: var(--countdown-icon);
+}
+
 .datecount-widget-container .days-label {
   font-size: 10px;
-  color: #74b1ff;
+  color: var(--countdown-label-text);
   margin: 0;
   padding: 0;
 }
@@ -21,9 +29,13 @@
 }
 
 .datecount-widget-container .button-select-day {
-  background: linear-gradient(180deg, #2788ff, #1672f9);
+  background: linear-gradient(
+    180deg,
+    var(--countdown-button-background-start),
+    var(--countdown-button-background-end)
+  );
   height: 40px;
-  border: 1px solid rgba(255, 255, 255, 8%) !important;
+  border: 1px solid var(--countdown-button-border) !important;
   border-radius: 64px !important;
   font-family: "Montserrat", sans-serif !important;
   font-weight: 500;
@@ -32,8 +44,12 @@
 }
 
 .datecount-widget-container .button-select-day:hover {
-  box-shadow: 0 0px 2px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(180deg, #3c93fd, #1672f9);
+  box-shadow: 0 0px 2px var(--countdown-button-hover-shadow-color);
+  background: linear-gradient(
+    180deg,
+    var(--countdown-button-hover-background-start),
+    var(--countdown-button-background-end)
+  );
 }
 
 @media screen and (max-width: 480px) {
@@ -42,7 +58,7 @@
   }
   .datecount-widget-container .days-label {
     font-size: 16px;
-    color: #74b1ff;
+    color: var(--countdown-label-text);
   }
   .datecount-widget-container .button-select-day {
     font-size: 16px !important;

@@ -5,8 +5,7 @@ class ButtonStyle {
       borderRadius: "8px",
       border: "none",
       cursor: "pointer",
-      backgroundColor: "#007BFF",
-      color: "#FFFFFF",
+      color: "var(--button-text)",
     };
   }
 }

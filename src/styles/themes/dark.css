@@ -34,6 +34,16 @@
   --cta-button-hover-background: #292929;
   --cta-button-border: #3e3e3e;
 
+  /* Grid editor */
+  --grid-editor-button-text: var(--tooltip-text);
+  --grid-editor-focus-ring: var(--project-title-text);
+  --grid-editor-menu-background: var(--page-background);
+  --grid-editor-menu-text: var(--project-title-text);
+  --grid-editor-menu-border: var(--cta-button-border);
+  --grid-editor-menu-shadow: var(--tooltip-shadow-color);
+  --grid-widget-remove-background: rgba(0, 0, 0, 0.7);
+  --grid-widget-remove-icon: var(--tooltip-text);
+
   /* Footer text and links */
   --footer-text: #d0d0d0;
   --footer-link-text: #aaa4ff;

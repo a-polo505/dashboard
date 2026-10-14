@@ -12,6 +12,7 @@
 @import url("themes/dark.css");
 @import url("flex.css");
 @import url("theme-toggle.css");
+@import url("grid-editor.css");
 @import url("currency-widget.css");
 @import url("context-menu.css");
 @import url("animation.css");
@@ -206,6 +207,7 @@ a {
 }
 
 header {
+  flex-wrap: wrap;
   width: 100%;
   margin-right: auto;
 }

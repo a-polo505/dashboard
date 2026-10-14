@@ -14,4 +14,8 @@ class DateCountdownWidget {
   }
 }
 
+export function closeCountdownDatePicker(container) {
+  container.querySelector(".button-select-day")?._flatpickr?.close();
+}
+
 export { DateCountdownWidget };

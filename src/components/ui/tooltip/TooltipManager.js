@@ -1,6 +1,10 @@
 // Coordinate visibility while keeping subscriptions owned by each manager.
 let activeManager = null;
 
+export function dismissActiveTooltip() {
+  activeManager?.removeTooltip();
+}
+
 class TooltipManager {
   constructor() {
     this.tooltipElement = null;

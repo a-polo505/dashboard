@@ -33,7 +33,17 @@
   /* Primary buttons */
   --cta-button-background: #8987df;
   --cta-button-hover-background: #afadff;
-  --cta-button-border: transparent;
+  --cta-button-border: #ffffff;
+
+  /* Grid editor */
+  --grid-editor-button-text: var(--tooltip-text);
+  --grid-editor-focus-ring: var(--project-title-text);
+  --grid-editor-menu-background: var(--page-background);
+  --grid-editor-menu-text: var(--project-title-text);
+  --grid-editor-menu-border: var(--cta-button-border);
+  --grid-editor-menu-shadow: var(--tooltip-shadow-color);
+  --grid-widget-remove-background: rgba(0, 0, 0, 0.7);
+  --grid-widget-remove-icon: var(--tooltip-text);
 
   /* Footer text and links */
   --footer-text: #4b4694c4;

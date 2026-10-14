@@ -111,13 +111,14 @@ describe("currency selection without required browser storage", () => {
     global.fetch = jest
       .fn()
       .mockResolvedValue({ ok: true, status: 200, json: async () => initial });
-    ({ initializeCurrencyWidget: initialize } = jest.requireActual(
+    ({ loadCurrencyWidget: initialize } = jest.requireActual(
       "../src/components/widgets/currencyWidget/currencyWidget.js",
     ));
     ({ fetchAndUpdateData: refresh } = jest.requireActual(
       "../src/utils/fetchUtils.js",
     ));
     display = jest.requireActual("../src/utils/displayCurrencyUtils.js");
+    display.mountCurrencyWidget();
     menu = jest.requireActual(
       "../src/components/ui/contextMenu/currencyContextMenu.js",
     );

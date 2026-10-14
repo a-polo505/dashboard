@@ -20,17 +20,17 @@ const handleClickOutside = (e) => {
   }
 };
 
-export const closeContextMenu = () => {
+export const closeContextMenu = ({ animate = true } = {}) => {
   if (contextMenuOpen) {
     contextMenuOpen = false;
-    const animationCircle = createAnimationCircle(menuTrigger);
+    const animationCircle = animate ? createAnimationCircle(menuTrigger) : null;
     menuTrigger = undefined;
 
     contextMenuContainer.remove();
     document.removeEventListener("mousedown", handleClickOutside);
     document.removeEventListener("keydown", handleKeydown);
 
-    animateAndRemoveCircle(animationCircle);
+    if (animationCircle) animateAndRemoveCircle(animationCircle);
   }
 };
 

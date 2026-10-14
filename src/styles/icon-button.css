@@ -1,0 +1,16 @@
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-button__icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  pointer-events: none;
+}
+
+.icon-button[hidden] {
+  display: none;
+}

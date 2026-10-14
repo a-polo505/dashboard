@@ -76,10 +76,7 @@ body::before {
 }
 
 @media (hover: none) and (pointer: coarse) {
-  html {
-    background-color: var(--page-background);
-  }
-
+  /* Keep the page color on body so negative widget layers remain visible. */
   body::before {
     content: none;
   }

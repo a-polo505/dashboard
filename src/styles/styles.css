@@ -247,10 +247,6 @@ header {
   border: 2px solid var(--cta-button-border);
 }
 
-footer .primary-btn .footer-icon {
-  color: var(--cta-button-icon);
-}
-
 .primary-btn:hover {
   box-shadow: none;
 }
@@ -265,14 +261,7 @@ footer .primary-btn .footer-icon {
   }
 }
 
-.primary-btn a {
-  position: relative;
-  padding: 8px 8px;
-  color: var(--cta-button-text);
-}
-
 .footer-label {
-  order: 2;
   font-family: "Space Mono", monospace;
   font-size: 12px;
   color: var(--footer-text);

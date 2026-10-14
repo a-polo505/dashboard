@@ -5,9 +5,13 @@ class QuoteWidgetRenderer {
 
   render() {
     const container = this.createContainer();
+    const patternElement = document.createElement("div");
+    patternElement.classList.add("quote-widget-container--pattern");
+    patternElement.setAttribute("aria-hidden", "true");
     const symbolElement = this.createSymbolElement();
     const textElement = this.createTextElement();
 
+    container.appendChild(patternElement);
     container.appendChild(symbolElement);
     container.appendChild(textElement);
 

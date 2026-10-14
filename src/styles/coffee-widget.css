@@ -64,6 +64,18 @@
   cursor: pointer;
 }
 
+.coffe-widget-container .coffee-icon--filled {
+  color: var(--coffee-filled-icon-outline);
+}
+
+.coffe-widget-container .coffee-icon--filled .coffee-icon__drink {
+  color: var(--coffee-filled-icon-drink);
+}
+
+.coffe-widget-container .coffee-icon--empty {
+  color: var(--coffee-empty-icon-outline);
+}
+
 @keyframes bounce {
   0% {
     transform: scale(1);

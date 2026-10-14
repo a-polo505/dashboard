@@ -5,37 +5,50 @@
 .quote-widget-container:after {
   background: linear-gradient(
     180deg,
-    #ffd952 0%,
-    #ffc801 24%,
-    #dfdfdf 24%,
-    #ffffff 25%,
-    #ffffff 64%,
-    #efefef 64%,
-    #ffffff 65%,
-    #ffffff 76%,
-    #efefef 76%,
-    #ffffff 77%,
-    #ffffff 88%,
-    #efefef 88%,
-    #ffffff 89%,
-    #fffdf1
+    var(--quote-header-background-start) 0%,
+    var(--quote-header-background-end) 24%,
+    var(--quote-header-divider) 24%,
+    var(--quote-paper-background) 25%,
+    var(--quote-paper-background) 64%,
+    var(--quote-paper-line) 64%,
+    var(--quote-paper-background) 65%,
+    var(--quote-paper-background) 76%,
+    var(--quote-paper-line) 76%,
+    var(--quote-paper-background) 77%,
+    var(--quote-paper-background) 88%,
+    var(--quote-paper-line) 88%,
+    var(--quote-paper-background) 89%,
+    var(--quote-paper-background-end)
   );
 }
 
 .quote-widget-container::before {
   content: "";
+  background-color: var(--quote-pattern-background);
+}
+
+.quote-widget-container::before,
+.quote-widget-container .quote-widget-container--pattern {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 40px;
-  background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"%3E%3Cpath d="M0,10 L10,0 M-5,5 L5,15 M5,-5 L15,5" stroke="%23ffffff18" stroke-width="1" /%3E%3C/svg%3E');
-  background-size: 10px 10px;
-  background-repeat: repeat;
-  background-color: #ffc80191;
   z-index: 1;
   pointer-events: none;
   border-radius: 26px 26px 0 0;
+}
+
+.quote-widget-container .quote-widget-container--pattern {
+  --quote-pattern-mask: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"%3E%3Cpath d="M0,10 L10,0 M-5,5 L5,15 M5,-5 L15,5" stroke="white" stroke-width="1" /%3E%3C/svg%3E');
+  background-color: var(--quote-pattern-stroke);
+  -webkit-mask-image: var(--quote-pattern-mask);
+  mask-image: var(--quote-pattern-mask);
+  -webkit-mask-size: 10px 10px;
+  mask-size: 10px 10px;
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  mask-mode: alpha;
 }
 
 .quote-widget-container--symbol {
@@ -43,18 +56,18 @@
   font-family: "Catamaran", sans-serif;
   font-optical-sizing: auto;
   line-height: 30px;
-  color: #2e2e2e;
+  color: var(--quote-symbol-text);
 }
 
 .quote-widget-container--text-accent {
-  color: #d03860;
+  color: var(--quote-accent-text);
 }
 
 .quote-widget-container--text {
   font-size: 18px;
   font-family: "Rubik", sans-serif;
   font-optical-sizing: auto;
-  color: #2e2e2e;
+  color: var(--quote-text);
 }
 
 @media screen and (max-width: 480px) {
@@ -71,24 +84,25 @@
   .quote-widget-container:after {
     background: linear-gradient(
       180deg,
-      #ffd952 0%,
-      #ffc801 24%,
-      #dfdfdf 24%,
-      #ffffff 25%,
-      #ffffff 66%,
-      #efefef 66%,
-      #ffffff 67%,
-      #ffffff 78%,
-      #efefef 78%,
-      #ffffff 79%,
-      #ffffff 90%,
-      #efefef 90%,
-      #ffffff 91%,
-      #fffdf1
+      var(--quote-header-background-start) 0%,
+      var(--quote-header-background-end) 24%,
+      var(--quote-header-divider) 24%,
+      var(--quote-paper-background) 25%,
+      var(--quote-paper-background) 66%,
+      var(--quote-paper-line) 66%,
+      var(--quote-paper-background) 67%,
+      var(--quote-paper-background) 78%,
+      var(--quote-paper-line) 78%,
+      var(--quote-paper-background) 79%,
+      var(--quote-paper-background) 90%,
+      var(--quote-paper-line) 90%,
+      var(--quote-paper-background) 91%,
+      var(--quote-paper-background-end)
     );
   }
 
-  .quote-widget-container::before {
+  .quote-widget-container::before,
+  .quote-widget-container .quote-widget-container--pattern {
     height: 56px;
     border-radius: 32px 32px 0 0;
   }

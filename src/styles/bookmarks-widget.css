@@ -18,6 +18,10 @@
   padding-left: 16px;
 }
 
+.bookmarks-widget-container .header .widget-icon {
+  color: var(--bookmarks-icon);
+}
+
 .bookmarks-widget-container .links-box {
   gap: 12px;
   overflow-x: auto;

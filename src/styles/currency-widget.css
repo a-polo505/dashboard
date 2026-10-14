@@ -2,6 +2,10 @@
   order: 4;
 }
 
+.currency-widget-container .loading-spinner {
+  color: var(--currency-loading-icon);
+}
+
 .currency--button {
   color: var(--currency-button-text);
   font-size: 14px;

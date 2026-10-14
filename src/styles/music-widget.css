@@ -1,7 +1,11 @@
 .music-widget-container {
   order: 7;
   padding: 0 !important;
-  background: linear-gradient(180deg, #872116, #4a110a);
+  background: linear-gradient(
+    180deg,
+    var(--music-background-start),
+    var(--music-background-end)
+  );
   overflow: hidden;
   position: relative;
 }
@@ -13,7 +17,11 @@
   left: -60px;
   width: 140%;
   height: 140%;
-  background: linear-gradient(180deg, #912418, #5b160d),
+  background: linear-gradient(
+      180deg,
+      var(--music-pattern-background-start),
+      var(--music-pattern-background-end)
+    ),
     url('data:image/svg+xml, %3Csvg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"%3E%3Cpath d="M0,30 Q15,45 30,30 T60,30" fill="none" stroke="%23ffffff" stroke-width="2" /%3E%3C/svg%3E');
   background-size: 10px 10px;
   background-position: center;
@@ -35,21 +43,25 @@
   bottom: -4px;
   width: 30px;
   height: 30px;
-  background-color: #e83b1f;
+  background-color: var(--music-bubble-background);
   border-radius: 50%;
   opacity: 0.7;
   animation: bubbleMove 8s infinite ease-in-out;
 }
 
 .bubble.fast-bubble {
-  background-color: #ff3700;
+  background-color: var(--music-fast-bubble-background);
 }
 
 .music-widget-container .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #731b11, #5e160e);
+  background: linear-gradient(
+    180deg,
+    var(--music-button-background-start),
+    var(--music-button-background-end)
+  );
   height: 56px;
   border-radius: 21px !important;
   font-weight: 400;
@@ -59,13 +71,21 @@
 }
 
 .music-widget-container .button:hover {
-  background: linear-gradient(180deg, #aa1a0f, #5e160e);
+  background: linear-gradient(
+    180deg,
+    var(--music-button-hover-background-start),
+    var(--music-button-background-end)
+  );
 }
 
 .music-icon-box {
   padding-top: 12px;
   padding-right: 12px;
   z-index: 1;
+}
+
+.music-widget-container .music-icon {
+  color: var(--music-icon);
 }
 
 .music-widget-container .button::before {
@@ -84,7 +104,7 @@
   font-weight: 800;
   font-optical-sizing: auto;
   font-size: 28px;
-  color: #a4281a;
+  color: var(--music-title-text);
   text-align: center;
   z-index: 1;
 }
@@ -108,7 +128,7 @@
   height: 25px;
   left: 20%;
   animation-duration: 5s;
-  background-color: #e72c0e;
+  background-color: var(--music-bubble-primary-background);
 }
 
 .bubble:nth-child(2) {
@@ -117,7 +137,7 @@
   left: 60%;
   animation-duration: 7s;
   animation-delay: 1s;
-  background-color: #ea4126;
+  background-color: var(--music-bubble-secondary-background);
 }
 
 .bubble:nth-child(3) {
@@ -150,7 +170,7 @@
   left: 10%;
   animation-duration: 6.5s;
   animation-delay: 0.5s;
-  background-color: #e72c0e;
+  background-color: var(--music-bubble-primary-background);
 }
 
 @media screen and (max-width: 480px) {

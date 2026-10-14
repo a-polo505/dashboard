@@ -1,12 +1,12 @@
 import "./styles/styles.css";
 import { initializeCurrencyWidget } from "./components/widgets/currencyWidget/currencyWidget.js";
 import { initializeWidgets } from "./utils/widgetInitializer.js";
-import { initializeInfoTooltip } from "./components/ui/tooltip/infoTooltip.js";
+import { initializeThemeToggle } from "./components/ui/themeToggle/themeToggle.js";
 
 function initializeDashboard() {
+  initializeThemeToggle(document.getElementById("themeToggle"));
   initializeWidgets();
   initializeCurrencyWidget();
-  initializeInfoTooltip();
 }
 
 if (document.readyState === "loading") {

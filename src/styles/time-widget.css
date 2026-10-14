@@ -22,6 +22,22 @@
   font-size: 12px;
 }
 
+.time-widget-container .time-progress-track {
+  color: var(--time-progress-track);
+}
+
+.time-widget-container .time-progress-marker {
+  color: var(--time-progress-marker);
+}
+
+.time-widget-container .time-progress-gradient-start {
+  stop-color: var(--time-progress-gradient-start);
+}
+
+.time-widget-container .time-progress-gradient-end {
+  stop-color: var(--time-progress-gradient-end);
+}
+
 .time-widget-container #svgText {
   font-weight: 600;
   font-size: 14px;

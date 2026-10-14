@@ -126,12 +126,12 @@ describe("managed tooltip subscriptions", () => {
   test("preserves desktop hover, HTML content, positioning, and custom class", () => {
     const manager = createManager();
     const element = addTarget();
-    manager.handleInteraction(element, "<p>Details</p>", "info-tooltip");
+    manager.handleInteraction(element, "<p>Details</p>", "details-tooltip");
 
     hover(element);
 
     expect(manager.tooltipElement.innerHTML).toBe("<p>Details</p>");
-    expect(manager.tooltipElement.classList).toContain("info-tooltip");
+    expect(manager.tooltipElement.classList).toContain("details-tooltip");
     expect(manager.tooltipElement.style.left).toBe("20px");
     expect(manager.tooltipElement.style.top).toBe("30px");
     expect(manager.tooltipElement.classList).not.toContain("visible");

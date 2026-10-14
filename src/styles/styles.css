@@ -11,6 +11,7 @@
 @import url("themes/light.css");
 @import url("themes/dark.css");
 @import url("flex.css");
+@import url("theme-toggle.css");
 @import url("currency-widget.css");
 @import url("context-menu.css");
 @import url("animation.css");
@@ -56,16 +57,22 @@ body {
 body::before {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: var(--vh);
+  inset: 0;
   background: linear-gradient(
-    to bottom,
+    180deg,
     var(--page-background-start),
     var(--page-background-end)
   );
   z-index: -1;
+}
+
+:root[data-theme="dark"] body::before {
+  background: linear-gradient(
+    180deg,
+    var(--page-background-start) 0%,
+    var(--page-background-middle) 50%,
+    var(--page-background-end) 100%
+  );
 }
 
 main {
@@ -157,6 +164,26 @@ a {
   text-align: center;
 }
 
+.logotype .logotype__base {
+  fill: var(--logotype-base-fill);
+}
+
+.logotype .logotype__middle-gradient-start {
+  stop-color: var(--logotype-middle-gradient-start);
+}
+
+.logotype .logotype__middle-gradient-end {
+  stop-color: var(--logotype-middle-gradient-end);
+}
+
+.logotype .logotype__top-gradient-start {
+  stop-color: var(--logotype-top-gradient-start);
+}
+
+.logotype .logotype__top-gradient-end {
+  stop-color: var(--logotype-top-gradient-end);
+}
+
 .project-title {
   margin: 0;
 
@@ -172,6 +199,7 @@ a {
 }
 
 header {
+  width: 100%;
   margin-right: auto;
 }
 
@@ -205,55 +233,42 @@ header {
   transform: translateY(0);
 }
 
-.cta-button {
+.primary-btn {
   overflow: hidden;
   gap: 4px;
   background-color: var(--cta-button-background);
+  border: none;
   border-radius: 24px;
   cursor: pointer;
   font-weight: 600;
-  box-shadow: 0 1px 6px var(--cta-button-shadow-color);
 }
 
-.info {
-  padding: 8px 12px;
+:root[data-theme="dark"] .primary-btn {
+  border: 2px solid var(--cta-button-border);
 }
 
-.cta-button:hover {
-  box-shadow: 0 0 4px var(--cta-button-hover-shadow-color);
+footer .primary-btn .footer-icon {
+  color: var(--cta-button-icon);
 }
 
-.cta-button a {
+.primary-btn:hover {
+  box-shadow: none;
+}
+
+.primary-btn:active {
+  background-color: var(--cta-button-hover-background);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .primary-btn:hover {
+    background-color: var(--cta-button-hover-background);
+  }
+}
+
+.primary-btn a {
   position: relative;
   padding: 8px 8px;
   color: var(--cta-button-text);
-}
-
-.cta-button a::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    var(--cta-button-shine-color) 50%,
-    transparent 100%
-  );
-  transition: left 0.8s ease;
-  z-index: 1;
-}
-
-.info-icon {
-  position: relative;
-  width: 40px;
-  cursor: none;
-}
-
-.cta-button:hover a::before {
-  left: 100%;
 }
 
 .footer-label {
@@ -340,9 +355,5 @@ header {
   }
   .tooltip {
     font-size: 14px;
-  }
-  .info-tooltip {
-    min-width: 300px !important;
-    line-height: 1.5;
   }
 }

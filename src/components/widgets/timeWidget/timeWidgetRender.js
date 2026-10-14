@@ -69,14 +69,14 @@ class TimeWidgetRenderer {
       viewBox: "0 0 100 100",
     });
     svg.appendChild(this.createGradient());
-    svg.appendChild(
-      this.createPath(
-        "#progress-path",
-        "#201E43",
-        getArcBackground(),
-        elapsedPercentage,
-      ),
+    const track = this.createPath(
+      "#progress-path",
+      "currentColor",
+      getArcBackground(),
+      elapsedPercentage,
     );
+    track.classList.add("time-progress-track");
+    svg.appendChild(track);
     svg.appendChild(
       this.createPath(
         "#progress-path-filled",
@@ -86,15 +86,22 @@ class TimeWidgetRenderer {
       ),
     );
     svg.appendChild(
-      SVGElementFactory.createCircle({ cx: 50, cy: 10, r: 6, fill: "#FFFFFF" }),
+      SVGElementFactory.createCircle({
+        class: "time-progress-marker",
+        cx: 50,
+        cy: 10,
+        r: 6,
+        fill: "currentColor",
+      }),
     );
     const [endX, endY] = getEndCoordinates(elapsedPercentage);
     svg.appendChild(
       SVGElementFactory.createCircle({
+        class: "time-progress-marker",
         cx: endX,
         cy: endY,
         r: 6,
-        fill: "#FFFFFF",
+        fill: "currentColor",
       }),
     );
     svg.appendChild(
@@ -139,14 +146,14 @@ class TimeWidgetRenderer {
     });
     gradient.appendChild(
       SVGElementFactory.createSVGElement("stop", {
+        class: "time-progress-gradient-start",
         offset: "0%",
-        "stop-color": "#7AFB7A",
       }),
     );
     gradient.appendChild(
       SVGElementFactory.createSVGElement("stop", {
+        class: "time-progress-gradient-end",
         offset: "100%",
-        "stop-color": "#A87FF2",
       }),
     );
     return gradient;

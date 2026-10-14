@@ -7,19 +7,22 @@ import {
   saveDashboardLayout,
 } from "../../../utils/dashboardLayoutStorage.js";
 import { initializeGridDrag } from "./gridDragController.js";
+import { IconButton } from "../button/IconButton.js";
+import { createGridActionIcon } from "./gridActionIcons.js";
 
 const initializedToolbars = new WeakMap();
 const DESKTOP_QUERY =
   "(min-width: 1024px) and (hover: hover) and (pointer: fine)";
 const TOUCH_QUERY = "(any-pointer: coarse)";
 
-function createButton(id, text) {
-  const button = document.createElement("button");
-  button.id = id;
-  button.type = "button";
-  button.className = "primary-btn grid-editor__button";
-  button.textContent = text;
-  return button;
+function createGridActionButton(id, label, action, onClick) {
+  return new IconButton({
+    id,
+    label,
+    icon: createGridActionIcon(action),
+    onClick,
+    classNames: ["grid-editor__button"],
+  }).render();
 }
 
 export function initializeGridEditor(
@@ -41,33 +44,64 @@ export function initializeGridEditor(
   let desktop;
   let destroyed = false;
 
-  const actions = document.createElement("div");
-  actions.className = "grid-editor__actions";
-  const edit = createButton("grid_edit_btn", "Налаштувати сітку");
-  edit.setAttribute("aria-controls", grid.id);
-  const cancel = createButton("grid_edit_cancel_btn", "Скасувати");
-  const reset = createButton("grid_edit_reset_btn", "Скинути налаштування");
-  const add = createButton("grid_edit_add_btn", "Додати віджет");
-  const save = createButton("grid_edit_save_btn", "Зберегти");
-  const addGroup = document.createElement("div");
-  addGroup.className = "grid-editor__add";
-  const menu = document.createElement("ul");
-  menu.id = "grid_edit_add_menu";
-  menu.className = "grid-editor__menu";
-  menu.hidden = true;
-  add.setAttribute("aria-controls", menu.id);
-  add.setAttribute("aria-expanded", "false");
-  addGroup.append(add, menu);
-  actions.append(cancel, reset, addGroup, edit, save);
-  const error = document.createElement("p");
-  error.className = "grid-editor__error";
-  error.setAttribute("role", "alert");
-  error.hidden = true;
-  toolbar.replaceChildren(actions, error);
+  const gridActions = document.createElement("div");
+  gridActions.className = "grid-editor__actions";
+  const customizeButton = createGridActionButton(
+    "customizeButton",
+    "Customize",
+    "customize",
+    beginCustomization,
+  );
+  customizeButton.setAttribute("aria-controls", grid.id);
+  const cancelCustomizationButton = createGridActionButton(
+    "cancelCustomizationButton",
+    "Cancel",
+    "cancelCustomization",
+    cancelCustomization,
+  );
+  const resetLayoutButton = createGridActionButton(
+    "resetLayoutButton",
+    "Reset Layout",
+    "resetLayout",
+    resetLayout,
+  );
+  const addWidgetButton = createGridActionButton(
+    "addWidgetButton",
+    "Add Widget",
+    "addWidget",
+    toggleAddWidgetMenu,
+  );
+  const saveLayoutButton = createGridActionButton(
+    "saveLayoutButton",
+    "Save",
+    "saveLayout",
+    saveLayout,
+  );
+  const addWidgetGroup = document.createElement("div");
+  addWidgetGroup.className = "grid-editor__add";
+  const addWidgetMenu = document.createElement("ul");
+  addWidgetMenu.id = "addWidgetMenu";
+  addWidgetMenu.className = "grid-editor__menu";
+  addWidgetMenu.hidden = true;
+  addWidgetButton.setAttribute("aria-controls", addWidgetMenu.id);
+  addWidgetButton.setAttribute("aria-expanded", "false");
+  addWidgetGroup.append(addWidgetButton, addWidgetMenu);
+  gridActions.append(
+    cancelCustomizationButton,
+    resetLayoutButton,
+    addWidgetGroup,
+    customizeButton,
+    saveLayoutButton,
+  );
+  const saveLayoutError = document.createElement("p");
+  saveLayoutError.className = "grid-editor__error";
+  saveLayoutError.setAttribute("role", "alert");
+  saveLayoutError.hidden = true;
+  toolbar.replaceChildren(gridActions, saveLayoutError);
 
   function closeMenu() {
-    menu.hidden = true;
-    add.setAttribute("aria-expanded", "false");
+    addWidgetMenu.hidden = true;
+    addWidgetButton.setAttribute("aria-expanded", "false");
   }
 
   function removeShells() {
@@ -97,19 +131,19 @@ export function initializeGridEditor(
     const layout = desktop ? model.layout : defaults;
     applyLayout(layout);
     toolbar.hidden = !desktop;
-    edit.hidden = editing;
-    cancel.hidden = !editing;
-    reset.hidden = !editing;
-    addGroup.hidden = !editing;
-    save.hidden = !editing;
+    customizeButton.hidden = editing;
+    cancelCustomizationButton.hidden = !editing;
+    resetLayoutButton.hidden = !editing;
+    addWidgetGroup.hidden = !editing;
+    saveLayoutButton.hidden = !editing;
     const removed = layout.filter((widget) => widget.is_remove);
-    add.disabled = removed.length === 0;
+    addWidgetButton.disabled = removed.length === 0;
     const visibleCount = layout.length - removed.length;
     for (const { shell, remove } of shells.values()) {
       remove.hidden = visibleCount === 1;
       shell.classList.toggle("grid-widget--fixed", visibleCount === 1);
     }
-    menu.replaceChildren();
+    addWidgetMenu.replaceChildren();
     for (const entry of removed) {
       const item = document.createElement("li");
       const button = document.createElement("button");
@@ -120,21 +154,21 @@ export function initializeGridEditor(
         drag?.cancel();
         model.restoreWidget(entry.id);
         closeMenu();
-        error.hidden = true;
+        saveLayoutError.hidden = true;
         render();
-        (add.disabled ? save : add).focus();
+        (addWidgetButton.disabled ? saveLayoutButton : addWidgetButton).focus();
       });
       item.appendChild(button);
-      menu.appendChild(item);
+      addWidgetMenu.appendChild(item);
     }
   }
 
-  function beginEdit() {
+  function beginCustomization() {
     if (destroyed || !desktop || model.isEditing) return;
     beforeEdit();
     model.beginEdit();
     grid.classList.add("grid--editing");
-    error.hidden = true;
+    saveLayoutError.hidden = true;
     for (const widget of widgets) {
       const { container } = widget;
       const shell = document.createElement("div");
@@ -150,16 +184,21 @@ export function initializeGridEditor(
       remove.type = "button";
       remove.className = "grid-widget__remove";
       remove.dataset.removeWidget = widget.id;
-      remove.textContent = "−";
-      remove.setAttribute("aria-label", `Прибрати віджет «${widget.name}»`);
+      const removeIcon = createGridActionIcon("removeWidget");
+      removeIcon.setAttribute("width", "16");
+      removeIcon.setAttribute("height", "16");
+      removeIcon.setAttribute("aria-hidden", "true");
+      removeIcon.setAttribute("focusable", "false");
+      remove.append(removeIcon);
+      remove.setAttribute("aria-label", `Remove widget: ${widget.name}`);
       remove.addEventListener("click", () => {
         if (!desktop || !model.isEditing) return;
         drag?.cancel();
         if (!model.hideWidget(widget.id)) return;
         closeMenu();
-        error.hidden = true;
+        saveLayoutError.hidden = true;
         render();
-        save.focus();
+        saveLayoutButton.focus();
       });
       const wasInert = container.hasAttribute("inert");
       container.setAttribute("inert", "");
@@ -175,58 +214,58 @@ export function initializeGridEditor(
       grid,
       onStart: closeMenu,
       onDrop(id, index) {
-        if (model.moveWidget(id, index)) error.hidden = true;
+        if (model.moveWidget(id, index)) saveLayoutError.hidden = true;
         applyLayout(model.layout);
       },
       onCancel: () => applyLayout(model.layout),
     });
-    save.focus();
+    saveLayoutButton.focus();
   }
 
-  function cancelEdit() {
+  function cancelCustomization() {
     if (!desktop || !model.isEditing) return;
     drag?.cancel();
     model.cancel();
     closeMenu();
-    error.hidden = true;
+    saveLayoutError.hidden = true;
     removeShells();
     render();
-    edit.focus();
+    customizeButton.focus();
   }
 
-  edit.addEventListener("click", beginEdit);
-  cancel.addEventListener("click", cancelEdit);
-  reset.addEventListener("click", () => {
+  function resetLayout() {
     if (!desktop || !model.isEditing) return;
     drag?.cancel();
     model.reset();
     closeMenu();
-    error.hidden = true;
+    saveLayoutError.hidden = true;
     render();
-  });
-  add.addEventListener("click", () => {
-    if (!desktop || !model.isEditing || add.disabled) return;
+  }
+
+  function toggleAddWidgetMenu() {
+    if (!desktop || !model.isEditing || addWidgetButton.disabled) return;
     drag?.cancel();
-    const open = menu.hidden;
-    menu.hidden = !open;
-    add.setAttribute("aria-expanded", String(open));
-    if (open) menu.querySelector("button")?.focus();
-  });
-  save.addEventListener("click", () => {
+    const open = addWidgetMenu.hidden;
+    addWidgetMenu.hidden = !open;
+    addWidgetButton.setAttribute("aria-expanded", String(open));
+    if (open) addWidgetMenu.querySelector("button")?.focus();
+  }
+
+  function saveLayout() {
     if (!desktop || !model.isEditing) return;
     drag?.cancel();
     closeMenu();
     if (!model.save((layout) => saveDashboardLayout(layout, widgetIds))) {
-      error.textContent =
-        "Не вдалося зберегти налаштування. Спробуйте ще раз або скасуйте зміни.";
-      error.hidden = false;
+      saveLayoutError.textContent =
+        "Could not save the layout. Try again or cancel customization.";
+      saveLayoutError.hidden = false;
       return;
     }
-    error.hidden = true;
+    saveLayoutError.hidden = true;
     removeShells();
     render();
-    edit.focus();
-  });
+    customizeButton.focus();
+  }
 
   function updateAvailability() {
     const available = desktopMedia.matches && !touchMedia.matches;
@@ -234,7 +273,7 @@ export function initializeGridEditor(
     drag?.cancel();
     model?.cancel();
     closeMenu();
-    error.hidden = true;
+    saveLayoutError.hidden = true;
     removeShells();
     desktop = available;
     // Touch devices never read or repair a saved desktop preference.
@@ -244,13 +283,13 @@ export function initializeGridEditor(
   }
 
   function onOutsidePointer(event) {
-    if (!addGroup.contains(event.target)) closeMenu();
+    if (!addWidgetGroup.contains(event.target)) closeMenu();
   }
 
   function onKeydown(event) {
-    if (event.key === "Escape" && !menu.hidden) {
+    if (event.key === "Escape" && !addWidgetMenu.hidden) {
       closeMenu();
-      add.focus();
+      addWidgetButton.focus();
     }
   }
 
@@ -264,7 +303,7 @@ export function initializeGridEditor(
       return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    if (event.type === "focusin") save.focus();
+    if (event.type === "focusin") saveLayoutButton.focus();
   }
   const blockedEvents = [
     "click",

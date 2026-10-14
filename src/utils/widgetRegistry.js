@@ -16,23 +16,23 @@ export const widgetDefinitions = Object.freeze(
   [
     {
       id: "date",
-      name: "Date",
+      name: "Current Date",
       mount: () => new DateWidget().dateWidgetContainer.container,
     },
     {
       id: "time",
-      name: "Day progress",
+      name: "Day Progress",
       mount: () => new TimeWidget().timeWidgetContainer.container,
     },
     {
       id: "weeks",
-      name: "Weeks",
+      name: "Year Progress",
       mount: () => new WeeksWidget().weeksWidgetContainer.container,
     },
     { id: "currency", name: "Currency rates", mount: mountCurrencyWidget },
     {
       id: "air",
-      name: "Air",
+      name: "Fresh Air",
       mount: () => new AirWidget().airWidgetContainer.container,
     },
     {
@@ -62,12 +62,12 @@ export const widgetDefinitions = Object.freeze(
     },
     {
       id: "coffee",
-      name: "Coffee",
+      name: "Coffee Tracker",
       mount: () => new CoffeeWidget().coffeeWidgetContainer.container,
     },
     {
       id: "contact",
-      name: "Contact author",
+      name: "Contact Author",
       mount: () =>
         new ContactAuthorWidget().contactAuthorWidgetContainer.container,
     },

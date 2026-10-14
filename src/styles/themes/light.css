@@ -33,7 +33,7 @@
   /* Primary buttons */
   --cta-button-background: #8987df;
   --cta-button-hover-background: #afadff;
-  --cta-button-border: transparent;
+  --cta-button-border: #ffffff;
 
   /* Grid editor */
   --grid-editor-button-text: var(--tooltip-text);

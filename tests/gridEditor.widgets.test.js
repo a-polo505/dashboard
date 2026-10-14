@@ -26,8 +26,8 @@ describe("grid editing with real widgets and mocked network", () => {
   let windowAdd;
   let loadCurrencyWidget;
   const button = (id) => document.getElementById(id);
-  const begin = () => button("grid_edit_btn").click();
-  const cancel = () => button("grid_edit_cancel_btn").click();
+  const begin = () => button("customizeButton").click();
+  const cancel = () => button("cancelCustomizationButton").click();
 
   function hover(element) {
     const event = new window.MouseEvent("pointerover", {
@@ -155,9 +155,9 @@ describe("grid editing with real widgets and mocked network", () => {
     expect(currency.hasAttribute("inert")).toBe(true);
     expect(remove.isConnected).toBe(true);
     expect(currency.closest(".grid-widget").hidden).toBe(true);
-    button("grid_edit_add_btn").click();
+    button("addWidgetButton").click();
     const restore = [
-      ...button("grid_edit_add_menu").querySelectorAll("button"),
+      ...button("addWidgetMenu").querySelectorAll("button"),
     ].find((node) => node.textContent === "Currency rates");
     restore.click();
     expect(currency.parentElement.hidden).toBe(false);
@@ -168,6 +168,99 @@ describe("grid editing with real widgets and mocked network", () => {
     button("currencyPair").click();
     expect(document.querySelector("#contextMenu")).not.toBeNull();
     expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  test("uses current display names to restore stable IDs from an existing saved layout", () => {
+    const expected = [
+      ["contact", "Contact Author"],
+      ["coffee", "Coffee Tracker"],
+      ["calendar", "Calendar"],
+      ["bookmarks", "Bookmarks"],
+      ["music", "Music"],
+      ["countdown", "Countdown"],
+      ["quote", "Quote"],
+      ["air", "Fresh Air"],
+      ["weeks", "Year Progress"],
+      ["time", "Day Progress"],
+      ["date", "Current Date"],
+    ];
+    const savedIds = [
+      "contact",
+      "coffee",
+      "calendar",
+      "bookmarks",
+      "music",
+      "countdown",
+      "quote",
+      "air",
+      "currency",
+      "weeks",
+      "time",
+      "date",
+    ];
+    const snapshot = {
+      version: 1,
+      widgets: savedIds.map((id) => ({ id, is_remove: id !== "currency" })),
+    };
+    const raw = JSON.stringify(snapshot);
+    editor.destroy();
+    localStorage.setItem("dashboardLayout", raw);
+    const { initializeGridEditor } = jest.requireActual(
+      "../src/components/ui/gridEditor/gridEditor.js",
+    );
+    const grid = button("app");
+    editor = initializeGridEditor(widgets, {
+      grid,
+      toolbar: button("gridEditor"),
+    });
+    const visibleIds = () =>
+      [...grid.children]
+        .filter((node) => !node.hidden)
+        .map((node) => node.dataset.widgetId);
+
+    expect(visibleIds()).toEqual(["currency"]);
+    expect([...grid.children].map((node) => node.dataset.widgetId)).toEqual(
+      savedIds,
+    );
+    begin();
+    expect(
+      [...button("addWidgetMenu").querySelectorAll("button")].map(
+        (node) => node.textContent,
+      ),
+    ).toEqual(expected.map(([, name]) => name));
+
+    for (const [id, name] of expected) {
+      button("addWidgetButton").click();
+      const option = [
+        ...button("addWidgetMenu").querySelectorAll("button"),
+      ].find((node) => node.textContent === name);
+      option.click();
+      const original = widgets.find((widget) => widget.id === id).container;
+      expect(original.closest(".grid-widget").hidden).toBe(false);
+    }
+    expect(visibleIds()).toEqual(savedIds);
+    expect(grid.querySelectorAll(".Container")).toHaveLength(12);
+    expect(new Set(widgets.map(({ container }) => container)).size).toBe(12);
+    expect(localStorage.getItem("dashboardLayout")).toBe(raw);
+    cancel();
+    expect(visibleIds()).toEqual(["currency"]);
+    expect(localStorage.getItem("dashboardLayout")).toBe(raw);
+
+    begin();
+    button("addWidgetButton").click();
+    button("addWidgetMenu").querySelector("button").click();
+    button("saveLayoutButton").click();
+    expect(visibleIds()).toEqual(["contact", "currency"]);
+    expect(JSON.parse(localStorage.getItem("dashboardLayout"))).toEqual({
+      version: 1,
+      widgets: snapshot.widgets.map((entry) => ({
+        ...entry,
+        is_remove: entry.id === "contact" ? false : entry.is_remove,
+      })),
+    });
+    expect(new Set(grid.children)).toEqual(
+      new Set(widgets.map(({ container }) => container)),
+    );
   });
 
   test("retains edit controls and blocks fresh tooltip subscriptions after the time widget refreshes", () => {
@@ -200,7 +293,7 @@ describe("grid editing with real widgets and mocked network", () => {
     begin();
     cup.click();
     document.querySelector('[data-remove-widget="quote"]').click();
-    button("grid_edit_save_btn").click();
+    button("saveLayoutButton").click();
 
     expect(localStorage.getItem("coffeeCupsProgress")).toBe(progress);
     expect(localStorage.getItem("coffeeCupsDate")).toBe(coffeeDate);

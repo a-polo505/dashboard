@@ -167,7 +167,7 @@ describe("desktop grid dragging", () => {
       grid,
       toolbar: button("toolbar"),
     });
-    button("grid_edit_btn").click();
+    button("customizeButton").click();
     for (const node of shells()) {
       Object.defineProperties(node, {
         offsetLeft: { get: () => rect(node).left - 100 },
@@ -224,7 +224,7 @@ describe("desktop grid dragging", () => {
     expect(grid.classList.contains("grid--dragging")).toBe(false);
     expect(captured).toBeNull();
     expect(write).not.toHaveBeenCalled();
-    button("grid_edit_save_btn").click();
+    button("saveLayoutButton").click();
 
     expect(
       JSON.parse(localStorage.getItem("dashboardLayout")).widgets.map(
@@ -301,11 +301,11 @@ describe("desktop grid dragging", () => {
       expect(shells().map((node) => node.dataset.widgetId)).toEqual(before);
       expect(grid.classList.contains("grid--dragging")).toBe(false);
       expect(surface("date").style.transform).toBe("");
-      expect(button("grid_edit_save_btn").hidden).toBe(false);
+      expect(button("saveLayoutButton").hidden).toBe(false);
       expect(captured).toBeNull();
       expect(frames.size).toBe(0);
-      button("grid_edit_add_btn").click();
-      button("grid_edit_add_menu").querySelector("button").click();
+      button("addWidgetButton").click();
+      button("addWidgetMenu").querySelector("button").click();
       expect(ids()).toEqual(["date", "currency", "coffee", "countdown"]);
     },
   );
@@ -318,7 +318,7 @@ describe("desktop grid dragging", () => {
     moveTo(2);
     pointer(grid, "pointercancel", 0, 0);
     expect(ids()).toEqual(["currency", "coffee", "countdown", "date"]);
-    button("grid_edit_cancel_btn").click();
+    button("cancelCustomizationButton").click();
     expect(ids()).toEqual(["date", "currency", "coffee", "countdown"]);
     expect(localStorage.getItem("dashboardLayout")).toBeNull();
   });
@@ -388,10 +388,10 @@ describe("desktop grid dragging", () => {
     start();
     moveTo(2);
     drop(2);
-    button("grid_edit_add_btn").click();
-    button("grid_edit_add_menu").querySelector("button").click();
+    button("addWidgetButton").click();
+    button("addWidgetMenu").querySelector("button").click();
     expect(ids()).toEqual(["currency", "coffee", "countdown", "date"]);
-    button("grid_edit_save_btn").click();
+    button("saveLayoutButton").click();
     expect(JSON.parse(localStorage.getItem("dashboardLayout")).widgets).toEqual(
       ["currency", "coffee", "countdown", "date"].map((id) => ({
         id,
@@ -401,9 +401,9 @@ describe("desktop grid dragging", () => {
   });
 
   test.each([
-    "grid_edit_cancel_btn",
-    "grid_edit_reset_btn",
-    "grid_edit_save_btn",
+    "cancelCustomizationButton",
+    "resetLayoutButton",
+    "saveLayoutButton",
   ])("%s discards an unfinished gesture before acting", (id) => {
     start();
     moveTo(3);
@@ -448,14 +448,14 @@ describe("desktop grid dragging", () => {
       .mockImplementation(() => {
         throw new Error("Synthetic storage failure");
       });
-    button("grid_edit_save_btn").click();
+    button("saveLayoutButton").click();
     expect(ids()).toEqual(["currency", "coffee", "countdown", "date"]);
-    expect(button("grid_edit_save_btn").hidden).toBe(false);
+    expect(button("saveLayoutButton").hidden).toBe(false);
     expect(button("toolbar").querySelector('[role="alert"]').hidden).toBe(
       false,
     );
     failure.mockRestore();
-    button("grid_edit_save_btn").click();
+    button("saveLayoutButton").click();
     expect(
       JSON.parse(localStorage.getItem("dashboardLayout")).widgets[3].id,
     ).toBe("date");

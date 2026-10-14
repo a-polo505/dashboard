@@ -167,9 +167,14 @@
   color: var(--grid-widget-remove-icon);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  font-size: 28px;
-  line-height: 1;
   cursor: pointer;
+}
+
+.grid-widget__remove svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  pointer-events: none;
 }
 
 .grid-editor[hidden],

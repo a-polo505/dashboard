@@ -93,6 +93,22 @@ describe("explicit widget initialization", () => {
     expect(new Set(dashboard.widgets.map((widget) => widget.name)).size).toBe(
       12,
     );
+    expect(
+      Object.fromEntries(dashboard.widgets.map(({ id, name }) => [id, name])),
+    ).toEqual({
+      date: "Current Date",
+      time: "Day Progress",
+      weeks: "Year Progress",
+      currency: "Currency rates",
+      air: "Fresh Air",
+      quote: "Quote",
+      countdown: "Countdown",
+      music: "Music",
+      bookmarks: "Bookmarks",
+      calendar: "Calendar",
+      coffee: "Coffee Tracker",
+      contact: "Contact Author",
+    });
     expect(global.fetch).not.toHaveBeenCalled();
     expect(document.getElementById("loadingSpinner")).not.toBeNull();
     for (const [index, container] of containers.entries()) {

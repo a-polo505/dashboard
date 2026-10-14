@@ -43,10 +43,10 @@ describe("desktop grid editor", () => {
       .filter((node) => !node.hidden)
       .map((node) => node.dataset.widgetId);
   const remove = (id) => grid.querySelector(`[data-remove-widget="${id}"]`);
-  const begin = () => button("grid_edit_btn").click();
-  const save = () => button("grid_edit_save_btn").click();
-  const cancel = () => button("grid_edit_cancel_btn").click();
-  const reset = () => button("grid_edit_reset_btn").click();
+  const begin = () => button("customizeButton").click();
+  const save = () => button("saveLayoutButton").click();
+  const cancel = () => button("cancelCustomizationButton").click();
+  const reset = () => button("resetLayoutButton").click();
 
   function initialize() {
     editor = initializeGridEditor(widgets, { grid, toolbar, beforeEdit });
@@ -97,13 +97,73 @@ describe("desktop grid editor", () => {
     initialize();
 
     expect(toolbar.hidden).toBe(false);
-    expect(button("grid_edit_btn").hidden).toBe(false);
-    expect(button("grid_edit_save_btn").hidden).toBe(true);
+    expect(button("customizeButton").hidden).toBe(false);
+    expect(button("saveLayoutButton").hidden).toBe(true);
     expect([...grid.children]).toEqual(
       widgets.map(({ container }) => container),
     );
     expect(localStorage.getItem("dashboardLayout")).toBeNull();
     expect(beforeEdit).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ["customizeButton", "Customize", "M7.70059"],
+    ["saveLayoutButton", "Save", "m15.56"],
+    ["addWidgetButton", "Add Widget", "M8.75"],
+    ["resetLayoutButton", "Reset Layout", "M13.5"],
+    ["cancelCustomizationButton", "Cancel", "m12.47"],
+  ])(
+    "renders %s with its English label and clean decorative icon",
+    (id, label, pathStart) => {
+      initialize();
+      const element = button(id);
+      const svg = element.querySelector("svg");
+
+      expect(element.textContent).toBe(label);
+      expect(element.type).toBe("button");
+      expect(element.classList.contains("primary-btn")).toBe(true);
+      expect(element.classList.contains("icon-button")).toBe(true);
+      expect(element.classList.contains("grid-editor__button")).toBe(true);
+      expect(svg.getAttribute("viewBox")).toBe("0 0 16 16");
+      expect(svg.getAttribute("width")).toBe("16");
+      expect(svg.getAttribute("height")).toBe("16");
+      expect(svg.getAttribute("aria-hidden")).toBe("true");
+      expect(svg.getAttribute("focusable")).toBe("false");
+      expect(svg.querySelector("path").getAttribute("fill")).toBe(
+        "currentColor",
+      );
+      expect(svg.querySelector("path").getAttribute("d")).toMatch(
+        new RegExp(`^${pathStart}`),
+      );
+      expect(
+        svg.querySelector("defs,clipPath,[id],[data-slot],[style]"),
+      ).toBeNull();
+      expect(svg.hasAttribute("style")).toBe(false);
+      expect(svg.hasAttribute("data-slot")).toBe(false);
+      expect([...svg.classList]).toEqual(["icon-button__icon"]);
+    },
+  );
+
+  test("clicking an action label or SVG keeps menu associations and behavior intact", () => {
+    initialize();
+    expect(button("customizeButton").getAttribute("aria-controls")).toBe("app");
+    button("customizeButton")
+      .querySelector("path")
+      .dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+    remove("currency").click();
+    const add = button("addWidgetButton");
+    expect(add.getAttribute("aria-controls")).toBe("addWidgetMenu");
+    add.querySelector("span").click();
+    expect(button("addWidgetMenu").hidden).toBe(false);
+    expect(add.getAttribute("aria-expanded")).toBe("true");
+    button("addWidgetMenu").querySelector("button").click();
+    expect(add.disabled).toBe(true);
+    add
+      .querySelector("svg")
+      .dispatchEvent(new window.MouseEvent("click", { bubbles: true }));
+    expect(button("addWidgetMenu").hidden).toBe(true);
+    button("cancelCustomizationButton").querySelector("span").click();
+    expect(button("customizeButton").hidden).toBe(false);
   });
 
   test("restores saved desktop order and visibility without recreating any widget", () => {
@@ -165,17 +225,17 @@ describe("desktop grid editor", () => {
     begin();
 
     expect(beforeEdit).toHaveBeenCalledTimes(1);
-    expect(button("grid_edit_btn").hidden).toBe(true);
-    expect(button("grid_edit_save_btn").hidden).toBe(false);
-    expect(button("grid_edit_cancel_btn").hidden).toBe(false);
-    expect(button("grid_edit_reset_btn").hidden).toBe(false);
-    expect(button("grid_edit_add_btn").disabled).toBe(true);
+    expect(button("customizeButton").hidden).toBe(true);
+    expect(button("saveLayoutButton").hidden).toBe(false);
+    expect(button("cancelCustomizationButton").hidden).toBe(false);
+    expect(button("resetLayoutButton").hidden).toBe(false);
+    expect(button("addWidgetButton").disabled).toBe(true);
     expect(grid.querySelectorAll(".grid-widget")).toHaveLength(4);
     expect([...grid.querySelectorAll(".Container")]).toEqual(containers);
     expect(
       containers.every((container) => container.hasAttribute("inert")),
     ).toBe(true);
-    expect(document.activeElement).toBe(button("grid_edit_save_btn"));
+    expect(document.activeElement).toBe(button("saveLayoutButton"));
   });
 
   test("prevents content interaction and focus during editing and restores both on cancel", () => {
@@ -194,7 +254,7 @@ describe("desktop grid editor", () => {
 
     expect(action).not.toHaveBeenCalled();
     expect(hover).not.toHaveBeenCalled();
-    expect(document.activeElement).toBe(button("grid_edit_save_btn"));
+    expect(document.activeElement).toBe(button("saveLayoutButton"));
     cancel();
     expect(widgets[0].container.hasAttribute("inert")).toBe(false);
     expect(grid.querySelector(".grid-widget")).toBeNull();
@@ -217,8 +277,8 @@ describe("desktop grid editor", () => {
     remove("countdown").click();
     expect(visibleIds()).toEqual(["countdown"]);
     expect(write).not.toHaveBeenCalled();
-    button("grid_edit_add_btn").click();
-    const menu = button("grid_edit_add_menu");
+    button("addWidgetButton").click();
+    const menu = button("addWidgetMenu");
     expect(
       [...menu.querySelectorAll("button")].map((node) => node.textContent),
     ).toEqual(["DATE", "CURRENCY", "COFFEE"]);
@@ -227,18 +287,18 @@ describe("desktop grid editor", () => {
     expect(visibleIds()).toEqual(["currency", "countdown"]);
     expect(remove("countdown").hidden).toBe(false);
     expect(menu.hidden).toBe(true);
-    expect(button("grid_edit_save_btn").hidden).toBe(false);
+    expect(button("saveLayoutButton").hidden).toBe(false);
   });
 
   test("disables Add when the final hidden widget is restored and returns focus to Save", () => {
     initialize();
     begin();
     remove("currency").click();
-    button("grid_edit_add_btn").click();
-    button("grid_edit_add_menu").querySelector("button").click();
+    button("addWidgetButton").click();
+    button("addWidgetMenu").querySelector("button").click();
 
-    expect(button("grid_edit_add_btn").disabled).toBe(true);
-    expect(document.activeElement).toBe(button("grid_edit_save_btn"));
+    expect(button("addWidgetButton").disabled).toBe(true);
+    expect(document.activeElement).toBe(button("saveLayoutButton"));
     save();
     expect(localStorage.getItem("dashboardLayout")).toBeNull();
   });
@@ -247,20 +307,20 @@ describe("desktop grid editor", () => {
     initialize();
     begin();
     remove("currency").click();
-    const add = button("grid_edit_add_btn");
+    const add = button("addWidgetButton");
     add.click();
     document.dispatchEvent(
       new window.KeyboardEvent("keydown", { key: "Escape", bubbles: true }),
     );
 
-    expect(button("grid_edit_add_menu").hidden).toBe(true);
+    expect(button("addWidgetMenu").hidden).toBe(true);
     expect(document.activeElement).toBe(add);
-    expect(button("grid_edit_save_btn").hidden).toBe(false);
+    expect(button("saveLayoutButton").hidden).toBe(false);
     add.click();
     document.body.dispatchEvent(
       new window.MouseEvent("pointerdown", { bubbles: true }),
     );
-    expect(button("grid_edit_add_menu").hidden).toBe(true);
+    expect(button("addWidgetMenu").hidden).toBe(true);
     expect(add.getAttribute("aria-expanded")).toBe("false");
   });
 
@@ -272,11 +332,11 @@ describe("desktop grid editor", () => {
     reset();
 
     expect(visibleIds()).toEqual(widgets.map(({ id }) => id));
-    expect(button("grid_edit_save_btn").hidden).toBe(false);
+    expect(button("saveLayoutButton").hidden).toBe(false);
     cancel();
     expect(visibleIds()).toEqual(["coffee", "date", "countdown"]);
     expect(localStorage.getItem("dashboardLayout")).toBe(raw);
-    expect(document.activeElement).toBe(button("grid_edit_btn"));
+    expect(document.activeElement).toBe(button("customizeButton"));
   });
 
   test("saves a custom snapshot and returns to the same live widget containers", () => {
@@ -345,13 +405,13 @@ describe("desktop grid editor", () => {
         });
       save();
 
-      expect(button("grid_edit_save_btn").hidden).toBe(false);
+      expect(button("saveLayoutButton").hidden).toBe(false);
       expect(toolbar.querySelector('[role="alert"]').hidden).toBe(false);
       expect(visibleIds()).toEqual(draft);
       expect(grid.querySelectorAll("[inert]")).toHaveLength(4);
       failure.mockRestore();
       save();
-      expect(button("grid_edit_save_btn").hidden).toBe(true);
+      expect(button("saveLayoutButton").hidden).toBe(true);
       expect(toolbar.querySelector('[role="alert"]').hidden).toBe(true);
       expect(visibleIds()).toEqual(draft);
     },
@@ -373,7 +433,7 @@ describe("desktop grid editor", () => {
     desktop.change(true);
     expect(visibleIds()).toEqual(["coffee", "date", "countdown"]);
     expect(toolbar.hidden).toBe(false);
-    expect(button("grid_edit_save_btn").hidden).toBe(true);
+    expect(button("saveLayoutButton").hidden).toBe(true);
     touch.change(true);
     expect(toolbar.hidden).toBe(true);
     expect(visibleIds()).toEqual(widgets.map(({ id }) => id));
@@ -421,7 +481,7 @@ describe("desktop grid editor", () => {
   test("reuses initialization and destroys listeners without changing stored preferences", () => {
     const first = initialize();
     expect(initialize()).toBe(first);
-    const originalEdit = button("grid_edit_btn");
+    const originalEdit = button("customizeButton");
     begin();
     expect(beforeEdit).toHaveBeenCalledTimes(1);
     remove("date").click();

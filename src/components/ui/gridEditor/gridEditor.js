@@ -6,6 +6,7 @@ import {
   readDashboardLayout,
   saveDashboardLayout,
 } from "../../../utils/dashboardLayoutStorage.js";
+import { initializeGridDrag } from "./gridDragController.js";
 
 const initializedToolbars = new WeakMap();
 const DESKTOP_QUERY =
@@ -35,6 +36,7 @@ export function initializeGridEditor(
   const desktopMedia = window.matchMedia(DESKTOP_QUERY);
   const touchMedia = window.matchMedia(TOUCH_QUERY);
   const shells = new Map();
+  let drag = null;
   let model = null;
   let desktop;
   let destroyed = false;
@@ -69,6 +71,9 @@ export function initializeGridEditor(
   }
 
   function removeShells() {
+    drag?.destroy();
+    drag = null;
+    grid.classList.remove("grid--editing");
     for (const { container, shell, wasInert } of shells.values()) {
       container.toggleAttribute("inert", wasInert);
       shell.replaceWith(container);
@@ -100,8 +105,10 @@ export function initializeGridEditor(
     const removed = layout.filter((widget) => widget.is_remove);
     add.disabled = removed.length === 0;
     const visibleCount = layout.length - removed.length;
-    for (const { remove } of shells.values())
+    for (const { shell, remove } of shells.values()) {
       remove.hidden = visibleCount === 1;
+      shell.classList.toggle("grid-widget--fixed", visibleCount === 1);
+    }
     menu.replaceChildren();
     for (const entry of removed) {
       const item = document.createElement("li");
@@ -110,6 +117,7 @@ export function initializeGridEditor(
       button.textContent = byId.get(entry.id).name;
       button.addEventListener("click", () => {
         if (!desktop || !model.isEditing) return;
+        drag?.cancel();
         model.restoreWidget(entry.id);
         closeMenu();
         error.hidden = true;
@@ -125,6 +133,7 @@ export function initializeGridEditor(
     if (destroyed || !desktop || model.isEditing) return;
     beforeEdit();
     model.beginEdit();
+    grid.classList.add("grid--editing");
     error.hidden = true;
     for (const widget of widgets) {
       const { container } = widget;
@@ -133,6 +142,10 @@ export function initializeGridEditor(
       shell.dataset.widgetId = widget.id;
       shell.setAttribute("role", "group");
       shell.setAttribute("aria-label", widget.name);
+      const surface = document.createElement("div");
+      surface.className = "grid-widget__surface";
+      const card = document.createElement("div");
+      card.className = "grid-widget__card";
       const remove = document.createElement("button");
       remove.type = "button";
       remove.className = "grid-widget__remove";
@@ -140,8 +153,9 @@ export function initializeGridEditor(
       remove.textContent = "−";
       remove.setAttribute("aria-label", `Прибрати віджет «${widget.name}»`);
       remove.addEventListener("click", () => {
-        if (!desktop || !model.isEditing || !model.hideWidget(widget.id))
-          return;
+        if (!desktop || !model.isEditing) return;
+        drag?.cancel();
+        if (!model.hideWidget(widget.id)) return;
         closeMenu();
         error.hidden = true;
         render();
@@ -151,15 +165,27 @@ export function initializeGridEditor(
       container.setAttribute("inert", "");
       container.hidden = false;
       container.replaceWith(shell);
-      shell.append(container, remove);
+      card.append(container, remove);
+      surface.append(card);
+      shell.append(surface);
       shells.set(widget.id, { container, shell, remove, wasInert });
     }
     render();
+    drag = initializeGridDrag({
+      grid,
+      onStart: closeMenu,
+      onDrop(id, index) {
+        if (model.moveWidget(id, index)) error.hidden = true;
+        applyLayout(model.layout);
+      },
+      onCancel: () => applyLayout(model.layout),
+    });
     save.focus();
   }
 
   function cancelEdit() {
     if (!desktop || !model.isEditing) return;
+    drag?.cancel();
     model.cancel();
     closeMenu();
     error.hidden = true;
@@ -172,6 +198,7 @@ export function initializeGridEditor(
   cancel.addEventListener("click", cancelEdit);
   reset.addEventListener("click", () => {
     if (!desktop || !model.isEditing) return;
+    drag?.cancel();
     model.reset();
     closeMenu();
     error.hidden = true;
@@ -179,6 +206,7 @@ export function initializeGridEditor(
   });
   add.addEventListener("click", () => {
     if (!desktop || !model.isEditing || add.disabled) return;
+    drag?.cancel();
     const open = menu.hidden;
     menu.hidden = !open;
     add.setAttribute("aria-expanded", String(open));
@@ -186,6 +214,7 @@ export function initializeGridEditor(
   });
   save.addEventListener("click", () => {
     if (!desktop || !model.isEditing) return;
+    drag?.cancel();
     closeMenu();
     if (!model.save((layout) => saveDashboardLayout(layout, widgetIds))) {
       error.textContent =
@@ -202,6 +231,7 @@ export function initializeGridEditor(
   function updateAvailability() {
     const available = desktopMedia.matches && !touchMedia.matches;
     if (available === desktop) return;
+    drag?.cancel();
     model?.cancel();
     closeMenu();
     error.hidden = true;
@@ -257,6 +287,7 @@ export function initializeGridEditor(
     destroy() {
       if (destroyed) return;
       destroyed = true;
+      drag?.cancel();
       model?.cancel();
       removeShells();
       applyLayout(desktop && model ? model.savedLayout : defaults);

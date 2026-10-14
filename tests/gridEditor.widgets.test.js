@@ -50,7 +50,9 @@ describe("grid editing with real widgets and mocked network", () => {
     Object.defineProperty(window, "matchMedia", {
       configurable: true,
       value: jest.fn((query) => ({
-        matches: query !== "(any-pointer: coarse)",
+        matches:
+          query !== "(any-pointer: coarse)" &&
+          query !== "(prefers-reduced-motion: reduce)",
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
       })),
@@ -152,7 +154,7 @@ describe("grid editing with real widgets and mocked network", () => {
 
     expect(currency.hasAttribute("inert")).toBe(true);
     expect(remove.isConnected).toBe(true);
-    expect(currency.parentElement.hidden).toBe(true);
+    expect(currency.closest(".grid-widget").hidden).toBe(true);
     button("grid_edit_add_btn").click();
     const restore = [
       ...button("grid_edit_add_menu").querySelectorAll("button"),

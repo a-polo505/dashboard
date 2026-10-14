@@ -72,7 +72,11 @@ describe("desktop grid editor", () => {
     Object.defineProperty(window, "matchMedia", {
       configurable: true,
       value: jest.fn((query) =>
-        query === "(any-pointer: coarse)" ? touch : desktop,
+        query === "(prefers-reduced-motion: reduce)"
+          ? media(false)
+          : query === "(any-pointer: coarse)"
+            ? touch
+            : desktop,
       ),
     });
     beforeEdit = jest.fn();

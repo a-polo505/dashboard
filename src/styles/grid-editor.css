@@ -89,20 +89,65 @@
   font-size: 14px;
 }
 
+.grid--editing {
+  position: relative;
+}
+
 .grid-widget {
   position: relative;
   flex: 0 0 auto;
   width: max-content;
+  cursor: grab;
+  user-select: none;
+}
+
+.grid-widget__surface,
+.grid-widget__card {
+  position: relative;
+}
+
+.grid-widget__card {
   animation: grid-widget-shake 0.28s ease-in-out infinite alternate;
 }
 
-.grid-widget:nth-child(even) {
+.grid-widget:nth-child(even) .grid-widget__card {
   animation-direction: alternate-reverse;
 }
 
-.grid-widget > .Container {
+.grid-widget__card > .Container {
   pointer-events: none;
   user-select: none;
+}
+
+.grid-widget--fixed {
+  cursor: default;
+}
+
+.grid--dragging,
+.grid--dragging .grid-widget {
+  cursor: grabbing;
+}
+
+.grid-widget--dragging {
+  z-index: 3;
+}
+
+.grid-widget--dragging::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px dashed var(--grid-editor-focus-ring);
+  border-radius: 26px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.grid-widget--dragging .grid-widget__card {
+  animation: none;
+}
+
+.grid-widget--dragging .grid-widget__remove {
+  visibility: hidden;
 }
 
 .grid-widget__remove {
@@ -145,7 +190,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .grid-widget {
+  .grid-widget__card {
     animation: none;
   }
 }

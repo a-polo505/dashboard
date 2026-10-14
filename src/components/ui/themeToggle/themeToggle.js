@@ -1,3 +1,8 @@
+import {
+  readThemePreference,
+  saveThemePreference,
+} from "../../../utils/themePreferenceStorage.js";
+
 const initializedButtons = new WeakSet();
 
 export function initializeThemeToggle(button, root = document.documentElement) {
@@ -10,9 +15,11 @@ export function initializeThemeToggle(button, root = document.documentElement) {
     button.title = isDark ? "Switch to light theme" : "Switch to dark theme";
   };
 
-  applyTheme(root.dataset.theme === "dark" ? "dark" : "light");
+  applyTheme(readThemePreference());
   button.addEventListener("click", () => {
-    applyTheme(root.dataset.theme === "dark" ? "light" : "dark");
+    const theme = root.dataset.theme === "dark" ? "light" : "dark";
+    applyTheme(theme);
+    saveThemePreference(theme);
   });
   initializedButtons.add(button);
 }

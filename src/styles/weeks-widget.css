@@ -1,5 +1,4 @@
 .weeks-widget-container {
-  order: 3;
   background: linear-gradient(
     180deg,
     var(--weeks-background-start),

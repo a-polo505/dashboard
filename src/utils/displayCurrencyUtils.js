@@ -33,8 +33,7 @@ export function mountCurrencyWidget() {
   currencyContainer = createContainer("Small", "");
   currencyContainer.id = "currencyWidget";
   currencyContainer.classList.add("currency-widget-container");
-  // Keep the original DOM order when mounting after the other widgets.
-  parent.prepend(currencyContainer);
+  parent.appendChild(currencyContainer);
   currencyContainer.appendChild(createLoadingSpinner());
   document.addEventListener("currencyChange", handleCurrencyChange);
   return currencyContainer;

@@ -5,7 +5,7 @@ jest.mock("../src/utils/widgetInitializer.js", () => ({
   initializeWidgets: jest.fn(),
 }));
 jest.mock("../src/components/widgets/currencyWidget/currencyWidget.js", () => ({
-  initializeCurrencyWidget: jest.fn(),
+  loadCurrencyWidget: jest.fn(),
 }));
 jest.mock("../src/components/ui/themeToggle/themeToggle.js", () => ({
   initializeThemeToggle: jest.fn(),
@@ -13,7 +13,7 @@ jest.mock("../src/components/ui/themeToggle/themeToggle.js", () => ({
 
 describe("widget startup in the application entry point", () => {
   let initializeWidgets;
-  let initializeCurrencyWidget;
+  let loadCurrencyWidget;
   let initializeThemeToggle;
   let themeButton;
   let addEventListener;
@@ -25,7 +25,7 @@ describe("widget startup in the application entry point", () => {
     ({ initializeWidgets } = jest.requireMock(
       "../src/utils/widgetInitializer.js",
     ));
-    ({ initializeCurrencyWidget } = jest.requireMock(
+    ({ loadCurrencyWidget } = jest.requireMock(
       "../src/components/widgets/currencyWidget/currencyWidget.js",
     ));
     ({ initializeThemeToggle } = jest.requireMock(
@@ -48,19 +48,19 @@ describe("widget startup in the application entry point", () => {
     jest.requireActual("../src/app.js");
 
     expect(initializeWidgets).not.toHaveBeenCalled();
-    expect(initializeCurrencyWidget).not.toHaveBeenCalled();
+    expect(loadCurrencyWidget).not.toHaveBeenCalled();
     expect(initializeThemeToggle).not.toHaveBeenCalled();
     document.dispatchEvent(new Event("DOMContentLoaded"));
     document.dispatchEvent(new Event("DOMContentLoaded"));
     expect(initializeWidgets).toHaveBeenCalledTimes(1);
-    expect(initializeCurrencyWidget).toHaveBeenCalledTimes(1);
+    expect(loadCurrencyWidget).toHaveBeenCalledTimes(1);
     expect(initializeThemeToggle).toHaveBeenCalledTimes(1);
     expect(initializeThemeToggle).toHaveBeenCalledWith(themeButton);
     expect(initializeThemeToggle.mock.invocationCallOrder[0]).toBeLessThan(
       initializeWidgets.mock.invocationCallOrder[0],
     );
     expect(initializeWidgets.mock.invocationCallOrder[0]).toBeLessThan(
-      initializeCurrencyWidget.mock.invocationCallOrder[0],
+      loadCurrencyWidget.mock.invocationCallOrder[0],
     );
   });
 
@@ -73,14 +73,14 @@ describe("widget startup in the application entry point", () => {
       document.dispatchEvent(new Event("DOMContentLoaded"));
 
       expect(initializeWidgets).toHaveBeenCalledTimes(1);
-      expect(initializeCurrencyWidget).toHaveBeenCalledTimes(1);
+      expect(loadCurrencyWidget).toHaveBeenCalledTimes(1);
       expect(initializeThemeToggle).toHaveBeenCalledTimes(1);
       expect(initializeThemeToggle).toHaveBeenCalledWith(themeButton);
       expect(initializeThemeToggle.mock.invocationCallOrder[0]).toBeLessThan(
         initializeWidgets.mock.invocationCallOrder[0],
       );
       expect(initializeWidgets.mock.invocationCallOrder[0]).toBeLessThan(
-        initializeCurrencyWidget.mock.invocationCallOrder[0],
+        loadCurrencyWidget.mock.invocationCallOrder[0],
       );
     },
   );

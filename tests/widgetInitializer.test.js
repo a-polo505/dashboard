@@ -6,14 +6,30 @@ describe("explicit widget initialization", () => {
   let windowEvents;
   let elementEvents;
   let interval;
+  const originalFetch = global.fetch;
 
+  const widgetIds = [
+    "date",
+    "time",
+    "weeks",
+    "currency",
+    "air",
+    "quote",
+    "countdown",
+    "music",
+    "bookmarks",
+    "calendar",
+    "coffee",
+    "contact",
+  ];
   const widgetClasses = [
-    "air-widget-container",
     "date-widget-container",
-    "weeks-widget-container",
     "time-widget-container",
-    "datecount-widget-container",
+    "weeks-widget-container",
+    "currency-widget-container",
+    "air-widget-container",
     "quote-widget-container",
+    "datecount-widget-container",
     "music-widget-container",
     "bookmarks-widget-container",
     "calendar-widget-container",
@@ -27,6 +43,8 @@ describe("explicit widget initialization", () => {
     jest.setSystemTime(new Date("2026-10-10T12:00:00Z"));
     document.body.innerHTML = '<div class="widgets"></div>';
     localStorage.clear();
+    sessionStorage.clear();
+    global.fetch = jest.fn();
     documentEvents = jest.spyOn(document, "addEventListener");
     windowEvents = jest.spyOn(window, "addEventListener");
     elementEvents = jest.spyOn(window.Element.prototype, "addEventListener");
@@ -46,6 +64,8 @@ describe("explicit widget initialization", () => {
     jest.clearAllTimers();
     jest.useRealTimers();
     jest.restoreAllMocks();
+    if (originalFetch === undefined) delete global.fetch;
+    else global.fetch = originalFetch;
   });
 
   test("import does not mount widgets, write storage, or start timers and listeners", () => {
@@ -57,12 +77,24 @@ describe("explicit widget initialization", () => {
     expect(elementEvents).not.toHaveBeenCalled();
   });
 
-  test("mounts all existing widgets in their original order", () => {
+  test("mounts and registers all 12 widgets in their existing visual order without loading rates", () => {
     const dashboard = initializeWidgets();
     const containers = [...document.querySelector(".widgets").children];
 
-    expect(dashboard.widgets).toHaveLength(11);
+    expect(dashboard.widgets).toHaveLength(12);
     expect(containers).toHaveLength(widgetClasses.length);
+    expect(dashboard.widgets.map((widget) => widget.id)).toEqual(widgetIds);
+    expect(containers.map((container) => container.dataset.widgetId)).toEqual(
+      widgetIds,
+    );
+    expect(dashboard.widgets.map((widget) => widget.container)).toEqual(
+      containers,
+    );
+    expect(new Set(dashboard.widgets.map((widget) => widget.name)).size).toBe(
+      12,
+    );
+    expect(global.fetch).not.toHaveBeenCalled();
+    expect(document.getElementById("loadingSpinner")).not.toBeNull();
     for (const [index, container] of containers.entries()) {
       expect(container.classList.contains(widgetClasses[index])).toBe(true);
       expect(container.classList.contains("Container--small")).toBe(true);
@@ -85,13 +117,94 @@ describe("explicit widget initialization", () => {
     expect([...document.querySelector(".widgets").children]).toEqual(
       containers,
     );
-    expect(first.widgets).toHaveLength(11);
+    expect(first.widgets).toHaveLength(12);
     expect(interval).toHaveBeenCalledTimes(1);
     expect(jest.getTimerCount()).toBe(timerCount);
     expect(documentEvents).toHaveBeenCalledTimes(documentEventCount);
     expect(windowEvents).toHaveBeenCalledTimes(windowEventCount);
     expect(elementEvents).toHaveBeenCalledTimes(elementEventCount);
+    expect(global.fetch).not.toHaveBeenCalled();
+    expect(
+      documentEvents.mock.calls.filter(([type]) => type === "currencyChange"),
+    ).toHaveLength(1);
   });
+
+  test.each([
+    ["success", "#currencyPair", "USD / UAH"],
+    [
+      "failure",
+      '[role="alert"]',
+      "Currency rates are unavailable. Please try again.",
+    ],
+  ])(
+    "keeps all registered containers and their order during a slow currency request ending in %s",
+    async (outcome, resultSelector, expectedText) => {
+      const dashboard = initializeWidgets();
+      const containers = dashboard.widgets.map((widget) => widget.container);
+      const currency = dashboard.widgets.find(
+        (widget) => widget.id === "currency",
+      );
+      const { loadCurrencyWidget } = jest.requireActual(
+        "../src/components/widgets/currencyWidget/currencyWidget.js",
+      );
+      let resolveRequest;
+      let rejectRequest;
+      global.fetch.mockImplementation(
+        () =>
+          new Promise((resolve, reject) => {
+            resolveRequest = resolve;
+            rejectRequest = reject;
+          }),
+      );
+      jest.spyOn(console, "error").mockImplementation(() => {});
+
+      const loading = loadCurrencyWidget();
+
+      expect([...document.querySelector(".widgets").children]).toEqual(
+        containers,
+      );
+      expect(
+        currency.container.querySelector("#loadingSpinner"),
+      ).not.toBeNull();
+      expect(document.querySelectorAll(".coffee-cup")).toHaveLength(6);
+      expect(initializeWidgets()).toBe(dashboard);
+
+      if (outcome === "success") {
+        resolveRequest({
+          ok: true,
+          json: async () => ({
+            currencies: [
+              {
+                data: {
+                  USD: { code: "USD", value: 1 },
+                  UAH: { code: "UAH", value: 41 },
+                },
+              },
+            ],
+            currenciesDiff: [],
+          }),
+        });
+      } else {
+        rejectRequest(new Error("Synthetic currency failure"));
+      }
+      await loading;
+
+      expect([...document.querySelector(".widgets").children]).toEqual(
+        containers,
+      );
+      expect(dashboard.widgets.find((widget) => widget.id === "currency")).toBe(
+        currency,
+      );
+      expect(currency.container.querySelector("#loadingSpinner")).toBeNull();
+      expect(currency.container.querySelector(resultSelector).textContent).toBe(
+        expectedText,
+      );
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(
+        interval.mock.calls.filter(([, delay]) => delay === 60 * 60 * 1000),
+      ).toHaveLength(1);
+    },
+  );
 
   test("rejects a missing parent before side effects and permits initialization after mounting it", () => {
     document.body.innerHTML = "";
@@ -103,7 +216,7 @@ describe("explicit widget initialization", () => {
     expect(elementEvents).not.toHaveBeenCalled();
 
     document.body.innerHTML = '<div class="widgets"></div>';
-    expect(initializeWidgets().widgets).toHaveLength(11);
+    expect(initializeWidgets().widgets).toHaveLength(12);
   });
 
   test("keeps the time widget refresh working without replacing its container", () => {
@@ -136,7 +249,7 @@ describe("explicit widget initialization", () => {
     expect(document.querySelector(".tooltip").textContent).toBe(
       "Remaining time until end of day: 24.65%",
     );
-    expect(document.querySelector(".widgets").children).toHaveLength(11);
+    expect(document.querySelector(".widgets").children).toHaveLength(12);
     expect(interval).toHaveBeenCalledTimes(1);
   });
 
@@ -163,7 +276,7 @@ describe("explicit widget initialization", () => {
 
     const dashboard = initializeWidgets();
 
-    expect(dashboard.widgets).toHaveLength(11);
+    expect(dashboard.widgets).toHaveLength(12);
     expect(document.querySelectorAll(".coffee-cup")).toHaveLength(6);
     expect(
       document.querySelector(".contact-author-widget-container"),
@@ -174,7 +287,7 @@ describe("explicit widget initialization", () => {
   test("starts all widgets with an invalid saved countdown date", () => {
     localStorage.setItem("selectedDate", "invalid");
 
-    expect(initializeWidgets().widgets).toHaveLength(11);
+    expect(initializeWidgets().widgets).toHaveLength(12);
     expect(
       document.querySelector(".datecount-widget-container").textContent,
     ).not.toContain("NaN");

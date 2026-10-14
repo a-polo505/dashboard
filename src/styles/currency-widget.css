@@ -1,7 +1,3 @@
-#currencyWidget {
-  order: 4;
-}
-
 .currency-widget-container .loading-spinner {
   color: var(--currency-loading-icon);
 }

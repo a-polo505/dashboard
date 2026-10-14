@@ -25,9 +25,10 @@ const payload = {
   ],
 };
 
-describe("explicit currency widget initialization", () => {
+describe("separate currency widget mounting and data loading", () => {
   const originalFetch = global.fetch;
-  let initializeCurrencyWidget;
+  let loadCurrencyWidget;
+  let mountCurrencyWidget;
   let addEventListener;
 
   beforeEach(() => {
@@ -44,7 +45,10 @@ describe("explicit currency widget initialization", () => {
     });
     jest.spyOn(console, "error").mockImplementation(() => {});
     addEventListener = jest.spyOn(document, "addEventListener");
-    ({ initializeCurrencyWidget } = jest.requireActual(
+    ({ mountCurrencyWidget } = jest.requireActual(
+      "../src/utils/displayCurrencyUtils.js",
+    ));
+    ({ loadCurrencyWidget } = jest.requireActual(
       "../src/components/widgets/currencyWidget/currencyWidget.js",
     ));
   });
@@ -83,19 +87,18 @@ describe("explicit currency widget initialization", () => {
     expect(jest.getTimerCount()).toBe(0);
   });
 
-  test("mounts the existing design and displays cached rates with the original DOM order", async () => {
+  test("appends its container without moving existing widgets and displays cached rates", async () => {
     saveCache();
 
-    await initializeCurrencyWidget();
+    mountCurrencyWidget();
+    await loadCurrencyWidget();
 
     const container = document.getElementById("currencyWidget");
     expect(container.classList.contains("Container--small")).toBe(true);
     expect(container.classList.contains("currency-widget-container")).toBe(
       true,
     );
-    expect(document.querySelector(".widgets").firstElementChild).toBe(
-      container,
-    );
+    expect(document.querySelector(".widgets").lastElementChild).toBe(container);
     expect(document.getElementById("otherWidget")).not.toBeNull();
     expect(document.getElementById("currencyPair").textContent).toBe(
       "USD / UAH",
@@ -106,9 +109,11 @@ describe("explicit currency widget initialization", () => {
 
   test("does not duplicate the container, event subscription or timer on repeated initialization", async () => {
     saveCache();
-    await initializeCurrencyWidget();
+    mountCurrencyWidget();
+    await loadCurrencyWidget();
     const container = document.getElementById("currencyWidget");
-    await initializeCurrencyWidget();
+    mountCurrencyWidget();
+    await loadCurrencyWidget();
 
     expect(document.querySelectorAll("#currencyWidget")).toHaveLength(1);
     expect(document.getElementById("currencyWidget")).toBe(container);
@@ -121,7 +126,8 @@ describe("explicit currency widget initialization", () => {
 
   test("renders a saved currency change after explicit initialization", async () => {
     saveCache();
-    await initializeCurrencyWidget();
+    mountCurrencyWidget();
+    await loadCurrencyWidget();
     localStorage.setItem("userCurrency", "EUR");
 
     document.dispatchEvent(
@@ -141,7 +147,8 @@ describe("explicit currency widget initialization", () => {
   });
 
   test("fetches and renders fresh data on first initialization without a cache", async () => {
-    await initializeCurrencyWidget();
+    mountCurrencyWidget();
+    await loadCurrencyWidget();
 
     expect(global.fetch).toHaveBeenCalledTimes(1);
     expect(document.getElementById("currencyPair").textContent).toBe(
@@ -158,7 +165,8 @@ describe("explicit currency widget initialization", () => {
 
   test("preserves error recovery through the real retry button", async () => {
     global.fetch.mockRejectedValueOnce(new Error("Synthetic failure"));
-    await initializeCurrencyWidget();
+    mountCurrencyWidget();
+    await loadCurrencyWidget();
     const container = document.getElementById("currencyWidget");
     expect(container.querySelector('[role="alert"]')).not.toBeNull();
 
@@ -178,14 +186,15 @@ describe("explicit currency widget initialization", () => {
 
   test("can initialize after the parent element becomes available", async () => {
     document.body.innerHTML = "";
-    expect(() => initializeCurrencyWidget()).toThrow(
+    expect(() => mountCurrencyWidget()).toThrow(
       "Currency widget parent element not found",
     );
     expect(global.fetch).not.toHaveBeenCalled();
     expect(jest.getTimerCount()).toBe(0);
 
     document.body.innerHTML = '<div class="widgets"></div>';
-    await initializeCurrencyWidget();
+    mountCurrencyWidget();
+    await loadCurrencyWidget();
 
     expect(document.querySelectorAll("#currencyWidget")).toHaveLength(1);
     expect(global.fetch).toHaveBeenCalledTimes(1);

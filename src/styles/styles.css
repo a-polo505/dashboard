@@ -75,6 +75,16 @@ body::before {
   );
 }
 
+@media (hover: none) and (pointer: coarse) {
+  html {
+    background-color: var(--page-background);
+  }
+
+  body::before {
+    content: none;
+  }
+}
+
 main {
   flex: 1;
 }

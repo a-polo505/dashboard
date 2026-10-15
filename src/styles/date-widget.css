@@ -49,8 +49,11 @@
 }
 
 @media screen and (max-width: 480px) {
+   .date--day {
+    font-size: 112px;
+   }
   .date--weekday,
   .date--month {
-    font-size: 18px;
+    font-size: 20px;
   }
 }

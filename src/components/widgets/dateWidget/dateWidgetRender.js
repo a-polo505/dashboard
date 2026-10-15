@@ -19,12 +19,15 @@ class DateWidgetRenderer {
     );
 
     const currentDate = getCurrentDate();
-    const month = currentDate.toLocaleString("en-US", { month: "long" });
-    const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+    const weekday = currentDate.toLocaleString("en-US", { weekday: "short" });
+    const month = currentDate.toLocaleString("en-US", { month: "short" });
     const day = currentDate.getDate();
 
     const containerContent = `
-        <p class="date--month">${capitalizedMonth}</p>
+        <div class="date--heading">
+          <p class="date--weekday">${weekday}</p>
+          <p class="date--month">${month}</p>
+        </div>
         <p class="date--day">${day}</p>
     `;
 

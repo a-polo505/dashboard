@@ -1,8 +1,3 @@
-/*
- * Color tokens are named by role and grouped by the element they style.
- * Add each new token to both themes, keeping the same name and group order.
- * Keep typography, layout, and gradient geometry in component stylesheets.
- */
 :root {
   /* Page */
   --page-background: #f6f7fb;
@@ -107,8 +102,9 @@
   --date-pattern-dot: rgba(255, 255, 255, 0.03);
   --date-border-start: #042742;
   --date-border-end: #05172f;
-  --date-month-text: #fbdbc1;
-  --date-day-text: #ff4f4f;
+  --date-weekday-text: #ff4f4f;
+  --date-month-text: #dbe3ff;
+  --date-day-text: #f5f7ff;
   --date-day-shadow-color: #00132e9c;
 
   /* Weeks widget */

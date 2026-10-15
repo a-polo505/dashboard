@@ -60,7 +60,12 @@ describe("coffee widget progress recovery", () => {
     expect(JSON.parse(localStorage.getItem("coffeeCupsProgress"))).toEqual(
       emptyProgress,
     );
-    expect(document.querySelector(".max-cups-text")).toBeNull();
+    expect(document.querySelector(".max-cups-text").classList).not.toContain(
+      "visible",
+    );
+    expect(
+      document.querySelector(".max-cups-text").getAttribute("aria-hidden"),
+    ).toBe("true");
     expect(localStorage.getItem("userCurrency")).toBe("EUR");
     expect(localStorage.getItem("selectedDate")).toBe("2026-11-01");
 
@@ -78,73 +83,78 @@ describe("coffee widget progress recovery", () => {
     expect(writes).not.toHaveBeenCalled();
   });
 
-  test("preserves a full day and its maximum-cups message", () => {
-    storeProgress(JSON.stringify(Array(6).fill(true)));
+  test.each([5, 6])(
+    "restores %s filled cups and the matching message visibility",
+    (filled) => {
+      const progress = Array.from({ length: 6 }, (_, index) => index < filled);
+      storeProgress(JSON.stringify(progress));
 
-    mountWidget();
-    jest.advanceTimersByTime(10);
-
-    expect(renderer.cups).toEqual(Array(6).fill(true));
-    expect(document.querySelector(".max-cups-text").textContent).toBe(
-      "Take it easy, coffee lover!",
-    );
-    expect(document.querySelector(".max-cups-text").classList).toContain(
-      "visible",
-    );
-  });
-
-  test.each([0, 10])(
-    "restores the maximum message after a rapid toggle and ignores a stale transition (%s ms)",
-    (delay) => {
-      storeProgress(JSON.stringify(Array(6).fill(true)));
       mountWidget();
-      jest.advanceTimersByTime(delay);
+
       const message = document.querySelector(".max-cups-text");
-
-      document.querySelectorAll(".coffee-cup")[5].click();
-      expect(message.classList.contains("visible")).toBe(false);
-      document.querySelectorAll(".coffee-cup")[5].click();
-
-      expect(renderer.cups).toEqual(Array(6).fill(true));
-      expect(document.querySelector(".max-cups-text")).toBe(message);
-      expect(message.classList.contains("visible")).toBe(true);
-      message.dispatchEvent(new Event("transitionend"));
-      jest.advanceTimersByTime(10);
-      expect(message.isConnected).toBe(true);
-      expect(message.classList.contains("visible")).toBe(true);
-      expect(document.querySelectorAll(".max-cups-text")).toHaveLength(1);
+      expect(renderer.cups).toEqual(progress);
+      expect(message.textContent).toBe("Take it easy, coffee lover!");
+      expect(message.classList.contains("visible")).toBe(filled === 6);
+      expect(message.getAttribute("aria-hidden")).toBe(String(filled !== 6));
     },
   );
 
-  test("keeps one message through repeated rapid toggles and removes it after a completed dismissal", () => {
+  test.each([0, 1, 2, 3, 4, 5])(
+    "hides the persistent message when filled cup %s is cleared",
+    (index) => {
+      storeProgress(JSON.stringify(Array(6).fill(true)));
+      mountWidget();
+      const message = document.querySelector(".max-cups-text");
+
+      document.querySelectorAll(".coffee-cup")[index].click();
+
+      const progress = Array.from({ length: 6 }, (_, cup) => cup < index);
+      expect(renderer.cups).toEqual(progress);
+      expect(JSON.parse(localStorage.getItem("coffeeCupsProgress"))).toEqual(
+        progress,
+      );
+      expect(document.querySelector(".max-cups-text")).toBe(message);
+      expect(message.classList.contains("visible")).toBe(false);
+      expect(message.getAttribute("aria-hidden")).toBe("true");
+
+      // Visibility must stay correct even without a transitionend event.
+      jest.advanceTimersByTime(1000);
+      expect(message.isConnected).toBe(true);
+      expect(message.classList.contains("visible")).toBe(false);
+    },
+  );
+
+  test("keeps one message and the latest visibility through rapid toggles and late transition events", () => {
     storeProgress(JSON.stringify(Array(6).fill(true)));
     mountWidget();
-    jest.advanceTimersByTime(10);
     const message = document.querySelector(".max-cups-text");
 
     for (let cycle = 0; cycle < 3; cycle++) {
       document.querySelectorAll(".coffee-cup")[5].click();
+      expect(message.classList.contains("visible")).toBe(false);
+      expect(message.getAttribute("aria-hidden")).toBe("true");
       document.querySelectorAll(".coffee-cup")[5].click();
       message.dispatchEvent(new Event("transitionend"));
       expect(document.querySelector(".max-cups-text")).toBe(message);
       expect(message.classList.contains("visible")).toBe(true);
+      expect(message.getAttribute("aria-hidden")).toBe("false");
       expect(document.querySelectorAll(".max-cups-text")).toHaveLength(1);
     }
 
     document.querySelectorAll(".coffee-cup")[5].click();
     message.dispatchEvent(new Event("transitionend"));
-    expect(message.isConnected).toBe(false);
-    expect(document.querySelector(".max-cups-text")).toBeNull();
+    expect(message.isConnected).toBe(true);
+    expect(message.classList.contains("visible")).toBe(false);
+    expect(message.getAttribute("aria-hidden")).toBe("true");
 
     document.querySelectorAll(".coffee-cup")[5].click();
     jest.advanceTimersByTime(10);
-    const nextMessage = document.querySelector(".max-cups-text");
-    expect(nextMessage).not.toBe(message);
-    expect(nextMessage.classList.contains("visible")).toBe(true);
+    expect(document.querySelector(".max-cups-text")).toBe(message);
+    expect(message.classList.contains("visible")).toBe(true);
     expect(document.querySelectorAll(".max-cups-text")).toHaveLength(1);
   });
 
-  test("does not show the delayed maximum message after a cup has already been cleared", () => {
+  test("does not show the maximum message later when a cup is immediately cleared", () => {
     mountWidget();
     document.querySelectorAll(".coffee-cup")[5].click();
     const message = document.querySelector(".max-cups-text");

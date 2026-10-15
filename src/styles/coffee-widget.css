@@ -29,15 +29,26 @@
   font-weight: 500;
 }
 
+.max-cups-text-container {
+  min-height: 1.2em;
+  flex-shrink: 0;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
 .max-cups-text {
   margin: 0;
-  font-size: 10px;
-  color: var(--coffee-max-cups-text);
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
+  font-size: inherit;
+  color: transparent;
+  visibility: hidden;
+  transition:
+    color 0.5s ease-in-out,
+    visibility 0s linear 0.5s;
 }
 .max-cups-text.visible {
-  opacity: 1;
+  color: var(--coffee-max-cups-text);
+  visibility: visible;
+  transition-delay: 0s;
 }
 
 .coffee-cups-container {
@@ -123,7 +134,7 @@
     font-weight: 500;
   }
 
-  .coffe-widget-container .max-cups-text {
+  .coffe-widget-container .max-cups-text-container {
     font-size: 14px;
   }
 

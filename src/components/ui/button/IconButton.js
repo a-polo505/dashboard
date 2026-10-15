@@ -3,7 +3,7 @@ class IconButton {
     const button = document.createElement("button");
     button.type = "button";
     if (id) button.id = id;
-    button.classList.add("primary-btn", "gap-6", "icon-button", ...classNames);
+    button.classList.add("primary-btn", "icon-button", ...classNames);
     button.disabled = disabled;
 
     const decorativeIcon = icon.cloneNode(true);

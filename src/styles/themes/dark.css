@@ -1,8 +1,3 @@
-/*
- * The page has a dark background; widget palettes retain their light values
- * until configured. Customize each group independently.
- * Keep token names and group order aligned with light.css.
- */
 :root[data-theme="dark"] {
   /* Page */
   --page-background: #1c1b1b;
@@ -106,8 +101,9 @@
   --date-pattern-dot: rgba(255, 255, 255, 0.03);
   --date-border-start: #043459;
   --date-border-end: #041021;
-  --date-month-text: #fbdbc1;
-  --date-day-text: #ff4f4f;
+  --date-weekday-text: #ff4f4f;
+  --date-month-text: #dbe3ff;
+  --date-day-text: #f5f7ff;
   --date-day-shadow-color: #00132e9c;
 
   /* Weeks widget */

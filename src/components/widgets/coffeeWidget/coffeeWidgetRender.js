@@ -28,7 +28,9 @@ class CoffeeWidgetRenderer {
         <p class="widget-title">Coffee Cups</p>
       </div>
       <div class="coffee-cups-container"></div>
-      <div class="flex align-center justify-center max-cups-text-container"></div>
+      <div class="flex align-center justify-center max-cups-text-container">
+        <p class="max-cups-text" aria-hidden="true">${this.getMaxCupsText()}</p>
+      </div>
     `;
 
     this.loadProgress();
@@ -88,31 +90,10 @@ class CoffeeWidgetRenderer {
   }
 
   updateMaxCupsText() {
-    const textContainer = this.container.querySelector(
-      ".max-cups-text-container",
-    );
-    let textElement = textContainer.querySelector(".max-cups-text");
-
-    if (this.isMaxCupsReached()) {
-      if (!textElement) {
-        textElement = document.createElement("p");
-        textElement.classList.add("max-cups-text");
-        textElement.textContent = this.getMaxCupsText();
-        textContainer.appendChild(textElement);
-
-        textElement.addEventListener("transitionend", () => {
-          if (!this.isMaxCupsReached()) textElement.remove();
-        });
-
-        setTimeout(() => {
-          if (this.isMaxCupsReached()) textElement.classList.add("visible");
-        }, 10);
-      } else {
-        textElement.classList.add("visible");
-      }
-    } else if (textElement) {
-      textElement.classList.remove("visible");
-    }
+    const textElement = this.container.querySelector(".max-cups-text");
+    const isVisible = this.isMaxCupsReached();
+    textElement.classList.toggle("visible", isVisible);
+    textElement.setAttribute("aria-hidden", String(!isVisible));
   }
 
   isMaxCupsReached() {

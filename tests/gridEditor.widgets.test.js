@@ -19,6 +19,10 @@ const rates = {
 
 describe("grid editing with real widgets and mocked network", () => {
   const originalFetch = global.fetch;
+  const originalObserver = Object.getOwnPropertyDescriptor(
+    window,
+    "IntersectionObserver",
+  );
   const originalMedia = Object.getOwnPropertyDescriptor(window, "matchMedia");
   let editor;
   let widgets;
@@ -40,6 +44,10 @@ describe("grid editing with real widgets and mocked network", () => {
   }
 
   beforeEach(() => {
+    window.IntersectionObserver = jest.fn(() => ({
+      observe: jest.fn(),
+      disconnect: jest.fn(),
+    }));
     jest.resetModules();
     jest.useFakeTimers();
     jest.setSystemTime(new Date(2026, 9, 14, 12));
@@ -96,6 +104,9 @@ describe("grid editing with real widgets and mocked network", () => {
     jest.clearAllTimers();
     jest.useRealTimers();
     jest.restoreAllMocks();
+    if (originalObserver)
+      Object.defineProperty(window, "IntersectionObserver", originalObserver);
+    else delete window.IntersectionObserver;
     document.body.replaceChildren();
     if (originalMedia)
       Object.defineProperty(window, "matchMedia", originalMedia);
@@ -218,10 +229,11 @@ describe("grid editing with real widgets and mocked network", () => {
         .filter((node) => !node.hidden)
         .map((node) => node.dataset.widgetId);
 
-    expect(visibleIds()).toEqual(["currency"]);
-    expect([...grid.children].map((node) => node.dataset.widgetId)).toEqual(
-      savedIds,
-    );
+    expect(visibleIds()).toEqual(["currency", "clock"]);
+    expect([...grid.children].map((node) => node.dataset.widgetId)).toEqual([
+      ...savedIds,
+      "clock",
+    ]);
     begin();
     expect(
       [...button("addWidgetMenu").querySelectorAll("button")].map(
@@ -238,29 +250,53 @@ describe("grid editing with real widgets and mocked network", () => {
       const original = widgets.find((widget) => widget.id === id).container;
       expect(original.closest(".grid-widget").hidden).toBe(false);
     }
-    expect(visibleIds()).toEqual(savedIds);
-    expect(grid.querySelectorAll(".Container")).toHaveLength(12);
-    expect(new Set(widgets.map(({ container }) => container)).size).toBe(12);
+    expect(visibleIds()).toEqual([...savedIds, "clock"]);
+    expect(grid.querySelectorAll(".Container")).toHaveLength(13);
+    expect(new Set(widgets.map(({ container }) => container)).size).toBe(13);
     expect(localStorage.getItem("dashboardLayout")).toBe(raw);
     cancel();
-    expect(visibleIds()).toEqual(["currency"]);
+    expect(visibleIds()).toEqual(["currency", "clock"]);
     expect(localStorage.getItem("dashboardLayout")).toBe(raw);
 
     begin();
     button("addWidgetButton").click();
     button("addWidgetMenu").querySelector("button").click();
     button("saveLayoutButton").click();
-    expect(visibleIds()).toEqual(["contact", "currency"]);
+    expect(visibleIds()).toEqual(["contact", "currency", "clock"]);
     expect(JSON.parse(localStorage.getItem("dashboardLayout"))).toEqual({
       version: 1,
-      widgets: snapshot.widgets.map((entry) => ({
-        ...entry,
-        is_remove: entry.id === "contact" ? false : entry.is_remove,
-      })),
+      widgets: [
+        ...snapshot.widgets.map((entry) => ({
+          ...entry,
+          is_remove: entry.id === "contact" ? false : entry.is_remove,
+        })),
+        { id: "clock", is_remove: false },
+      ],
     });
     expect(new Set(grid.children)).toEqual(
       new Set(widgets.map(({ container }) => container)),
     );
+  });
+
+  test("hides and restores Clock without replacing its artwork or affecting Day Progress", () => {
+    const clock = widgets.find(({ id }) => id === "clock").container;
+    const face = clock.querySelector(".clock__face");
+    const time = widgets.find(({ id }) => id === "time").container;
+    begin();
+    document.querySelector('[data-remove-widget="clock"]').click();
+    expect(clock.closest(".grid-widget").hidden).toBe(true);
+    button("addWidgetButton").click();
+    [...button("addWidgetMenu").querySelectorAll("button")]
+      .find((node) => node.textContent === "Clock")
+      .click();
+    expect(clock.closest(".grid-widget").hidden).toBe(false);
+    expect(clock.querySelector(".clock__face")).toBe(face);
+    button("saveLayoutButton").click();
+    expect(clock.parentElement).toBe(button("app"));
+    expect(time.querySelector("#progress-circle")).not.toBeNull();
+    expect(
+      button("app").querySelectorAll('[data-widget-id="clock"]'),
+    ).toHaveLength(1);
   });
 
   test("retains edit controls and blocks fresh tooltip subscriptions after the time widget refreshes", () => {

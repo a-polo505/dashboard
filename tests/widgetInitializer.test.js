@@ -7,9 +7,14 @@ describe("explicit widget initialization", () => {
   let elementEvents;
   let interval;
   const originalFetch = global.fetch;
+  const originalObserver = Object.getOwnPropertyDescriptor(
+    window,
+    "IntersectionObserver",
+  );
 
   const widgetIds = [
     "date",
+    "clock",
     "time",
     "weeks",
     "currency",
@@ -24,6 +29,7 @@ describe("explicit widget initialization", () => {
   ];
   const widgetClasses = [
     "date-widget-container",
+    "clock-widget-container",
     "time-widget-container",
     "weeks-widget-container",
     "currency-widget-container",
@@ -38,6 +44,10 @@ describe("explicit widget initialization", () => {
   ];
 
   beforeEach(() => {
+    window.IntersectionObserver = jest.fn(() => ({
+      observe: jest.fn(),
+      disconnect: jest.fn(),
+    }));
     jest.resetModules();
     jest.useFakeTimers();
     jest.setSystemTime(new Date("2026-10-10T12:00:00Z"));
@@ -64,6 +74,9 @@ describe("explicit widget initialization", () => {
     jest.clearAllTimers();
     jest.useRealTimers();
     jest.restoreAllMocks();
+    if (originalObserver)
+      Object.defineProperty(window, "IntersectionObserver", originalObserver);
+    else delete window.IntersectionObserver;
     if (originalFetch === undefined) delete global.fetch;
     else global.fetch = originalFetch;
   });
@@ -77,11 +90,11 @@ describe("explicit widget initialization", () => {
     expect(elementEvents).not.toHaveBeenCalled();
   });
 
-  test("mounts and registers all 12 widgets in their existing visual order without loading rates", () => {
+  test("mounts and registers all 13 widgets in default visual order without loading rates", () => {
     const dashboard = initializeWidgets();
     const containers = [...document.querySelector(".widgets").children];
 
-    expect(dashboard.widgets).toHaveLength(12);
+    expect(dashboard.widgets).toHaveLength(13);
     expect(containers).toHaveLength(widgetClasses.length);
     expect(dashboard.widgets.map((widget) => widget.id)).toEqual(widgetIds);
     expect(containers.map((container) => container.dataset.widgetId)).toEqual(
@@ -91,12 +104,13 @@ describe("explicit widget initialization", () => {
       containers,
     );
     expect(new Set(dashboard.widgets.map((widget) => widget.name)).size).toBe(
-      12,
+      13,
     );
     expect(
       Object.fromEntries(dashboard.widgets.map(({ id, name }) => [id, name])),
     ).toEqual({
       date: "Current Date",
+      clock: "Clock",
       time: "Day Progress",
       weeks: "Year Progress",
       currency: "Currency rates",
@@ -133,7 +147,7 @@ describe("explicit widget initialization", () => {
     expect([...document.querySelector(".widgets").children]).toEqual(
       containers,
     );
-    expect(first.widgets).toHaveLength(12);
+    expect(first.widgets).toHaveLength(13);
     expect(interval).toHaveBeenCalledTimes(1);
     expect(jest.getTimerCount()).toBe(timerCount);
     expect(documentEvents).toHaveBeenCalledTimes(documentEventCount);
@@ -232,7 +246,7 @@ describe("explicit widget initialization", () => {
     expect(elementEvents).not.toHaveBeenCalled();
 
     document.body.innerHTML = '<div class="widgets"></div>';
-    expect(initializeWidgets().widgets).toHaveLength(12);
+    expect(initializeWidgets().widgets).toHaveLength(13);
   });
 
   test("keeps the time widget refresh working without replacing its container", () => {
@@ -265,7 +279,7 @@ describe("explicit widget initialization", () => {
     expect(document.querySelector(".tooltip").textContent).toBe(
       "Remaining time until end of day: 24.65%",
     );
-    expect(document.querySelector(".widgets").children).toHaveLength(12);
+    expect(document.querySelector(".widgets").children).toHaveLength(13);
     expect(interval).toHaveBeenCalledTimes(1);
   });
 
@@ -292,7 +306,7 @@ describe("explicit widget initialization", () => {
 
     const dashboard = initializeWidgets();
 
-    expect(dashboard.widgets).toHaveLength(12);
+    expect(dashboard.widgets).toHaveLength(13);
     expect(document.querySelectorAll(".coffee-cup")).toHaveLength(6);
     expect(
       document.querySelector(".contact-author-widget-container"),
@@ -303,7 +317,7 @@ describe("explicit widget initialization", () => {
   test("starts all widgets with an invalid saved countdown date", () => {
     localStorage.setItem("selectedDate", "invalid");
 
-    expect(initializeWidgets().widgets).toHaveLength(12);
+    expect(initializeWidgets().widgets).toHaveLength(13);
     expect(
       document.querySelector(".datecount-widget-container").textContent,
     ).not.toContain("NaN");

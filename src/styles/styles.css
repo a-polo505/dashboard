@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Catamaran:wght@700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Heebo:wght@800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@500..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@500..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
@@ -20,6 +20,7 @@
 @import url("animation.css");
 @import url("container.css");
 @import url("date-widget.css");
+@import url("clock-widget.css");
 @import url("weeks-widget.css");
 @import url("air-widget.css");
 @import url("time-widget.css");

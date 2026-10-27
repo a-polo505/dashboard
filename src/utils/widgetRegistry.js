@@ -1,4 +1,5 @@
 import { DateWidget } from "../components/widgets/dateWidget/dateWidget.js";
+import { ClockWidget } from "../components/widgets/clockWidget/clockWidget.js";
 import { TimeWidget } from "../components/widgets/timeWidget/timeWidget.js";
 import { WeeksWidget } from "../components/widgets/weeksWidget/weeksWidget.js";
 import { AirWidget } from "../components/widgets/airWidget/airWidget.js";
@@ -18,6 +19,11 @@ export const widgetDefinitions = Object.freeze(
       id: "date",
       name: "Current Date",
       mount: () => new DateWidget().dateWidgetContainer.container,
+    },
+    {
+      id: "clock",
+      name: "Clock",
+      mount: () => new ClockWidget().clockWidgetContainer.container,
     },
     {
       id: "time",

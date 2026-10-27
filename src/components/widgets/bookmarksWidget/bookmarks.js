@@ -2,11 +2,13 @@ import {
   FIGMA_ICON,
   GITHUB_ICON,
   OPENAI_ICON,
+  CLAUDE_ICON,
   X_ICON,
   DRIBBBLE_ICON,
   LAYERS_ICON,
   MOBBIN_ICON,
   LINKEDIN_ICON,
+  SPOTIFY_ICON,
   MEDIUM_ICON,
 } from "./bookmarksIcons.js";
 
@@ -28,6 +30,12 @@ const bookmarks = [
     className: "bg-chatgpt",
     svgIcon: OPENAI_ICON,
     text: "OpenAI",
+  },
+  {
+    href: "https://claude.ai/",
+    className: "bg-claude",
+    svgIcon: CLAUDE_ICON,
+    text: "Claude",
   },
   {
     href: "https://x.com/home",
@@ -58,6 +66,12 @@ const bookmarks = [
     className: "bg-linkedin",
     svgIcon: LINKEDIN_ICON,
     text: "Linkedin",
+  },
+  {
+    href: "https://www.spotify.com",
+    className: "bg-spotify",
+    svgIcon: SPOTIFY_ICON,
+    text: "Spotify",
   },
   {
     href: "https://medium.com",

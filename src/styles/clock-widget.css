@@ -1,0 +1,57 @@
+.clock-widget-container {
+  padding: 0;
+  background: var(--clock-background-end);
+  border-radius: 16%;
+}
+
+.clock-widget-container.gradient-border::after {
+  background: linear-gradient(
+    180deg,
+    var(--clock-border-start),
+    var(--clock-border-end)
+  );
+  border-radius: calc(16% + var(--borderWidth));
+}
+
+.clock {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.clock__face,
+.clock__hands {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.clock__numerals {
+  font-family: ui-rounded, "Nunito", sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  fill: var(--clock-numeral-color);
+  stroke: var(--clock-numeral-shadow-color);
+  stroke-width: 1;
+  paint-order: stroke fill;
+}
+
+.clock__second,
+.clock__hour {
+  filter: drop-shadow(0 1px 1px var(--clock-hand-shadow-color));
+}
+
+.clock__minute {
+  filter: drop-shadow(2px 1px 1px var(--clock-minute-shadow-color));
+}
+
+@media screen and (max-width: 480px) {
+  .clock-widget-container {
+    padding: 0;
+    border-radius: 16%;
+  }
+}

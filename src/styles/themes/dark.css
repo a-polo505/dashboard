@@ -97,6 +97,33 @@
   --currency-menu-search-focus-border: #4a3d23;
   --currency-menu-search-focus-shadow-color: #4a3d23;
 
+  /* Clock widget */
+  --clock-background-start: #343434;
+  --clock-background-end: #050608;
+  --clock-border-start: #363636;
+  --clock-border-end: #000000;
+  --clock-ring-color: #212121;
+  --clock-noise-color: rgba(0, 0, 0, 0.25);
+  --clock-numeral-color: #f5ffff;
+  --clock-numeral-shadow-color: #000000;
+  --clock-second-start: #de5631;
+  --clock-second-end: #782e1a;
+  --clock-hour-start: #fbfbfb;
+  --clock-minute-start: #ffffff;
+  --clock-hand-end: #d2cecd;
+  --clock-hour-groove: #aeaeae;
+  --clock-minute-groove: #a3a3a3;
+  --clock-hub-start: #dfdfdf;
+  --clock-hub-end: #d9d9d9;
+  --clock-hub-border-start: #fefefe;
+  --clock-hub-border-middle: #a6a6a6;
+  --clock-hub-border-end: #2c2c2c;
+  --clock-pin-start: #e2e2e2;
+  --clock-pin-end: #6c6c6c;
+  --clock-shadow-color: #000000;
+  --clock-hand-shadow-color: rgba(0, 0, 0, 0.6);
+  --clock-minute-shadow-color: rgba(0, 0, 0, 0.95);
+
   /* Date widget */
   --date-pattern-dot: rgba(255, 255, 255, 0.03);
   --date-border-start: #043459;

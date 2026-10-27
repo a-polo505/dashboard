@@ -1,4 +1,3 @@
-// Preserve the supplied artwork's filter bounds and noise distribution.
 const NOISE_THRESHOLD = [...Array(51).fill(1), ...Array(49).fill(0)].join(" ");
 const RINGS = [
   [76, 24, 3.5],

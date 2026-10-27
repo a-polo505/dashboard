@@ -2,6 +2,7 @@ import {
   FIGMA_ICON,
   GITHUB_ICON,
   OPENAI_ICON,
+  CLAUDE_ICON,
   X_ICON,
   DRIBBBLE_ICON,
   LAYERS_ICON,
@@ -28,6 +29,12 @@ const bookmarks = [
     className: "bg-chatgpt",
     svgIcon: OPENAI_ICON,
     text: "OpenAI",
+  },
+  {
+    href: "https://claude.ai/",
+    className: "bg-claude",
+    svgIcon: CLAUDE_ICON,
+    text: "Claude",
   },
   {
     href: "https://x.com/home",

@@ -36,6 +36,7 @@
   --grid-editor-menu-text: var(--project-title-text);
   --grid-editor-menu-border: var(--cta-button-border);
   --grid-editor-menu-shadow: var(--tooltip-shadow-color);
+  --grid-editor-menu-hover-button: var(--cta-button-hover-background);
   --grid-widget-remove-background: rgba(0, 0, 0, 0.7);
   --grid-widget-remove-icon: var(--tooltip-text);
 
@@ -130,7 +131,7 @@
   --date-border-end: #041021;
   --date-weekday-text: #ff4f4f;
   --date-month-text: #dbe3ff;
-  --date-day-text: #f5f7ff;
+  --date-day-text: #dee4ff;
   --date-day-shadow-color: #00132e9c;
 
   /* Weeks widget */
@@ -242,6 +243,9 @@
   --quote-symbol-text: #2e2e2e;
   --quote-text: #2e2e2e;
   --quote-accent-text: #d03860;
+  --quote-navigation-background: #f0a800;
+  --quote-navigation-hover-background: #E87E00;
+  --quote-navigation-icon: #ffffff;
 
   /* Music widget */
   --music-background-start: #872116;

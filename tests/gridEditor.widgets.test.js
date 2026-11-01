@@ -317,6 +317,32 @@ describe("grid editing with real widgets and mocked network", () => {
     expect(document.querySelector(".tooltip")).not.toBeNull();
   });
 
+  test("blocks quote navigation during editing and preserves it through hide and restore", () => {
+    const quote = widgets.find((widget) => widget.id === "quote").container;
+    const previous = quote.querySelector('[aria-label="Previous quote"]');
+    const next = quote.querySelector('[aria-label="Next quote"]');
+    const text = () =>
+      quote.querySelector(".quote-widget-container--line").textContent;
+    next.click();
+    expect(text()).toBe("Think less &");
+    begin();
+    previous.click();
+    next.click();
+    expect(text()).toBe("Think less &");
+    expect(quote.hasAttribute("inert")).toBe(true);
+    document.querySelector('[data-remove-widget="quote"]').click();
+    button("addWidgetButton").click();
+    [...button("addWidgetMenu").querySelectorAll("button")]
+      .find((node) => node.textContent === "Quote")
+      .click();
+    expect(quote.closest(".grid-widget").hidden).toBe(false);
+    expect(quote.querySelector('[aria-label="Next quote"]')).toBe(next);
+    expect(text()).toBe("Think less &");
+    cancel();
+    previous.click();
+    expect(text()).toBe("Keep it simple,");
+  });
+
   test("keeps widget preference keys intact and preserves coffee interactions after save", async () => {
     await loadCurrencyWidget();
     document.querySelector(".coffee-cup").click();

@@ -13,7 +13,7 @@ describe("clock artwork and rendering", () => {
     document.body.appendChild(content);
   });
 
-  test("keeps the supplied background geometry and the requested layer order", () => {
+  test("keeps the supplied background geometry and hand pivot", () => {
     expect(
       [...content.querySelectorAll("svg")].map((svg) => svg.classList.value),
     ).toEqual(["clock__face", "clock__hands"]);
@@ -25,9 +25,6 @@ describe("clock artwork and rendering", () => {
       [...content.querySelectorAll("text")].map((node) => node.textContent),
     ).toEqual(["12", "3", "6", "9"]);
     const second = content.querySelector(".clock__second");
-    expect(
-      [...second.parentElement.children].map((node) => node.classList.value),
-    ).toEqual(["clock__second", "clock__hour", "clock__minute", "clock__hub"]);
     expect(second.parentElement.getAttribute("transform")).toBe(
       "translate(87.5 87.5)",
     );

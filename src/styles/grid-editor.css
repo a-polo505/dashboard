@@ -79,7 +79,7 @@
 
 .grid-editor__menu button:hover,
 .grid-editor__menu button:focus-visible {
-  background-color: var(--cta-button-hover-background);
+  background-color: var(--grid-editor-menu-hover-button);
 }
 
 .grid-editor__error {

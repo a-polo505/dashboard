@@ -13,7 +13,7 @@ const quotes = [
     lines: [{ text: "Design every" }, { highlightedText: "detail" }],
   },
   {
-    lines: [{ text: "Improve" }, { highlightedText: "everything", text: "!" }],
+    lines: [{ text: "Improve" }, { highlightedText: "everything" }],
   },
 ];
 

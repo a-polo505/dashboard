@@ -49,7 +49,7 @@ describe("quote navigation", () => {
       },
       { lines: ["Think less &", "Do more"], accent: "Do more" },
       { lines: ["Design every", "detail"], accent: "detail" },
-      { lines: ["Improve", "everything!"], accent: "everything" },
+      { lines: ["Improve", "everything"], accent: "everything" },
     ];
     for (const [button, order] of [
       [next, [1, 2, 3, 0]],
